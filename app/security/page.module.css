@@ -1,0 +1,297 @@
+/* Security, Travel, Online Services, Institutions — shared layout styles */
+
+.page {
+  padding-bottom: var(--space-3xl);
+}
+
+.hero {
+  padding: var(--space-3xl) 0 var(--space-2xl);
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.heroInner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .heroInner {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.heading {
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  margin-bottom: var(--space-lg);
+  max-width: 28ch;
+}
+
+.intro {
+  font-size: 1.0625rem;
+  color: var(--ink-2);
+  max-width: 60ch;
+  line-height: 1.7;
+}
+
+/* Services grid */
+.servicesList {
+  padding: var(--space-2xl) 0;
+}
+
+.servicesInner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .servicesInner {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .servicesGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .servicesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.serviceCard {
+  padding: var(--space-lg);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.serviceCardHeading {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--space-xs);
+}
+
+.serviceCardLine {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Credibility block */
+.credibility {
+  padding: var(--space-2xl) 0;
+  background-color: var(--green-wash);
+}
+
+.credibilityInner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .credibilityInner {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.credibilityInner p {
+  font-size: 1rem;
+  color: var(--ink-2);
+  line-height: 1.7;
+  max-width: 65ch;
+}
+
+/* Form */
+.formSection {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .formSection {
+    padding: var(--space-2xl) var(--space-xl);
+  }
+}
+
+.formContainer {
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .formContainer {
+    padding: var(--space-2xl);
+  }
+}
+
+.formHeading {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-xs);
+}
+
+.formSubheading {
+  font-size: 0.9375rem;
+  color: var(--muted);
+  margin-bottom: var(--space-xl);
+}
+
+/* Confirmation */
+.confirmation {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+}
+
+.confirmIcon {
+  width: 64px;
+  height: 64px;
+  color: var(--success);
+  margin: 0 auto var(--space-lg);
+}
+
+.confirmHeading {
+  font-size: 1.25rem;
+  margin-bottom: var(--space-xs);
+}
+
+.referenceNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--green);
+  margin-bottom: var(--space-lg);
+}
+
+.confirmText {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  line-height: 1.7;
+  max-width: 45ch;
+  margin: 0 auto var(--space-lg);
+}
+
+/* Content blocks (institutions) */
+.contentSection {
+  padding: var(--space-2xl) 0;
+}
+
+.contentInner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .contentInner {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.contentBlock {
+  margin-bottom: var(--space-2xl);
+  max-width: 65ch;
+}
+
+.contentBlock h2 {
+  font-size: 1.25rem;
+  margin-bottom: var(--space-md);
+}
+
+.contentBlock p {
+  font-size: 1rem;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+.contentBlock ul {
+  list-style: disc;
+  padding-left: var(--space-lg);
+}
+
+.contentBlock li {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: var(--space-xs);
+}
+
+/* Service item list (travel, online) */
+.serviceItemList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-2xl);
+}
+
+.serviceItem {
+  padding: var(--space-md) var(--space-lg);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+/* Online services detail card */
+.onlineServiceCard {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.onlineServiceCard h3 {
+  font-size: 1rem;
+  margin-bottom: var(--space-sm);
+}
+
+.onlineServiceCard p {
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  margin-bottom: var(--space-sm);
+}
+
+.docsLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: var(--space-xs);
+}
+
+.docsList {
+  list-style: disc;
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.docsList li {
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+.timeEstimate {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}

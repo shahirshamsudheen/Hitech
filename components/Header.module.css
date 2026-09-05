@@ -1,0 +1,284 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-sm) var(--space-md);
+  min-height: 64px;
+}
+
+@media (min-width: 768px) {
+  .headerInner {
+    padding: var(--space-sm) var(--space-xl);
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 90px;
+}
+
+.logo img {
+  height: 36px;
+  width: auto;
+}
+
+@media (min-width: 768px) {
+  .logo img {
+    height: 40px;
+  }
+}
+
+/* Desktop nav */
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+@media (min-width: 1024px) {
+  .desktopNav {
+    display: flex;
+  }
+}
+
+.navLink {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  border-radius: var(--radius);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--green);
+  background-color: var(--green-wash);
+}
+
+.navLink.active {
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* Actions area */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.phoneLink {
+  display: none;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .phoneLink {
+    display: flex;
+  }
+}
+
+.phoneIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.whatsappBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: 0.5rem 1rem;
+  background-color: #25D366;
+  color: var(--surface);
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
+  transition: background-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.whatsappBtn:hover {
+  background-color: #1EBE59;
+}
+
+.whatsappBtnText {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .whatsappBtnText {
+    display: inline;
+  }
+}
+
+.whatsappIcon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Mobile menu toggle */
+.mobileMenuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink);
+  border-radius: var(--radius);
+}
+
+.mobileMenuBtn:hover {
+  background-color: var(--green-wash);
+}
+
+@media (min-width: 1024px) {
+  .mobileMenuBtn {
+    display: none;
+  }
+}
+
+.hamburgerIcon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mobile menu overlay */
+.mobileMenu {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--surface);
+  z-index: 99;
+  overflow-y: auto;
+  padding: var(--space-md);
+}
+
+.mobileMenu.open {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .mobileMenu {
+    display: none !important;
+  }
+}
+
+.mobileNavLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.875rem var(--space-md);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+  border-radius: var(--radius);
+  border-bottom: 1px solid var(--rule);
+  min-height: 44px;
+}
+
+.mobileNavLink:hover {
+  background-color: var(--green-wash);
+  color: var(--green);
+}
+
+.mobileNavLink.active {
+  color: var(--green);
+  font-weight: 600;
+  background-color: var(--green-wash);
+}
+
+.mobileActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--rule);
+}
+
+.mobilePhoneLink {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.75rem var(--space-md);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--green);
+}
+
+/* Mobile sticky bar */
+.mobileSticky {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 98;
+  background-color: var(--surface);
+  border-top: 1px solid var(--rule);
+  padding: var(--space-sm) var(--space-md);
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .mobileSticky {
+    display: none;
+  }
+}
+
+.stickyBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: 0.625rem;
+  border-radius: var(--radius);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  min-height: 44px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  max-width: 200px;
+}
+
+.stickyCall {
+  background-color: var(--green);
+  color: var(--surface);
+}
+
+.stickyWhatsapp {
+  background-color: #25D366;
+  color: var(--surface);
+}

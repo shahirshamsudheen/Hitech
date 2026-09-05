@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 50">
+  <g fill="#075F33">
+    <!-- H mark (small version) -->
+    <g transform="translate(0, 2) scale(0.46)">
+      <path d="M51.36 33.24 L63.83 40.44 L88.00 26.49 L51.36 5.34 Z"/>
+      <path d="M65.20 42.80 L65.20 57.20 L89.36 71.15 L89.36 28.85 Z"/>
+      <path d="M63.83 59.56 L51.36 66.76 L51.36 94.66 L88.00 73.51 Z"/>
+      <path d="M48.64 66.76 L36.17 59.56 L12.00 73.51 L48.64 94.66 Z"/>
+      <path d="M34.80 57.20 L34.80 42.80 L10.64 28.85 L10.64 71.15 Z"/>
+      <path d="M36.17 40.44 L48.64 33.24 L48.64 5.34 L12.00 26.49 Z"/>
+    </g>
+    <!-- HITECH wordmark placeholder -->
+    <text x="55" y="37" font-family="Arial, sans-serif" font-weight="800" font-size="34" letter-spacing="3" fill="#075F33">HITECH</text>
+  </g>
+</svg>

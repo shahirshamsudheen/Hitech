@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Passport applications",
+    "description": "New passport applications and renewals, submitted on your behalf.",
+    "documentsNeeded": [
+      "Aadhaar card",
+      "Existing passport (if renewal)",
+      "Photograph — passport size, white background"
+    ],
+    "approxTime": "15–20 minutes at the counter"
+  },
+  {
+    "title": "Online fee and bill payments",
+    "description": "University fees, exam fees, government fees, KSEB, water bills and other online payments.",
+    "documentsNeeded": [
+      "Payment reference or account number",
+      "Amount to be paid"
+    ],
+    "approxTime": "5–10 minutes"
+  }
+]
