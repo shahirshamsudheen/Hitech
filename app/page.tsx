@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Wrench, Laptop, ShieldCheck, Plane, FileText } from 'lucide-react';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
@@ -66,10 +67,10 @@ const BIZ_CUSTOMERS = [
 ];
 
 const PARTNERS = [
-  'Acer Authorised Partner',
-  'Epson Authorised Partner',
-  'Asus Gold Partner',
-  'Canon Premium Partner',
+  { name: 'Acer Authorised Partner', src: '/partners/acer-partner.png' },
+  { name: 'Asus Business Partner Gold', src: '/partners/asus-partner.png' },
+  { name: 'Canon Premium Partner', src: '/partners/canon-partner.png' },
+  { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
 ];
 
 export default function Home() {
@@ -207,9 +208,15 @@ export default function Home() {
           <p className={styles.sectionLabel}>Authorised partners</p>
           <div className={styles.partnersGrid}>
             {PARTNERS.map((partner) => (
-              <span key={partner} className={styles.partnerBadge}>
-                {partner}
-              </span>
+              <div key={partner.name} className={styles.partnerCard}>
+                <Image
+                  src={partner.src}
+                  alt={partner.name}
+                  width={140}
+                  height={140}
+                  className={styles.partnerImage}
+                />
+              </div>
             ))}
           </div>
         </div>

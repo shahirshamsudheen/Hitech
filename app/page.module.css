@@ -354,8 +354,8 @@
 /* ── Partners ────────────────────────────────────────────────────────────── */
 
 .partners {
-  padding: var(--space-2xl) 0;
-  background-color: var(--surface);
+  padding: var(--space-3xl) 0;
+  background-color: var(--paper);
 }
 
 .partnersInner {
@@ -372,26 +372,44 @@
 }
 
 .partnersGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  justify-content: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .partnersGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+.partnerCard {
+  background: var(--surface);
+  border: none;
+  border-radius: 20px;
+  padding: 1.25rem;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: var(--space-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all var(--transition-base);
+  aspect-ratio: 1;
 }
 
-.partnerBadge {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--olive);
-  padding: 0.625rem 1.25rem;
-  border: 1.5px solid var(--sage);
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
-  transition: all var(--transition-fast);
+.partnerCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
 }
 
-.partnerBadge:hover {
-  background-color: var(--sage-pale);
+.partnerImage {
+  width: 100%;
+  height: auto;
+  max-height: 100px;
+  object-fit: contain;
 }
 
 /* ── WhatsApp CTA ────────────────────────────────────────────────────────── */

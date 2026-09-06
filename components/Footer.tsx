@@ -3,10 +3,10 @@ import Image from 'next/image';
 import styles from './Footer.module.css';
 
 const PARTNERS = [
-  'Acer Authorised Partner',
-  'Epson Authorised Partner',
-  'Asus Gold Partner',
-  'Canon Premium Partner',
+  { name: 'Acer Authorised Partner', src: '/partners/acer-partner.png' },
+  { name: 'Asus Business Partner Gold', src: '/partners/asus-partner.png' },
+  { name: 'Canon Premium Partner', src: '/partners/canon-partner.png' },
+  { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
 ];
 
 export default function Footer() {
@@ -107,9 +107,15 @@ export default function Footer() {
         <div className={styles.partnersRow}>
           <div className={styles.partnersInner}>
             {PARTNERS.map((partner) => (
-              <span key={partner} className={styles.partnerBadge}>
-                {partner}
-              </span>
+              <div key={partner.name} className={styles.partnerCard}>
+                <Image
+                  src={partner.src}
+                  alt={partner.name}
+                  width={100}
+                  height={100}
+                  className={styles.partnerImage}
+                />
+              </div>
             ))}
           </div>
         </div>

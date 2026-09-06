@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import styles from '../security/page.module.css';
 
@@ -7,10 +8,10 @@ export const metadata: Metadata = {
 };
 
 const PARTNERS = [
-  'Acer Authorised Partner',
-  'Epson Authorised Partner',
-  'Asus Gold Partner',
-  'Canon Premium Partner',
+  { name: 'Acer Authorised Partner', src: '/partners/acer-partner.png' },
+  { name: 'Asus Business Partner Gold', src: '/partners/asus-partner.png' },
+  { name: 'Canon Premium Partner', src: '/partners/canon-partner.png' },
+  { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
 ];
 
 export default function AboutPage() {
@@ -48,9 +49,13 @@ export default function AboutPage() {
 
           <div className={styles.contentBlock}>
             <h2>Authorised partners</h2>
-            <ul>
-              {PARTNERS.map(p => <li key={p}>{p}</li>)}
-            </ul>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 'var(--space-md)', marginTop: 'var(--space-md)', maxWidth: '580px' }}>
+              {PARTNERS.map(p => (
+                <div key={p.name} style={{ background: 'var(--surface)', borderRadius: '16px', padding: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(0,0,0,0.04)' }}>
+                  <Image src={p.src} alt={p.name} width={120} height={120} style={{ width: '100%', height: 'auto', maxHeight: '75px', objectFit: 'contain' }} />
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className={styles.contentBlock}>
