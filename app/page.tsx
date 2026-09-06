@@ -22,9 +22,9 @@ import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'HITECH — Computer Repair, CCTV & Technology Services in Kallara, Trivandrum',
+  title: 'HITECH — Computer Repair, CCTV & Technology Services in Kallara, Kerala',
   description:
-    'Specialized BGA chip-level motherboard repair, computer service, CCTV installation, and technology sales in Kallara, Trivandrum district. Board-level repair since 2016.',
+    'Specialized BGA chip-level motherboard repair, computer service, CCTV installation, and technology sales across Kerala. Board-level repair since 2016.',
 };
 
 const MODULES = [
@@ -97,8 +97,8 @@ const BGA_FEATURES = [
     desc: 'Reviving graphics chips, processor rails, BIOS corruption, and power management units instead of costly full board replacements.',
   },
   {
-    title: 'One-of-a-Kind Facility in Trivandrum',
-    desc: 'State-of-the-art micro-soldering and board repair lab right here in Kallara — trusted by clients across Trivandrum district.',
+    title: 'One-of-a-Kind Facility in Kerala',
+    desc: 'State-of-the-art micro-soldering and board repair lab in Kallara — trusted by clients and technicians across Kerala.',
   },
 ];
 
@@ -109,7 +109,7 @@ export default function Home() {
     name: 'Hitech Systems',
     alternateName: 'HITECH',
     description:
-      'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Trivandrum district. Specialized BGA chip-level repair since 2016.',
+      'Computer repair, laptop service, CCTV installation, and technology sales across Kerala. Specialized BGA chip-level repair since 2016.',
     url: 'https://hitechkallara.com',
     telephone: ['+914722960076', '+919496818237', '+919447765757'],
     address: {
@@ -126,8 +126,8 @@ export default function Home() {
       longitude: 77.0232,
     },
     areaServed: [
-      'Kallara', 'Nedumangad', 'Kilimanoor', 'Palode',
-      'Pangode', 'Vamanapuram', 'Attingal', 'Trivandrum',
+      'Kerala', 'Kallara', 'Trivandrum', 'Nedumangad', 'Kilimanoor', 'Palode',
+      'Pangode', 'Attingal',
     ],
     foundingDate: '2010-08',
     priceRange: '₹₹',
@@ -145,12 +145,12 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.heroPattern} aria-hidden="true" />
         <div className={styles.heroInner}>
-          <p className={styles.heroLabel}>Since 2010 · Kallara, Trivandrum</p>
+          <p className={styles.heroLabel}>Since 2010 · Kallara, Kerala</p>
           <h1 className={styles.heroHeading}>We keep it working.</h1>
           <p className={styles.heroIntro}>
-            Hitech has repaired, installed and maintained technology in and around
-            Kallara since 2010. Computers, cameras and networks — for homes,
-            businesses, schools and government offices across Trivandrum district.
+            Hitech has repaired, installed and maintained technology since 2010.
+            Computers, cameras and networks — for homes, businesses, schools and
+            government offices across Kerala and beyond.
           </p>
           <div className={styles.heroCtas}>
             <Link href="/service" className="btn btn-primary">
@@ -228,7 +228,7 @@ export default function Home() {
                 Advanced Chip-Level &amp; BGA Rework Laboratory.
               </h2>
               <p className={styles.bgaLead}>
-                One of a kind in Trivandrum — we specialize in Ball Grid Array (BGA) rework,
+                One of a kind in Kerala — we specialize in Ball Grid Array (BGA) rework,
                 micro-soldering, and board-level component diagnosis. Why replace an expensive
                 motherboard when the damaged chip can be precision-repaired?
               </p>

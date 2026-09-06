@@ -7,7 +7,7 @@ import styles from './page.module.css';
 export const metadata: Metadata = {
   title: 'History & Heritage — Since 2010 in Kallara | HITECH',
   description:
-    'The story of HITECH Systems in Kallara, Trivandrum. Founded in 2010 by Vinod. Board-level repair since 2016, BGA micro-soldering, enterprise security, and official brand partnerships.',
+    'The story of HITECH Systems in Kallara, Kerala. Founded in 2010 by Vinod. Board-level repair since 2016, BGA micro-soldering, enterprise security, and official brand partnerships.',
 };
 
 const STATS = [
@@ -21,7 +21,7 @@ const TIMELINE = [
   {
     year: 'August 2010',
     title: 'The Foundation in Kallara',
-    text: 'Vinod established Hitech Systems at KG Building, Main Road, Kallara after years working as a computer hardware and systems engineer. As computing devices arrived across rural and suburban Trivandrum villages, Hitech provided reliable, local technical service.',
+    text: 'Vinod established Hitech Systems at KG Building, Main Road, Kallara after years working as a computer hardware and systems engineer. As computing devices arrived across rural and suburban regions, Hitech provided reliable, dedicated technical service.',
     side: 'left',
   },
   {
@@ -39,13 +39,13 @@ const TIMELINE = [
   {
     year: '2019',
     title: 'Enterprise Security & Institutional IT',
-    text: 'Expanded to enterprise security, CCTV installation, biometric access control, and campus network cabling for Community Health Centres, Panchayat offices, and commercial factories across Trivandrum district.',
+    text: 'Expanded to enterprise security, CCTV installation, biometric access control, and campus network cabling for Community Health Centres, Panchayat offices, and commercial enterprises across Kerala.',
     side: 'right',
   },
   {
     year: '2023 – Present',
     title: 'Advanced BGA Lab & Multi-Brand Accreditations',
-    text: 'Upgraded the laboratory with an infrared Ball Grid Array (BGA) rework station for micro-pitch ICs and GPU reflows (one of a kind in Trivandrum). Formally accredited as Acer Authorised Partner, Asus Gold Partner, Canon Premium Partner, and Epson Authorised Partner.',
+    text: 'Upgraded the laboratory with an infrared Ball Grid Array (BGA) rework station for micro-pitch ICs and GPU reflows (one of a kind in Kerala). Formally accredited as Acer Authorised Partner, Asus Gold Partner, Canon Premium Partner, and Epson Authorised Partner.',
     side: 'left',
   },
 ];
@@ -74,7 +74,7 @@ const GALLERIES = [
     image: '/images/hitech-cctv-deploy.jpg',
     tag: 'Field Deployments',
     title: 'Enterprise Security & Networking',
-    desc: 'On-site server rack, structured cabling, and commercial surveillance installations across Trivandrum institutions.',
+    desc: 'On-site server rack, structured cabling, and commercial surveillance installations across institutions and businesses.',
   },
 ];
 

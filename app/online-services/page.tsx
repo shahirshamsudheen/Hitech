@@ -78,145 +78,154 @@ function EGovServicesContent() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.splitContainer}>
-        <div className={styles.splitGrid}>
-          {/* Left Column: Heading, Intro, Service Cards & Meta */}
-          <div className={styles.leftColumn}>
-            <div className={styles.badgePill}>
-              <Globe size={14} />
-              <span>e-Governance &amp; Citizen Counter</span>
-            </div>
-            <h1 className={styles.heading}>Government and online applications, handled at the counter.</h1>
-            <p className={styles.intro}>
-              Forms, applications, utility payments and certificates. Bring your documents to our Kallara centre
-              and our desk assists you step-by-step with zero hassle.
-            </p>
-
-            <p className={styles.sectionSubhead}>Select required eGov service</p>
-            <div className={styles.servicesGrid}>
-              {EGOV_SERVICES.map(s => {
-                const Icon = s.icon;
-                const isSelected = selectedService === s.key;
-                return (
-                  <button
-                    key={s.key}
-                    type="button"
-                    className={`${styles.serviceCard} ${isSelected ? styles.serviceCardActive : ''}`}
-                    onClick={() => handleSelectService(s.key, s.heading)}
-                  >
-                    <div className={styles.serviceIconWrapper}>
-                      <Icon size={20} strokeWidth={2} aria-hidden="true" />
-                    </div>
-                    <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
-                    <p className={styles.serviceCardLine}>{s.line}</p>
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className={styles.infoMetaRow}>
-              <div className={styles.infoMetaItem}>
-                <span className={styles.metaLabel}>Walk-in Counter</span>
-                <span className={styles.metaValue}>Main Road, Kallara</span>
-              </div>
-              <div className={styles.infoMetaItem}>
-                <span className={styles.metaLabel}>Response</span>
-                <span className={styles.metaValue}>Within 1 working day</span>
-              </div>
-              <div className={styles.infoMetaItem}>
-                <span className={styles.metaLabel}>Office Phone</span>
-                <span className={styles.metaValue}>+91 472 296007</span>
-              </div>
-            </div>
+      {/* Hero Banner */}
+      <section className={styles.hero}>
+        <div className={styles.heroPattern} aria-hidden="true" />
+        <div className={styles.heroInner}>
+          <div className={styles.heroBadge}>
+            <Globe size={14} />
+            <span>e-Governance &amp; Citizen Counter</span>
           </div>
+          <h1 className={styles.heading}>Government and online applications, handled at the counter.</h1>
+          <p className={styles.intro}>
+            Forms, applications, utility payments and certificates. Bring your documents to our centre
+            and our desk assists you step-by-step with zero hassle.
+          </p>
+        </div>
+      </section>
 
-          {/* Right Column: Form Starting Right At The Top */}
-          <div className={styles.rightColumn}>
-            <div className={styles.formCard}>
-              <h2 className={styles.formHeading}>eGov enquiry</h2>
-              <p className={styles.formSubheading}>Tell us what you need and our desk will prepare instructions.</p>
+      {/* Interactive Section (White Cards on Left + Form on Right) */}
+      <section className={styles.splitSection} aria-label="eGov services selection and enquiry">
+        <div className={styles.splitContainer}>
+          <div className={styles.splitGrid}>
+            {/* Left Column: White Service Cards */}
+            <div className={styles.leftColumn}>
+              <p className={styles.sectionSubhead}>Select required eGov service</p>
+              <div className={styles.servicesGrid}>
+                {EGOV_SERVICES.map(s => {
+                  const Icon = s.icon;
+                  const isSelected = selectedService === s.key;
+                  return (
+                    <button
+                      key={s.key}
+                      type="button"
+                      className={`${styles.serviceCard} ${isSelected ? styles.serviceCardActive : ''}`}
+                      onClick={() => handleSelectService(s.key, s.heading)}
+                    >
+                      <div className={styles.serviceIconWrapper}>
+                        <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
+                      </div>
+                      <h2 className={styles.serviceCardHeading}>{s.heading}</h2>
+                      <p className={styles.serviceCardLine}>{s.line}</p>
+                    </button>
+                  );
+                })}
+              </div>
 
-              {activeService && (
-                <div className={styles.activeServiceIndicator}>
-                  <span>Selected: {activeService.heading}</span>
+              <div className={styles.infoMetaRow}>
+                <div className={styles.infoMetaItem}>
+                  <span className={styles.metaLabel}>Counter Location</span>
+                  <span className={styles.metaValue}>Main Road, Kallara</span>
                 </div>
-              )}
-
-              <div className="form-group">
-                <label htmlFor="os-name" className="form-label">Name <span className="required">*</span></label>
-                <input
-                  ref={nameInputRef}
-                  id="os-name"
-                  type="text"
-                  className={`form-input ${errors.name ? 'error' : ''}`}
-                  value={formData.name}
-                  onChange={e => updateField('name', e.target.value)}
-                  placeholder="Your full name"
-                />
-                {errors.name && <p className="form-error" role="alert">{errors.name}</p>}
+                <div className={styles.infoMetaItem}>
+                  <span className={styles.metaLabel}>Response</span>
+                  <span className={styles.metaValue}>Within 1 working day</span>
+                </div>
+                <div className={styles.infoMetaItem}>
+                  <span className={styles.metaLabel}>Office Phone</span>
+                  <span className={styles.metaValue}>+91 472 296007</span>
+                </div>
               </div>
+            </div>
 
-              <div className="form-group">
-                <label htmlFor="os-mobile" className="form-label">Mobile number <span className="required">*</span></label>
-                <input
-                  id="os-mobile"
-                  type="tel"
-                  className={`form-input ${errors.mobile ? 'error' : ''}`}
-                  value={formData.mobile}
-                  onChange={e => updateField('mobile', e.target.value)}
-                  placeholder="10-digit mobile number"
-                />
-                {errors.mobile && <p className="form-error" role="alert">{errors.mobile}</p>}
-              </div>
+            {/* Right Column: Form Starting at the Top */}
+            <div className={styles.rightColumn}>
+              <div className={styles.formCard}>
+                <h2 className={styles.formHeading}>eGov enquiry</h2>
+                <p className={styles.formSubheading}>Tell us what you need and our desk will prepare instructions.</p>
 
-              <div className="form-group">
-                <label htmlFor="os-service" className="form-label">Which service <span className="required">*</span></label>
-                <select
-                  id="os-service"
-                  className={`form-input ${errors.service ? 'error' : ''}`}
-                  value={formData.service}
-                  onChange={e => updateField('service', e.target.value)}
-                >
-                  <option value="">Select service</option>
-                  {EGOV_SERVICES.map(s => (
-                    <option key={s.key} value={s.heading}>{s.heading}</option>
-                  ))}
-                  <option value="Other Online Application">Other Online Application</option>
-                </select>
-                {errors.service && <p className="form-error" role="alert">{errors.service}</p>}
-              </div>
+                {activeService && (
+                  <div className={styles.activeServiceIndicator}>
+                    <span>Selected: {activeService.heading}</span>
+                  </div>
+                )}
 
-              <div className="form-group">
-                <label htmlFor="os-notes" className="form-label">Specific details or document queries</label>
-                <textarea
-                  id="os-notes"
-                  className="form-input"
-                  rows={3}
-                  value={formData.notes}
-                  onChange={e => updateField('notes', e.target.value)}
-                  placeholder="e.g. Which certificate, registration number, deadline..."
-                />
-              </div>
-
-              <div className="form-group">
-                <label className={`checkbox-option ${formData.consent ? 'selected' : ''}`}>
+                <div className="form-group">
+                  <label htmlFor="os-name" className="form-label">Name <span className="required">*</span></label>
                   <input
-                    type="checkbox"
-                    checked={formData.consent}
-                    onChange={e => updateField('consent', e.target.checked)}
+                    ref={nameInputRef}
+                    id="os-name"
+                    type="text"
+                    className={`form-input ${errors.name ? 'error' : ''}`}
+                    value={formData.name}
+                    onChange={e => updateField('name', e.target.value)}
+                    placeholder="Your full name"
                   />
-                  I agree to HITECH contacting me regarding this eGov enquiry.
-                </label>
-                {errors.consent && <p className="form-error" role="alert">{errors.consent}</p>}
-              </div>
+                  {errors.name && <p className="form-error" role="alert">{errors.name}</p>}
+                </div>
 
-              <button type="button" onClick={handleSubmit} className="btn btn-primary" style={{ width: '100%' }}>
-                Submit enquiry
-              </button>
+                <div className="form-group">
+                  <label htmlFor="os-mobile" className="form-label">Mobile number <span className="required">*</span></label>
+                  <input
+                    id="os-mobile"
+                    type="tel"
+                    className={`form-input ${errors.mobile ? 'error' : ''}`}
+                    value={formData.mobile}
+                    onChange={e => updateField('mobile', e.target.value)}
+                    placeholder="10-digit mobile number"
+                  />
+                  {errors.mobile && <p className="form-error" role="alert">{errors.mobile}</p>}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="os-service" className="form-label">Which service <span className="required">*</span></label>
+                  <select
+                    id="os-service"
+                    className={`form-input ${errors.service ? 'error' : ''}`}
+                    value={formData.service}
+                    onChange={e => updateField('service', e.target.value)}
+                  >
+                    <option value="">Select service</option>
+                    {EGOV_SERVICES.map(s => (
+                      <option key={s.key} value={s.heading}>{s.heading}</option>
+                    ))}
+                    <option value="Other Online Application">Other Online Application</option>
+                  </select>
+                  {errors.service && <p className="form-error" role="alert">{errors.service}</p>}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="os-notes" className="form-label">Specific details or document queries</label>
+                  <textarea
+                    id="os-notes"
+                    className="form-input"
+                    rows={3}
+                    value={formData.notes}
+                    onChange={e => updateField('notes', e.target.value)}
+                    placeholder="e.g. Which certificate, registration number, deadline..."
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className={`checkbox-option ${formData.consent ? 'selected' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={formData.consent}
+                      onChange={e => updateField('consent', e.target.checked)}
+                    />
+                    I agree to HITECH contacting me regarding this eGov enquiry.
+                  </label>
+                  {errors.consent && <p className="form-error" role="alert">{errors.consent}</p>}
+                </div>
+
+                <button type="button" onClick={handleSubmit} className="btn btn-primary" style={{ width: '100%' }}>
+                  Submit enquiry
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

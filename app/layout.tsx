@@ -5,18 +5,19 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'HITECH — Computer Repair, CCTV & Technology Services in Kallara, Trivandrum',
+    default: 'HITECH — Computer Repair, CCTV & Technology Services in Kallara, Kerala',
     template: '%s | HITECH Kallara',
   },
   description:
-    'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Trivandrum district. Board-level repair since 2016. Serving Nedumangad, Kilimanoor, Palode, Pangode and surrounding areas since 2010.',
+    'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Kerala. Specialized BGA board-level repair since 2016. Serving clients across Kerala since 2010.',
   keywords: [
-    'computer repair Kallara',
-    'laptop service Nedumangad',
-    'CCTV installation Trivandrum',
-    'chip level repair Trivandrum',
-    'laptop shop Kilimanoor',
-    'computer service Palode',
+    'computer repair Kerala',
+    'laptop service Kallara',
+    'CCTV installation Kerala',
+    'chip level repair Kerala',
+    'BGA motherboard repair Kerala',
+    'laptop shop Kallara',
+    'computer service Kerala',
     'technology Kallara',
     'Hitech Systems',
   ],

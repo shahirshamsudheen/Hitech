@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Shop',
+  title: 'Hardware Store & Custom Rigs',
   description:
-    'Laptops, desktops, printers, monitors, networking equipment, storage, and accessories. Acer, Epson, Asus, and Canon authorised partner in Kallara, Trivandrum.',
+    'Laptops, custom desktops, printers, monitors, networking equipment, and storage. Official Acer, Epson, Asus, and Canon partner in Kerala.',
 };
 
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
