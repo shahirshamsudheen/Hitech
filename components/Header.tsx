@@ -106,6 +106,10 @@ const NAV_ITEMS: NavItem[] = [
       },
     ],
   },
+  {
+    label: 'History',
+    href: '/history',
+  },
 ];
 
 const PHONE_PRIMARY = '+91 9496 818237';

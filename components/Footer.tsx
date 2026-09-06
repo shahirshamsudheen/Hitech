@@ -37,17 +37,14 @@ export default function Footer() {
                 Kerala 695608
               </address>
               <div className={styles.phoneList}>
-                <a href="tel:+919496818237" className={styles.footerPhone}>
-                  <span className={styles.phoneTag}>Tel 1</span>
-                  <span>+91 9496 818237</span>
-                </a>
                 <a href="tel:+914722960076" className={styles.footerPhone}>
-                  <span className={styles.phoneTag}>Landline</span>
-                  <span>+91 472 296007</span>
+                  <span>📞 +91 472 296007</span>
+                </a>
+                <a href="tel:+919496818237" className={styles.footerPhone}>
+                  <span>📱 +91 9496 818237</span>
                 </a>
                 <a href="tel:+919447765757" className={styles.footerPhone}>
-                  <span className={styles.phoneTag}>Tel 2</span>
-                  <span>+91 9447 765757</span>
+                  <span>📞 +91 9447 765757</span>
                 </a>
               </div>
             </div>
@@ -79,6 +76,9 @@ export default function Footer() {
           <div className={styles.footerSection}>
             <h3>Company</h3>
             <div className={styles.footerLinks}>
+              <Link href="/history" className={styles.footerLink}>
+                History
+              </Link>
               <Link href="/about" className={styles.footerLink}>
                 About Us
               </Link>

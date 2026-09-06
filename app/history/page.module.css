@@ -1,0 +1,443 @@
+/* ── History & Heritage Page Styles ───────────────────────────────────────── */
+
+.page {
+  padding-bottom: var(--space-4xl);
+  background-color: var(--paper);
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  padding: 5rem 0 4rem;
+  background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%);
+  color: #FFFFFF;
+  overflow: hidden;
+}
+
+.heroPattern {
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-size: 800px;
+  background-repeat: repeat;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .heroInner {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--sage);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-md);
+  backdrop-filter: blur(10px);
+}
+
+.heroHeading {
+  font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.15;
+  margin-bottom: var(--space-lg);
+  letter-spacing: -0.02em;
+  max-width: 20ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroIntro {
+  font-size: 1.1875rem;
+  color: var(--sage);
+  max-width: 60ch;
+  margin: 0 auto var(--space-2xl);
+  line-height: 1.7;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .statsRow {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+.statItem {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 1.25rem 1rem;
+  backdrop-filter: blur(12px);
+}
+
+.statNumber {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 0.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.statLabel {
+  font-size: 0.775rem;
+  color: var(--sage);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--space-xl);
+  }
+}
+
+/* ── Timeline Section ────────────────────────────────────────────────────── */
+
+.timelineSection {
+  padding: var(--space-4xl) 0;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+  max-width: 48ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sectionLabel {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--olive);
+  margin-bottom: var(--space-xs);
+  display: inline-block;
+}
+
+.sectionTitle {
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.timelineTrack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.timelineTrack::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: var(--rule);
+}
+
+@media (min-width: 768px) {
+  .timelineTrack::before {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.timelineItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-left: 65px;
+}
+
+@media (min-width: 768px) {
+  .timelineItem {
+    padding-left: 0;
+    width: 50%;
+  }
+
+  .timelineItemLeft {
+    align-self: flex-start;
+    padding-right: var(--space-2xl);
+    text-align: right;
+  }
+
+  .timelineItemRight {
+    align-self: flex-end;
+    padding-left: var(--space-2xl);
+    text-align: left;
+  }
+}
+
+.timelineDot {
+  position: absolute;
+  left: 19px;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--olive);
+  border: 4px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--olive);
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .timelineItemLeft .timelineDot {
+    left: auto;
+    right: -10px;
+  }
+  .timelineItemRight .timelineDot {
+    left: -10px;
+  }
+}
+
+.timelineYear {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--olive);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.timelineCard {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all var(--transition-base);
+}
+
+.timelineCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.07);
+}
+
+.timelineHeading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.timelineText {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Photo Gallery Section ───────────────────────────────────────────────── */
+
+.gallerySection {
+  padding: var(--space-4xl) 0;
+  background: var(--surface);
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .galleryGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.galleryCard {
+  background: var(--paper);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+}
+
+.galleryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08);
+}
+
+.galleryImageWrapper {
+  aspect-ratio: 16/10;
+  position: relative;
+  overflow: hidden;
+}
+
+.galleryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.galleryCard:hover .galleryImage {
+  transform: scale(1.04);
+}
+
+.galleryContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.galleryTag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--olive);
+  margin-bottom: 0.35rem;
+}
+
+.galleryTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.galleryDesc {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Accreditations & Partners ───────────────────────────────────────────── */
+
+.accreditationsSection {
+  padding: var(--space-4xl) 0;
+}
+
+.partnersGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-3xl);
+}
+
+@media (min-width: 1024px) {
+  .partnersGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+.partnerCard {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all var(--transition-base);
+}
+
+.partnerCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.partnerImage {
+  width: 100%;
+  height: auto;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.principlesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .principlesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.principleCard {
+  background: var(--surface);
+  border-radius: 22px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.principleIconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--sage-pale);
+  color: var(--olive);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+}
+
+.principleTitle {
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.principleText {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin: 0;
+}

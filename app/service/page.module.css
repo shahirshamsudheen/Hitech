@@ -1,89 +1,97 @@
-/* ── Service Page ─────────────────────────────────────────────────────────── */
+/* ── Service Page — Top Split Layout ──────────────────────────────────────── */
 
-.page { }
-
-/* ── Hero ─────────────────────────────────────────────────────────────────── */
-
-.hero {
-  position: relative;
-  padding: var(--space-3xl) 0;
-  background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%);
-  overflow: hidden;
+.page {
+  padding: var(--space-2xl) 0 var(--space-4xl);
+  background-color: var(--paper);
+  min-height: 80vh;
 }
 
-.heroPattern {
-  position: absolute;
-  inset: 0;
-  background-image: url('/brand/HITECH-circuit-deep-air.svg');
-  background-size: 800px;
-  background-repeat: repeat;
-  opacity: 0.06;
-  pointer-events: none;
-}
-
-.heroInner {
-  position: relative;
-  z-index: 1;
+.splitContainer {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-md);
 }
 
 @media (min-width: 768px) {
-  .heroInner { padding: 0 var(--space-xl); }
+  .splitContainer {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.splitGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .splitGrid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-3xl);
+  }
+}
+
+/* ── Left Column: Content & Service Cards ─────────────────────────────────── */
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.badgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--sage-pale);
+  color: var(--olive);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-md);
+  width: fit-content;
 }
 
 .heading {
-  font-size: clamp(2rem, 5vw, 3.25rem);
-  color: var(--surface);
-  margin-bottom: var(--space-lg);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.02em;
 }
 
 .intro {
   font-size: 1.0625rem;
-  color: var(--sage);
-  max-width: 60ch;
+  color: var(--ink-2);
   line-height: 1.7;
+  margin-bottom: var(--space-2xl);
+  max-width: 54ch;
 }
 
-/* ── Service cards grid ──────────────────────────────────────────────────── */
-
-.servicesList {
-  padding: var(--space-3xl) 0;
-  background: var(--paper);
-}
-
-.servicesInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-}
-
-@media (min-width: 768px) {
-  .servicesInner { padding: 0 var(--space-xl); }
-}
-
-.servicesLabel {
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.sectionSubhead {
   font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--muted);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .servicesGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-md);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-2xl);
 }
 
 @media (min-width: 640px) {
-  .servicesGrid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (min-width: 1024px) {
-  .servicesGrid { grid-template-columns: repeat(4, 1fr); }
+  .servicesGrid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .serviceCard {
@@ -92,48 +100,31 @@
   align-items: flex-start;
   text-align: left;
   background: var(--surface);
-  border: none;
-  border-radius: 20px;
-  padding: 1.5rem;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  padding: 1.25rem;
   cursor: pointer;
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-}
-
-.serviceCard::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url('/brand/HITECH-circuit-mist-air.svg');
-  background-size: 400px;
-  opacity: 0;
-  transition: opacity var(--transition-base);
-  pointer-events: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
 }
 
 .serviceCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-}
-
-.serviceCard:hover::before {
-  opacity: 0.04;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+  border-color: rgba(74, 107, 83, 0.3);
 }
 
 .serviceCardActive {
-  background: var(--sage-pale);
-  box-shadow: 0 6px 20px rgba(46, 71, 59, 0.12);
-}
-
-.serviceCardActive::before {
-  opacity: 0.06;
+  background: #FFFFFF;
+  border-color: var(--olive);
+  box-shadow: 0 8px 24px rgba(74, 107, 83, 0.14);
 }
 
 .serviceIconWrapper {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
   background: var(--sage-pale);
   display: flex;
@@ -142,8 +133,6 @@
   margin-bottom: var(--space-sm);
   color: var(--olive);
   transition: all var(--transition-fast);
-  position: relative;
-  z-index: 1;
 }
 
 .serviceCard:hover .serviceIconWrapper,
@@ -152,136 +141,62 @@
   color: #FFFFFF;
 }
 
-.serviceIconSvg {
-  display: block;
-}
-
-.infoPanelIconWrapper {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: var(--sage-pale);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-md);
-  color: var(--olive);
-}
-
 .serviceCardHeading {
   font-size: 0.9375rem;
   font-weight: 700;
   color: var(--ink);
-  margin-bottom: var(--space-xs);
-  position: relative;
-  z-index: 1;
+  margin-bottom: 0.2rem;
 }
 
 .serviceCardLine {
-  font-size: 0.8125rem;
+  font-size: 0.775rem;
   color: var(--muted);
-  line-height: 1.5;
-  position: relative;
-  z-index: 1;
+  line-height: 1.45;
 }
 
-/* ── Split layout ────────────────────────────────────────────────────────── */
-
-.splitSection {
-  padding: var(--space-3xl) 0;
-  background: var(--surface);
-}
-
-.splitInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
+.infoMetaRow {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-xl);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  background: var(--surface);
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
 }
 
-@media (min-width: 768px) {
-  .splitInner {
-    padding: 0 var(--space-xl);
-  }
-}
-
-@media (min-width: 900px) {
-  .splitInner {
-    grid-template-columns: 1fr 1.2fr;
-    gap: var(--space-3xl);
-  }
-}
-
-/* ── Info panel (left) ───────────────────────────────────────────────────── */
-
-.infoPanel { }
-
-.infoPanelSticky {
-  position: sticky;
-  top: 100px;
-}
-
-.infoPanelIcon {
-  font-size: 2.5rem;
-  display: block;
-  margin-bottom: var(--space-md);
-}
-
-.infoPanelHeading {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: var(--ink);
-  margin-bottom: var(--space-md);
-}
-
-.infoPanelText {
-  font-size: 1.0625rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-  margin-bottom: var(--space-xl);
-}
-
-.infoPanelDetails {
+.infoMetaItem {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
 }
 
-.infoItem {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: var(--space-md);
-  background: var(--paper);
-  border-radius: var(--radius);
-  border: 1px solid var(--rule);
-}
-
-.infoItemLabel {
+.metaLabel {
   font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--muted);
+  margin-bottom: 0.2rem;
 }
 
-.infoItemValue {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--olive);
+.metaValue {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink);
 }
 
-/* ── Form panel (right) ──────────────────────────────────────────────────── */
+/* ── Right Column: Form Starting at the Top ──────────────────────────────── */
 
-.formPanel { }
+.rightColumn {
+  position: sticky;
+  top: 90px;
+}
 
 .formCard {
-  background: var(--paper);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 24px;
+  padding: 2.25rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
   position: relative;
   overflow: hidden;
 }
@@ -290,7 +205,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('/brand/HITECH-circuit-mist-air.svg');
+  background-image: url('/brand/HITECH-circuit-sage-air.svg');
   background-size: 500px;
   opacity: 0.03;
   pointer-events: none;
@@ -305,31 +220,39 @@
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--ink);
-  margin-bottom: var(--space-xs);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.01em;
 }
 
 .formSubheading {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: var(--muted);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
+}
+
+.activeServiceIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--sage-pale);
+  color: var(--olive);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  margin-bottom: var(--space-md);
 }
 
 /* ── Confirmation ────────────────────────────────────────────────────────── */
 
-.formSection {
-  padding: var(--space-3xl) 0;
-  display: flex;
-  justify-content: center;
-}
-
-.confirmationCard {
-  max-width: 520px;
+.confirmCard {
+  max-width: 540px;
+  margin: var(--space-4xl) auto;
   text-align: center;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-xl);
-  padding: var(--space-3xl);
-  box-shadow: var(--shadow-lg);
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
 }
 
 .confirmIcon {
@@ -343,6 +266,7 @@
   font-size: 1.75rem;
   font-weight: 800;
   margin-bottom: var(--space-sm);
+  color: var(--ink);
 }
 
 .referenceNumber {
@@ -350,7 +274,6 @@
   font-weight: 700;
   color: var(--olive);
   margin-bottom: var(--space-lg);
-  font-variant-numeric: tabular-nums;
 }
 
 .confirmText {

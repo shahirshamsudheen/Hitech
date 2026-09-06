@@ -8,12 +8,11 @@ import {
   Plane,
   FileText,
   Cpu,
-  CheckCircle2,
   Landmark,
   Building2,
   Phone,
-  PhoneCall,
   Smartphone,
+  PhoneCall,
   MapPin,
   Clock,
   ArrowRight,
@@ -112,7 +111,7 @@ export default function Home() {
     description:
       'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Trivandrum district. Specialized BGA chip-level repair since 2016.',
     url: 'https://hitechkallara.com',
-    telephone: ['+919496818237', '+914722960076', '+919447765757'],
+    telephone: ['+914722960076', '+919496818237', '+919447765757'],
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'KG Building, Main Road',
@@ -192,7 +191,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Authorised Partners - Immediately following Modules, matching 5-tile full container width */}
+      {/* Authorised Partners - Immediately following Modules, matching full container width */}
       <section className={styles.partners} aria-label="Authorised partners">
         <div className={styles.partnersInner}>
           <div className={styles.partnersHeader}>
@@ -215,7 +214,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Specialized BGA Chip-Level Motherboard Repair Spotlight */}
+      {/* Specialized BGA Chip-Level Motherboard Repair Spotlight (Distinct Light Separated Background) */}
       <section className={styles.bgaSpotlight} aria-label="Chip-level motherboard repair">
         <div className={styles.bgaPattern} aria-hidden="true" />
         <div className={styles.bgaInner}>
@@ -237,9 +236,7 @@ export default function Home() {
               <div className={styles.bgaFeatureList}>
                 {BGA_FEATURES.map((feat, idx) => (
                   <div key={idx} className={styles.bgaFeatureItem}>
-                    <div className={styles.bgaFeatureIconWrapper}>
-                      <CheckCircle2 size={18} strokeWidth={2.5} className={styles.bgaFeatureIcon} />
-                    </div>
+                    <div className={styles.bgaFeatureDot} aria-hidden="true" />
                     <div>
                       <h3 className={styles.bgaFeatureTitle}>{feat.title}</h3>
                       <p className={styles.bgaFeatureDesc}>{feat.desc}</p>
@@ -266,7 +263,6 @@ export default function Home() {
 
             <div className={styles.bgaVisualWrapper}>
               <div className={styles.bgaImageCard}>
-                <div className={styles.bgaImageOverlay} />
                 <Image
                   src="/images/bga-chip-repair.jpg"
                   alt="Specialized BGA Chip Level Repair Laboratory at Hitech Kallara"
@@ -288,7 +284,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Highlighted & Impressive Trusted by Section */}
+      {/* Highlighted & Impressive Trusted by Section (Clean, without tick marks) */}
       <section className={styles.trust} aria-label="Trusted by">
         <div className={styles.trustInner}>
           <div className={styles.trustHeader}>
@@ -310,7 +306,6 @@ export default function Home() {
               <div className={styles.trustNames}>
                 {GOV_CUSTOMERS.map((name) => (
                   <div key={name} className={styles.trustBadge}>
-                    <CheckCircle2 size={14} strokeWidth={2.5} className={styles.trustCheckIcon} />
                     <span>{name}</span>
                   </div>
                 ))}
@@ -331,7 +326,6 @@ export default function Home() {
               <div className={styles.trustNames}>
                 {BIZ_CUSTOMERS.map((name) => (
                   <div key={name} className={styles.trustBadge}>
-                    <CheckCircle2 size={14} strokeWidth={2.5} className={styles.trustCheckIcon} />
                     <span>{name}</span>
                   </div>
                 ))}
@@ -364,7 +358,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Styled Location & Contact Section */}
+      {/* Styled Location & Contact Section (Landline First, Elegant Icons) */}
       <section className={styles.location} aria-label="Location and contact">
         <div className={styles.locationInner}>
           <div className={styles.locationGrid}>
@@ -392,47 +386,38 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Styled Phone Directory Cards */}
+              {/* Styled Phone Directory Cards (Landline First, No Badges, Elegant Icons) */}
               <div className={styles.phonesContainer}>
-                {/* Tel 1 */}
-                <a href="tel:+919496818237" className={styles.phoneCard}>
-                  <div className={styles.phoneIconBox}>
-                    <Smartphone size={20} strokeWidth={2} />
-                  </div>
-                  <div className={styles.phoneCardContent}>
-                    <div className={styles.phoneLabelRow}>
-                      <span className={styles.phoneBadgePrimary}>Tel 1</span>
-                      <span className={styles.phoneRole}>Primary &amp; WhatsApp</span>
-                    </div>
-                    <span className={styles.phoneNumber}>+91 9496 818237</span>
-                  </div>
-                </a>
-
-                {/* Landphone */}
+                {/* Landline */}
                 <a href="tel:+914722960076" className={styles.phoneCard}>
                   <div className={styles.phoneIconBox}>
                     <Phone size={20} strokeWidth={2} />
                   </div>
                   <div className={styles.phoneCardContent}>
-                    <div className={styles.phoneLabelRow}>
-                      <span className={styles.phoneBadgeSecondary}>Landphone</span>
-                      <span className={styles.phoneRole}>Office Landline</span>
-                    </div>
                     <span className={styles.phoneNumber}>+91 472 296007</span>
+                    <span className={styles.phoneRole}>Office Landline</span>
                   </div>
                 </a>
 
-                {/* Tel 2 */}
+                {/* Mobile 1 */}
+                <a href="tel:+919496818237" className={styles.phoneCard}>
+                  <div className={styles.phoneIconBox}>
+                    <Smartphone size={20} strokeWidth={2} />
+                  </div>
+                  <div className={styles.phoneCardContent}>
+                    <span className={styles.phoneNumber}>+91 9496 818237</span>
+                    <span className={styles.phoneRole}>Primary &amp; WhatsApp</span>
+                  </div>
+                </a>
+
+                {/* Mobile 2 */}
                 <a href="tel:+919447765757" className={styles.phoneCard}>
                   <div className={styles.phoneIconBox}>
                     <PhoneCall size={20} strokeWidth={2} />
                   </div>
                   <div className={styles.phoneCardContent}>
-                    <div className={styles.phoneLabelRow}>
-                      <span className={styles.phoneBadgeNeutral}>Tel 2</span>
-                      <span className={styles.phoneRole}>Direct Helpline</span>
-                    </div>
                     <span className={styles.phoneNumber}>+91 9447 765757</span>
+                    <span className={styles.phoneRole}>Direct Helpline</span>
                   </div>
                 </a>
               </div>
@@ -440,7 +425,7 @@ export default function Home() {
               {/* Working Hours */}
               <div className={styles.hoursBox}>
                 <Clock size={16} className={styles.hoursIcon} />
-                <span>Monday – Saturday · Hours to be confirmed</span>
+                <span>Monday – Saturday · 9:00 AM – 7:30 PM</span>
               </div>
             </div>
 

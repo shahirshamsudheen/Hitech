@@ -1,85 +1,129 @@
-/* ── Shop Page ────────────────────────────────────────────────────────────── */
+/* ── Shop Page — Top Split Layout ─────────────────────────────────────────── */
 
-.shopPage { }
-
-.hero {
-  position: relative;
-  padding: var(--space-3xl) 0;
-  background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%);
-  overflow: hidden;
+.shopPage {
+  padding: var(--space-2xl) 0 var(--space-4xl);
+  background-color: var(--paper);
+  min-height: 80vh;
 }
 
-.heroPattern {
-  position: absolute;
-  inset: 0;
-  background-image: url('/brand/HITECH-circuit-deep-air.svg');
-  background-size: 800px;
-  background-repeat: repeat;
-  opacity: 0.06;
-  pointer-events: none;
-}
-
-.heroInner {
-  position: relative;
-  z-index: 1;
+.splitContainer {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-md);
 }
 
 @media (min-width: 768px) {
-  .heroInner { padding: 0 var(--space-xl); }
+  .splitContainer {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.splitGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+  margin-bottom: var(--space-3xl);
+}
+
+@media (min-width: 1024px) {
+  .splitGrid {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: var(--space-3xl);
+  }
+}
+
+/* ── Left Column: Content, Brand Badges & Category Filter ─────────────────── */
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.badgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--sage-pale);
+  color: var(--olive);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-md);
+  width: fit-content;
 }
 
 .heading {
-  font-size: clamp(2rem, 5vw, 3.25rem);
-  color: var(--surface);
-  margin-bottom: var(--space-lg);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.02em;
 }
 
 .intro {
   font-size: 1.0625rem;
-  color: var(--sage);
-  max-width: 60ch;
+  color: var(--ink-2);
   line-height: 1.7;
+  margin-bottom: var(--space-xl);
+  max-width: 54ch;
 }
 
-/* ── Category filter ─────────────────────────────────────────────────────── */
+.partnerBadgesRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
 
-.categoryFilter {
-  padding: var(--space-lg) 0;
+.partnerMiniCard {
   background: var(--surface);
-  border-bottom: 1px solid var(--rule);
-  position: sticky;
-  top: 68px;
-  z-index: 50;
+  border-radius: 14px;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.partnerMiniCard img {
+  width: 100%;
+  height: auto;
+  max-height: 38px;
+  object-fit: contain;
+}
+
+.sectionSubhead {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: var(--space-sm);
 }
 
 .categoryFilterInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-@media (min-width: 768px) {
-  .categoryFilterInner { padding: 0 var(--space-xl); }
+  gap: 0.5rem;
 }
 
 .categoryBtn {
-  padding: 0.6rem 1.2rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: var(--radius-pill);
-  background: var(--paper);
-  font-size: 0.875rem;
-  font-weight: 500;
+  background: var(--surface);
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: var(--ink-2);
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .categoryBtn:hover {
@@ -90,24 +134,73 @@
 .categoryBtn.active {
   background: var(--olive);
   color: #FFFFFF;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(46, 71, 59, 0.2);
+  box-shadow: 0 4px 14px rgba(74, 107, 83, 0.25);
 }
 
-/* ── Product grid ────────────────────────────────────────────────────────── */
+/* ── Right Column: Form Starting at the Top ──────────────────────────────── */
 
-.productSection {
-  padding: var(--space-3xl) 0;
+.rightColumn {
+  position: sticky;
+  top: 90px;
 }
 
-.productSectionInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
+.formCard {
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 24px;
+  padding: 2.25rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
 }
 
-@media (min-width: 768px) {
-  .productSectionInner { padding: 0 var(--space-xl); }
+.formCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-sage-air.svg');
+  background-size: 500px;
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.formCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.formHeading {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+.formSubheading {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: var(--space-lg);
+}
+
+/* ── Product Grid Section Below ──────────────────────────────────────────── */
+
+.catalogHeader {
+  margin-bottom: var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.catalogTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.catalogCount {
+  font-size: 0.875rem;
+  color: var(--muted);
 }
 
 .productGrid {
@@ -117,25 +210,32 @@
 }
 
 @media (min-width: 640px) {
-  .productGrid { grid-template-columns: 1fr 1fr; }
+  .productGrid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (min-width: 1024px) {
-  .productGrid { grid-template-columns: repeat(3, 1fr); }
+  .productGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .productCard {
-  background: var(--surface);
-  border: none;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 22px;
   overflow: hidden;
   transition: all var(--transition-base);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .productCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
 }
 
 .productImagePlaceholder {
@@ -147,19 +247,21 @@
   padding: var(--space-lg);
   color: var(--muted);
   font-size: 0.875rem;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .productImagePlaceholder img {
   max-height: 100%;
+  width: auto;
   object-fit: contain;
 }
 
 .productInfo {
-  padding: var(--space-lg);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  flex: 1;
 }
 
 .productBrand {
@@ -171,25 +273,25 @@
 }
 
 .productName {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: var(--ink);
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .productSpecs {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: 0.35rem;
 }
 
 .specTag {
   display: inline-block;
-  padding: 0.1875rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   background: var(--sage-pale);
   border-radius: var(--radius-pill);
   font-size: 0.6875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--olive);
 }
 
@@ -197,6 +299,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-sm);
+  margin-top: 0.25rem;
 }
 
 .productPrice {
@@ -230,8 +333,8 @@
 }
 
 .stockOnOrder {
-  background-color: var(--grape);
-  color: var(--surface);
+  background-color: #F6E6D8;
+  color: #8C4E1E;
 }
 
 .stockOutOfStock {
@@ -241,7 +344,7 @@
 
 .productHighlight {
   font-size: 0.8125rem;
-  color: var(--grape);
+  color: var(--olive);
   font-weight: 600;
 }
 
@@ -254,7 +357,7 @@
 .productActions {
   display: flex;
   gap: var(--space-sm);
-  margin-top: var(--space-sm);
+  margin-top: auto;
 }
 
 .emptyState {
@@ -263,5 +366,45 @@
   color: var(--muted);
   background: var(--surface);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--rule);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* ── Confirmation ────────────────────────────────────────────────────────── */
+
+.confirmCard {
+  max-width: 540px;
+  margin: var(--space-4xl) auto;
+  text-align: center;
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+.confirmIcon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--space-lg);
+  color: var(--olive);
+}
+
+.confirmHeading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+  color: var(--ink);
+}
+
+.referenceNumber {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--olive);
+  margin-bottom: var(--space-lg);
+}
+
+.confirmText {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  margin-bottom: var(--space-xl);
+  line-height: 1.6;
 }

@@ -232,7 +232,7 @@
   transform: translateX(4px);
 }
 
-/* ── Authorised Partners (Matching 5-Tile Full Container Width) ──────────── */
+/* ── Authorised Partners (Matching Full Width Container) ─────────────────── */
 
 .partners {
   padding-top: var(--space-xl);
@@ -309,23 +309,25 @@
   object-fit: contain;
 }
 
-/* ── BGA Chip-Level Motherboard Repair Spotlight ─────────────────────────── */
+/* ── BGA Chip-Level Repair Spotlight (Separated Soft Light Tone) ─────────── */
 
 .bgaSpotlight {
   position: relative;
   padding: var(--space-4xl) 0;
-  background: linear-gradient(145deg, #1C2421 0%, #111715 100%);
-  color: #FFFFFF;
+  background: linear-gradient(145deg, #F2F6F3 0%, #E6EFEA 100%);
+  color: var(--ink);
   overflow: hidden;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .bgaPattern {
   position: absolute;
   inset: 0;
-  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-image: url('/brand/HITECH-circuit-sage-air.svg');
   background-size: 700px;
   background-repeat: repeat;
-  opacity: 0.08;
+  opacity: 0.06;
   pointer-events: none;
 }
 
@@ -361,29 +363,29 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(184, 212, 196, 0.15);
-  border: 1px solid rgba(184, 212, 196, 0.25);
-  color: var(--sage);
+  background: rgba(74, 107, 83, 0.1);
+  border: 1px solid rgba(74, 107, 83, 0.2);
+  color: var(--olive);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
   padding: 0.4rem 0.9rem;
   border-radius: var(--radius-pill);
   margin-bottom: var(--space-md);
-  backdrop-filter: blur(8px);
 }
 
 .bgaHeading {
   font-size: clamp(2rem, 4.5vw, 3rem);
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--ink);
   line-height: 1.15;
   margin-bottom: var(--space-md);
+  letter-spacing: -0.02em;
 }
 
 .bgaLead {
   font-size: 1.0625rem;
-  color: var(--sage);
+  color: var(--ink-2);
   line-height: 1.65;
   margin-bottom: var(--space-xl);
   max-width: 58ch;
@@ -406,47 +408,39 @@
   display: flex;
   gap: 0.875rem;
   align-items: flex-start;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 1.125rem;
-  backdrop-filter: blur(12px);
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
   transition: all var(--transition-fast);
 }
 
 .bgaFeatureItem:hover {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(184, 212, 196, 0.3);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-color: rgba(74, 107, 83, 0.25);
 }
 
-.bgaFeatureIconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: rgba(45, 90, 62, 0.4);
-  color: #72D296;
+.bgaFeatureDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--olive);
   flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.bgaFeatureIcon {
-  color: #72D296;
+  margin-top: 6px;
 }
 
 .bgaFeatureTitle {
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--ink);
   margin-bottom: 0.25rem;
 }
 
 .bgaFeatureDesc {
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--muted);
   line-height: 1.45;
   margin: 0;
 }
@@ -457,18 +451,6 @@
   gap: var(--space-sm);
 }
 
-.bgaActions :global(.btn-secondary) {
-  background: rgba(255, 255, 255, 0.12);
-  color: #FFFFFF !important;
-  border: none !important;
-  backdrop-filter: blur(12px);
-}
-
-.bgaActions :global(.btn-secondary:hover) {
-  background: #FFFFFF;
-  color: var(--deep-ground) !important;
-}
-
 .bgaVisualWrapper {
   position: relative;
 }
@@ -477,8 +459,8 @@
   position: relative;
   border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  background: #000000;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  background: #FFFFFF;
 }
 
 .bgaImage {
@@ -493,22 +475,14 @@
   transform: scale(1.03);
 }
 
-.bgaImageOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
-
 .bgaFloatingBadge {
   position: absolute;
   bottom: 1.25rem;
   left: 1.25rem;
   right: 1.25rem;
   z-index: 2;
-  background: rgba(22, 28, 25, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 18px;
   padding: 0.875rem 1.25rem;
   display: flex;
@@ -516,26 +490,26 @@
   gap: 0.875rem;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .badgeSparkle {
-  color: #72D296;
+  color: var(--olive);
   flex-shrink: 0;
 }
 
 .badgeTitle {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--ink);
 }
 
 .badgeSub {
   font-size: 0.75rem;
-  color: var(--sage);
+  color: var(--muted);
 }
 
-/* ── Trusted by (Elevated & Impressive) ───────────────────────────────────── */
+/* ── Trusted by (Clean & Elevated) ───────────────────────────────────────── */
 
 .trust {
   padding: var(--space-4xl) 0;
@@ -637,8 +611,7 @@
 .trustBadge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.95rem;
+  padding: 0.5rem 1rem;
   background: var(--paper);
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: var(--radius-pill);
@@ -653,11 +626,6 @@
   border-color: var(--olive);
   color: var(--olive);
   transform: translateY(-1px);
-}
-
-.trustCheckIcon {
-  color: var(--olive);
-  flex-shrink: 0;
 }
 
 /* ── WhatsApp CTA ────────────────────────────────────────────────────────── */
@@ -711,7 +679,7 @@
   margin-right: auto;
 }
 
-/* ── Location & Styled Contacts ──────────────────────────────────────────── */
+/* ── Location & Styled Contacts (Landline First) ─────────────────────────── */
 
 .location {
   padding: var(--space-4xl) 0;
@@ -826,8 +794,8 @@
 }
 
 .phoneIconBox {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
   background: var(--sage-pale);
   color: var(--olive);
@@ -857,67 +825,18 @@
   }
 }
 
-.phoneLabelRow {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.15rem;
-}
-
-@media (min-width: 500px) {
-  .phoneLabelRow {
-    margin-bottom: 0;
-  }
-}
-
-.phoneBadgePrimary {
-  display: inline-block;
-  font-size: 0.6875rem;
+.phoneNumber {
+  font-size: 1.125rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: var(--olive);
-  color: #FFFFFF;
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
-}
-
-.phoneBadgeSecondary {
-  display: inline-block;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: #3A6351;
-  color: #FFFFFF;
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
-}
-
-.phoneBadgeNeutral {
-  display: inline-block;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: #5A6D63;
-  color: #FFFFFF;
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
 }
 
 .phoneRole {
   font-size: 0.8125rem;
   color: var(--muted);
   font-weight: 500;
-}
-
-.phoneNumber {
-  font-size: 1.0625rem;
-  font-weight: 700;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.01em;
 }
 
 .hoursBox {
