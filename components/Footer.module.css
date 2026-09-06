@@ -108,6 +108,17 @@
   transition: color var(--transition-fast);
 }
 
+.phoneTag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
 .footerPhone:hover {
   color: var(--olive-bright);
 }

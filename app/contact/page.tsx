@@ -68,12 +68,21 @@ export default function ContactPage() {
               </div>
 
               <div className={styles.contentBlock}>
-                <h2>Phone</h2>
-                <p>
-                  <a href="tel:+919496818237" style={{ color: 'var(--green)', fontWeight: 600 }}>+91 9496 818237</a><br />
-                  <a href="tel:+914722960076" style={{ color: 'var(--green)', fontWeight: 600 }}>+91 472 296007</a><br />
-                  <a href="tel:+919447765757" style={{ color: 'var(--green)', fontWeight: 600 }}>+91 9447 765757</a>
-                </p>
+                <h2>Phone Directory</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', marginTop: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.5rem', background: 'var(--olive)', color: '#fff', borderRadius: '4px' }}>Tel 1</span>
+                    <a href="tel:+919496818237" style={{ color: 'var(--ink)', fontWeight: 600, textDecoration: 'none' }}>+91 9496 818237 <span style={{ fontSize: '0.8125rem', color: 'var(--muted)', fontWeight: 400 }}>(WhatsApp / Primary)</span></a>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.5rem', background: '#3A6351', color: '#fff', borderRadius: '4px' }}>Landline</span>
+                    <a href="tel:+914722960076" style={{ color: 'var(--ink)', fontWeight: 600, textDecoration: 'none' }}>+91 472 296007 <span style={{ fontSize: '0.8125rem', color: 'var(--muted)', fontWeight: 400 }}>(Office)</span></a>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.5rem', background: '#5A6D63', color: '#fff', borderRadius: '4px' }}>Tel 2</span>
+                    <a href="tel:+919447765757" style={{ color: 'var(--ink)', fontWeight: 600, textDecoration: 'none' }}>+91 9447 765757 <span style={{ fontSize: '0.8125rem', color: 'var(--muted)', fontWeight: 400 }}>(Direct Helpline)</span></a>
+                  </div>
+                </div>
               </div>
 
               <div className={styles.contentBlock}>

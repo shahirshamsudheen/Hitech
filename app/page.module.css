@@ -83,10 +83,11 @@
   transform: translateY(-1px);
 }
 
-/* ── Modules ─────────────────────────────────────────────────────────────── */
+/* ── Modules (5 tiles) ───────────────────────────────────────────────────── */
 
 .modules {
-  padding: var(--space-3xl) 0;
+  padding-top: var(--space-3xl);
+  padding-bottom: var(--space-xl);
 }
 
 .modulesInner {
@@ -102,12 +103,13 @@
 }
 
 .sectionLabel {
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.75rem;
-  color: var(--muted);
-  margin-bottom: var(--space-lg);
+  color: var(--olive);
+  margin-bottom: var(--space-md);
+  display: inline-block;
 }
 
 .moduleGrid {
@@ -138,7 +140,7 @@
   padding: 1.75rem;
   text-decoration: none;
   transition: all var(--transition-base);
-  min-height: 190px;
+  min-height: 200px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
@@ -230,71 +232,314 @@
   transform: translateX(4px);
 }
 
-/* ── Stats ───────────────────────────────────────────────────────────────── */
+/* ── Authorised Partners (Matching 5-Tile Full Container Width) ──────────── */
 
-.stats {
-  padding: var(--space-3xl) 0;
-  background-color: var(--paper);
+.partners {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-3xl);
 }
 
-.statsInner {
+.partnersInner {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-md);
 }
 
 @media (min-width: 768px) {
-  .statsInner {
+  .partnersInner {
     padding: 0 var(--space-xl);
   }
 }
 
-.statsGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
+.partnersHeader {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-lg);
 }
 
-@media (min-width: 640px) {
-  .statsGrid {
-    grid-template-columns: repeat(3, 1fr);
+@media (min-width: 768px) {
+  .partnersHeader {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
   }
 }
 
-.statTile {
-  padding: 2rem;
+.partnersSubtitle {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.partnersGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .partnersGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+.partnerCard {
   background: var(--surface);
-  border-radius: 22px;
   border: none;
-  position: relative;
-  overflow: hidden;
+  border-radius: 22px;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: all var(--transition-base);
+  min-height: 140px;
 }
 
-.statTile:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
+.partnerCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
 }
 
-.statValue {
-  font-size: clamp(1.35rem, 3vw, 1.625rem);
+.partnerImage {
+  width: 100%;
+  height: auto;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+/* ── BGA Chip-Level Motherboard Repair Spotlight ─────────────────────────── */
+
+.bgaSpotlight {
+  position: relative;
+  padding: var(--space-4xl) 0;
+  background: linear-gradient(145deg, #1C2421 0%, #111715 100%);
+  color: #FFFFFF;
+  overflow: hidden;
+}
+
+.bgaPattern {
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-size: 700px;
+  background-repeat: repeat;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.bgaInner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .bgaInner {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.bgaGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .bgaGrid {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: var(--space-3xl);
+  }
+}
+
+.bgaPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(184, 212, 196, 0.15);
+  border: 1px solid rgba(184, 212, 196, 0.25);
+  color: var(--sage);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-md);
+  backdrop-filter: blur(8px);
+}
+
+.bgaHeading {
+  font-size: clamp(2rem, 4.5vw, 3rem);
   font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  color: var(--olive);
-  margin-bottom: var(--space-xs);
+  color: #FFFFFF;
+  line-height: 1.15;
+  margin-bottom: var(--space-md);
 }
 
-.statLabel {
+.bgaLead {
+  font-size: 1.0625rem;
+  color: var(--sage);
+  line-height: 1.65;
+  margin-bottom: var(--space-xl);
+  max-width: 58ch;
+}
+
+.bgaFeatureList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+
+@media (min-width: 640px) {
+  .bgaFeatureList {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.bgaFeatureItem {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.125rem;
+  backdrop-filter: blur(12px);
+  transition: all var(--transition-fast);
+}
+
+.bgaFeatureItem:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(184, 212, 196, 0.3);
+  transform: translateY(-2px);
+}
+
+.bgaFeatureIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(45, 90, 62, 0.4);
+  color: #72D296;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.bgaFeatureIcon {
+  color: #72D296;
+}
+
+.bgaFeatureTitle {
   font-size: 0.9375rem;
-  color: var(--muted);
-  line-height: 1.5;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.25rem;
 }
 
-/* ── Trust ───────────────────────────────────────────────────────────────── */
+.bgaFeatureDesc {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.bgaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.bgaActions :global(.btn-secondary) {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF !important;
+  border: none !important;
+  backdrop-filter: blur(12px);
+}
+
+.bgaActions :global(.btn-secondary:hover) {
+  background: #FFFFFF;
+  color: var(--deep-ground) !important;
+}
+
+.bgaVisualWrapper {
+  position: relative;
+}
+
+.bgaImageCard {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: #000000;
+}
+
+.bgaImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bgaImageCard:hover .bgaImage {
+  transform: scale(1.03);
+}
+
+.bgaImageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bgaFloatingBadge {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  z-index: 2;
+  background: rgba(22, 28, 25, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  padding: 0.875rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.badgeSparkle {
+  color: #72D296;
+  flex-shrink: 0;
+}
+
+.badgeTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.badgeSub {
+  font-size: 0.75rem;
+  color: var(--sage);
+}
+
+/* ── Trusted by (Elevated & Impressive) ───────────────────────────────────── */
 
 .trust {
-  padding: var(--space-3xl) 0;
+  padding: var(--space-4xl) 0;
+  background-color: var(--paper);
 }
 
 .trustInner {
@@ -309,107 +554,110 @@
   }
 }
 
+.trustHeader {
+  margin-bottom: var(--space-2xl);
+  text-align: left;
+}
+
+.trustHeading {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
 .trustColumns {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
 @media (min-width: 768px) {
   .trustColumns {
     grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
   }
 }
 
-.trustGroup {
-  margin-bottom: var(--space-md);
+.trustCard {
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 2.25rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
 }
 
-.trustGroupLabel {
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.6875rem;
+.trustCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08);
+}
+
+.trustCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--rule);
+}
+
+.trustIconWrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: var(--sage-pale);
+  color: var(--olive);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.trustCardTitle {
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.2rem;
+}
+
+.trustCardSub {
+  font-size: 0.8125rem;
   color: var(--muted);
-  margin-bottom: var(--space-sm);
+  margin: 0;
 }
 
 .trustNames {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
+  gap: 0.625rem;
 }
 
 .trustBadge {
-  display: inline-block;
-  padding: 0.375rem 0.875rem;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-pill);
-  font-size: 0.8125rem;
-  color: var(--ink-2);
-  font-weight: 500;
-}
-
-/* ── Partners ────────────────────────────────────────────────────────────── */
-
-.partners {
-  padding: var(--space-3xl) 0;
-  background-color: var(--paper);
-}
-
-.partnersInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-  text-align: center;
-}
-
-@media (min-width: 768px) {
-  .partnersInner {
-    padding: 0 var(--space-xl);
-  }
-}
-
-.partnersGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
-  justify-content: center;
-  max-width: 760px;
-  margin: 0 auto;
-}
-
-@media (min-width: 640px) {
-  .partnersGrid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-lg);
-  }
-}
-
-.partnerCard {
-  background: var(--surface);
-  border: none;
-  border-radius: 20px;
-  padding: 1.25rem;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-  transition: all var(--transition-base);
-  aspect-ratio: 1;
+  gap: 0.5rem;
+  padding: 0.5rem 0.95rem;
+  background: var(--paper);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  font-weight: 600;
+  transition: all var(--transition-fast);
 }
 
-.partnerCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+.trustBadge:hover {
+  background: var(--surface);
+  border-color: var(--olive);
+  color: var(--olive);
+  transform: translateY(-1px);
 }
 
-.partnerImage {
-  width: 100%;
-  height: auto;
-  max-height: 100px;
-  object-fit: contain;
+.trustCheckIcon {
+  color: var(--olive);
+  flex-shrink: 0;
 }
 
 /* ── WhatsApp CTA ────────────────────────────────────────────────────────── */
@@ -463,10 +711,10 @@
   margin-right: auto;
 }
 
-/* ── Location ────────────────────────────────────────────────────────────── */
+/* ── Location & Styled Contacts ──────────────────────────────────────────── */
 
 .location {
-  padding: var(--space-3xl) 0;
+  padding: var(--space-4xl) 0;
 }
 
 .locationInner {
@@ -484,66 +732,223 @@
 .locationGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-xl);
+  gap: var(--space-2xl);
+  align-items: start;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .locationGrid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-3xl);
   }
 }
 
-.locationInfo h2 {
-  font-size: 1.5rem;
-  margin-bottom: var(--space-lg);
+.locationHeaderBlock {
+  margin-bottom: var(--space-xl);
 }
 
-.locationAddress {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--ink-2);
-  font-style: normal;
-  margin-bottom: var(--space-lg);
+.locationMainHeading {
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-xs);
 }
 
-.locationPhones {
+.locationSubText {
+  font-size: 0.9375rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Styled Address Card */
+.styledAddressCard {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
+  align-items: flex-start;
+  gap: 1.25rem;
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.5rem;
   margin-bottom: var(--space-lg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-.locationPhoneLink {
+.cardIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--sage-pale);
+  color: var(--olive);
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cardHeading {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+
+.addressText {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  font-style: normal;
+}
+
+/* Phones Directory Container */
+.phonesContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.phoneCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  border-radius: 18px;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  transition: all var(--transition-fast);
+}
+
+.phoneCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+  background: #FFFFFF;
+}
+
+.phoneIconBox {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--sage-pale);
   color: var(--olive);
-  transition: color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
 }
 
-.locationPhoneLink:hover {
-  color: var(--grape);
+.phoneCard:hover .phoneIconBox {
+  background: var(--olive);
+  color: #FFFFFF;
 }
 
-.locationHours {
-  font-size: 0.875rem;
+.phoneCardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 500px) {
+  .phoneCardContent {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.phoneLabelRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+
+@media (min-width: 500px) {
+  .phoneLabelRow {
+    margin-bottom: 0;
+  }
+}
+
+.phoneBadgePrimary {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--olive);
+  color: #FFFFFF;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.phoneBadgeSecondary {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: #3A6351;
+  color: #FFFFFF;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.phoneBadgeNeutral {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: #5A6D63;
+  color: #FFFFFF;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.phoneRole {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.phoneNumber {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.hoursBox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.hoursIcon {
   color: var(--muted);
 }
 
 .mapContainer {
-  border-radius: var(--radius-lg);
+  border-radius: 24px;
   overflow: hidden;
-  border: 1px solid var(--rule);
-  min-height: 300px;
+  border: none;
+  min-height: 420px;
+  height: 100%;
   background-color: var(--sage-pale);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
 }
 
 .mapContainer iframe {
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 420px;
   border: 0;
 }

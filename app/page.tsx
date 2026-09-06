@@ -1,14 +1,31 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import { Wrench, Laptop, ShieldCheck, Plane, FileText } from 'lucide-react';
+import {
+  Wrench,
+  Laptop,
+  ShieldCheck,
+  Plane,
+  FileText,
+  Cpu,
+  CheckCircle2,
+  Landmark,
+  Building2,
+  Phone,
+  PhoneCall,
+  Smartphone,
+  MapPin,
+  Clock,
+  ArrowRight,
+  Sparkles,
+} from 'lucide-react';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'HITECH — Computer Repair, CCTV & Technology Services in Kallara, Trivandrum',
   description:
-    'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Trivandrum district. Board-level repair since 2016. Serving Nedumangad, Kilimanoor, Palode, Pangode and surrounding areas since 2010.',
+    'Specialized BGA chip-level motherboard repair, computer service, CCTV installation, and technology sales in Kallara, Trivandrum district. Board-level repair since 2016.',
 };
 
 const MODULES = [
@@ -44,12 +61,6 @@ const MODULES = [
   },
 ];
 
-const STATS = [
-  { value: 'Since 2010', label: 'Fifteen years in Kallara' },
-  { value: '8 technicians', label: 'Service and installation, not a sales floor' },
-  { value: 'Board-level repair since 2016', label: 'We repair the board instead of replacing it' },
-];
-
 const GOV_CUSTOMERS = [
   'Community Health Centres',
   'Family Health Centres',
@@ -73,6 +84,25 @@ const PARTNERS = [
   { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
 ];
 
+const BGA_FEATURES = [
+  {
+    title: 'Ball Grid Array (BGA) Rework Station',
+    desc: 'Precision infrared & hot-air rework station for safely desoldering, reballing, and re-soldering micro-pitch ICs.',
+  },
+  {
+    title: 'Component-Level Motherboard Diagnostics',
+    desc: 'Deep schematic tracing, short-circuit thermal imaging, and oscilloscopes to pinpoint failed capacitors, MOSFETs, and power controllers.',
+  },
+  {
+    title: 'GPU, CPU & Chipset Micro-Soldering',
+    desc: 'Reviving graphics chips, processor rails, BIOS corruption, and power management units instead of costly full board replacements.',
+  },
+  {
+    title: 'One-of-a-Kind Facility in Trivandrum',
+    desc: 'State-of-the-art micro-soldering and board repair lab right here in Kallara — trusted by clients across Trivandrum district.',
+  },
+];
+
 export default function Home() {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -80,7 +110,7 @@ export default function Home() {
     name: 'Hitech Systems',
     alternateName: 'HITECH',
     description:
-      'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Trivandrum district. Board-level repair since 2016.',
+      'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Trivandrum district. Specialized BGA chip-level repair since 2016.',
     url: 'https://hitechkallara.com',
     telephone: ['+919496818237', '+914722960076', '+919447765757'],
     address: {
@@ -162,62 +192,151 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className={styles.stats} aria-label="Why HITECH">
-        <div className={styles.statsInner}>
-          <p className={styles.sectionLabel}>Why people choose HITECH</p>
-          <div className={styles.statsGrid}>
-            {STATS.map((stat) => (
-              <div key={stat.value} className={styles.statTile}>
-                <div className={styles.statValue}>{stat.value}</div>
-                <div className={styles.statLabel}>{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trusted by */}
-      <section className={styles.trust} aria-label="Trusted by">
-        <div className={styles.trustInner}>
-          <p className={styles.sectionLabel}>Trusted by</p>
-          <div className={styles.trustColumns}>
-            <div className={styles.trustGroup}>
-              <p className={styles.trustGroupLabel}>Government and institutions</p>
-              <div className={styles.trustNames}>
-                {GOV_CUSTOMERS.map((name) => (
-                  <span key={name} className={styles.trustBadge}>{name}</span>
-                ))}
-              </div>
-            </div>
-            <div className={styles.trustGroup}>
-              <p className={styles.trustGroupLabel}>Businesses</p>
-              <div className={styles.trustNames}>
-                {BIZ_CUSTOMERS.map((name) => (
-                  <span key={name} className={styles.trustBadge}>{name}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Partners */}
+      {/* Authorised Partners - Immediately following Modules, matching 5-tile full container width */}
       <section className={styles.partners} aria-label="Authorised partners">
         <div className={styles.partnersInner}>
-          <p className={styles.sectionLabel}>Authorised partners</p>
+          <div className={styles.partnersHeader}>
+            <p className={styles.sectionLabel}>Official Authorised Partners</p>
+            <span className={styles.partnersSubtitle}>Direct manufacturer warranty and genuine sales support</span>
+          </div>
           <div className={styles.partnersGrid}>
             {PARTNERS.map((partner) => (
               <div key={partner.name} className={styles.partnerCard}>
                 <Image
                   src={partner.src}
                   alt={partner.name}
-                  width={140}
-                  height={140}
+                  width={220}
+                  height={120}
                   className={styles.partnerImage}
                 />
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Specialized BGA Chip-Level Motherboard Repair Spotlight */}
+      <section className={styles.bgaSpotlight} aria-label="Chip-level motherboard repair">
+        <div className={styles.bgaPattern} aria-hidden="true" />
+        <div className={styles.bgaInner}>
+          <div className={styles.bgaGrid}>
+            <div className={styles.bgaContent}>
+              <div className={styles.bgaPill}>
+                <Cpu size={16} strokeWidth={2} />
+                <span>Specialized Motherboard Engineering</span>
+              </div>
+              <h2 className={styles.bgaHeading}>
+                Advanced Chip-Level &amp; BGA Rework Laboratory.
+              </h2>
+              <p className={styles.bgaLead}>
+                One of a kind in Trivandrum — we specialize in Ball Grid Array (BGA) rework,
+                micro-soldering, and board-level component diagnosis. Why replace an expensive
+                motherboard when the damaged chip can be precision-repaired?
+              </p>
+
+              <div className={styles.bgaFeatureList}>
+                {BGA_FEATURES.map((feat, idx) => (
+                  <div key={idx} className={styles.bgaFeatureItem}>
+                    <div className={styles.bgaFeatureIconWrapper}>
+                      <CheckCircle2 size={18} strokeWidth={2.5} className={styles.bgaFeatureIcon} />
+                    </div>
+                    <div>
+                      <h3 className={styles.bgaFeatureTitle}>{feat.title}</h3>
+                      <p className={styles.bgaFeatureDesc}>{feat.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.bgaActions}>
+                <Link href="/service" className="btn btn-primary">
+                  <span>Explore Repair Services</span>
+                  <ArrowRight size={18} />
+                </Link>
+                <a
+                  href={buildWhatsAppUrl({ module: 'service' })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary"
+                >
+                  Consult a Technician
+                </a>
+              </div>
+            </div>
+
+            <div className={styles.bgaVisualWrapper}>
+              <div className={styles.bgaImageCard}>
+                <div className={styles.bgaImageOverlay} />
+                <Image
+                  src="/images/bga-chip-repair.jpg"
+                  alt="Specialized BGA Chip Level Repair Laboratory at Hitech Kallara"
+                  width={640}
+                  height={480}
+                  className={styles.bgaImage}
+                  priority
+                />
+                <div className={styles.bgaFloatingBadge}>
+                  <Sparkles size={16} className={styles.badgeSparkle} />
+                  <div>
+                    <div className={styles.badgeTitle}>BGA Micro-Soldering</div>
+                    <div className={styles.badgeSub}>Precision Motherboard Rework</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Highlighted & Impressive Trusted by Section */}
+      <section className={styles.trust} aria-label="Trusted by">
+        <div className={styles.trustInner}>
+          <div className={styles.trustHeader}>
+            <p className={styles.sectionLabel}>Trusted by</p>
+            <h2 className={styles.trustHeading}>Serving institutions and local businesses since 2010.</h2>
+          </div>
+          <div className={styles.trustColumns}>
+            {/* Government & Institutions */}
+            <div className={styles.trustCard}>
+              <div className={styles.trustCardHeader}>
+                <div className={styles.trustIconWrapper}>
+                  <Landmark size={24} strokeWidth={1.75} />
+                </div>
+                <div>
+                  <h3 className={styles.trustCardTitle}>Government &amp; Institutions</h3>
+                  <p className={styles.trustCardSub}>Healthcare centres, offices and educational bodies</p>
+                </div>
+              </div>
+              <div className={styles.trustNames}>
+                {GOV_CUSTOMERS.map((name) => (
+                  <div key={name} className={styles.trustBadge}>
+                    <CheckCircle2 size={14} strokeWidth={2.5} className={styles.trustCheckIcon} />
+                    <span>{name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Businesses */}
+            <div className={styles.trustCard}>
+              <div className={styles.trustCardHeader}>
+                <div className={styles.trustIconWrapper}>
+                  <Building2 size={24} strokeWidth={1.75} />
+                </div>
+                <div>
+                  <h3 className={styles.trustCardTitle}>Commercial Enterprises</h3>
+                  <p className={styles.trustCardSub}>Manufacturers, retail brands and corporate teams</p>
+                </div>
+              </div>
+              <div className={styles.trustNames}>
+                {BIZ_CUSTOMERS.map((name) => (
+                  <div key={name} className={styles.trustBadge}>
+                    <CheckCircle2 size={14} strokeWidth={2.5} className={styles.trustCheckIcon} />
+                    <span>{name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -245,33 +364,87 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Location */}
+      {/* Styled Location & Contact Section */}
       <section className={styles.location} aria-label="Location and contact">
         <div className={styles.locationInner}>
           <div className={styles.locationGrid}>
             <div className={styles.locationInfo}>
-              <h2>Find us in Kallara</h2>
-              <address className={styles.locationAddress}>
-                KG Building, Main Road<br />
-                Kallara P.O, Trivandrum<br />
-                Kerala 695608
-              </address>
-              <div className={styles.locationPhones}>
-                <a href="tel:+919496818237" className={styles.locationPhoneLink}>
-                  +91 9496 818237
+              <div className={styles.locationHeaderBlock}>
+                <p className={styles.sectionLabel}>Visit &amp; Contact</p>
+                <h2 className={styles.locationMainHeading}>Find us in Kallara</h2>
+                <p className={styles.locationSubText}>
+                  Conveniently located at Main Road, Kallara with direct service counters and dedicated technical lab.
+                </p>
+              </div>
+
+              {/* Styled Address Card */}
+              <div className={styles.styledAddressCard}>
+                <div className={styles.cardIconBox}>
+                  <MapPin size={22} strokeWidth={2} />
+                </div>
+                <div>
+                  <h3 className={styles.cardHeading}>Office &amp; Service Centre</h3>
+                  <address className={styles.addressText}>
+                    KG Building, Main Road<br />
+                    Kallara P.O, Trivandrum<br />
+                    Kerala 695608
+                  </address>
+                </div>
+              </div>
+
+              {/* Styled Phone Directory Cards */}
+              <div className={styles.phonesContainer}>
+                {/* Tel 1 */}
+                <a href="tel:+919496818237" className={styles.phoneCard}>
+                  <div className={styles.phoneIconBox}>
+                    <Smartphone size={20} strokeWidth={2} />
+                  </div>
+                  <div className={styles.phoneCardContent}>
+                    <div className={styles.phoneLabelRow}>
+                      <span className={styles.phoneBadgePrimary}>Tel 1</span>
+                      <span className={styles.phoneRole}>Primary &amp; WhatsApp</span>
+                    </div>
+                    <span className={styles.phoneNumber}>+91 9496 818237</span>
+                  </div>
                 </a>
-                <a href="tel:+914722960076" className={styles.locationPhoneLink}>
-                  +91 472 296007
+
+                {/* Landphone */}
+                <a href="tel:+914722960076" className={styles.phoneCard}>
+                  <div className={styles.phoneIconBox}>
+                    <Phone size={20} strokeWidth={2} />
+                  </div>
+                  <div className={styles.phoneCardContent}>
+                    <div className={styles.phoneLabelRow}>
+                      <span className={styles.phoneBadgeSecondary}>Landphone</span>
+                      <span className={styles.phoneRole}>Office Landline</span>
+                    </div>
+                    <span className={styles.phoneNumber}>+91 472 296007</span>
+                  </div>
                 </a>
-                <a href="tel:+919447765757" className={styles.locationPhoneLink}>
-                  +91 9447 765757
+
+                {/* Tel 2 */}
+                <a href="tel:+919447765757" className={styles.phoneCard}>
+                  <div className={styles.phoneIconBox}>
+                    <PhoneCall size={20} strokeWidth={2} />
+                  </div>
+                  <div className={styles.phoneCardContent}>
+                    <div className={styles.phoneLabelRow}>
+                      <span className={styles.phoneBadgeNeutral}>Tel 2</span>
+                      <span className={styles.phoneRole}>Direct Helpline</span>
+                    </div>
+                    <span className={styles.phoneNumber}>+91 9447 765757</span>
+                  </div>
                 </a>
               </div>
-              <p className={styles.locationHours}>
-                {/* TO CONFIRM: Opening hours */}
-                Monday – Saturday · Hours to be confirmed
-              </p>
+
+              {/* Working Hours */}
+              <div className={styles.hoursBox}>
+                <Clock size={16} className={styles.hoursIcon} />
+                <span>Monday – Saturday · Hours to be confirmed</span>
+              </div>
             </div>
+
+            {/* Interactive Map */}
             <div className={styles.mapContainer}>
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.5!2d77.023!3d8.654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMzknMTQuNCJOIDc3wrAwMScyMy41IkU!5e0!3m2!1sen!2sin!4v1"

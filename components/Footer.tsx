@@ -38,13 +38,16 @@ export default function Footer() {
               </address>
               <div className={styles.phoneList}>
                 <a href="tel:+919496818237" className={styles.footerPhone}>
-                  +91 9496 818237
+                  <span className={styles.phoneTag}>Tel 1</span>
+                  <span>+91 9496 818237</span>
                 </a>
                 <a href="tel:+914722960076" className={styles.footerPhone}>
-                  +91 472 296007
+                  <span className={styles.phoneTag}>Landline</span>
+                  <span>+91 472 296007</span>
                 </a>
                 <a href="tel:+919447765757" className={styles.footerPhone}>
-                  +91 9447 765757
+                  <span className={styles.phoneTag}>Tel 2</span>
+                  <span>+91 9447 765757</span>
                 </a>
               </div>
             </div>
