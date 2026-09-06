@@ -2,13 +2,14 @@
 
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Video, ShieldCheck } from 'lucide-react';
 import { generateReference } from '@/lib/referenceGenerator';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 const SERVICES = [
-  { key: 'cctv', icon: '📹', heading: 'CCTV Supply & Installation', line: 'Dome, bullet, IP and PTZ cameras. DVR/NVR systems, remote viewing setup, and retention planning. For shops, offices, factories, schools and public buildings.' },
-  { key: 'other', icon: '🔐', heading: 'Other Security Solutions', line: 'Access control, biometric attendance, video door phones, intercom systems, networking, structured cabling, and repairs to existing systems.' },
+  { key: 'cctv', icon: Video, heading: 'CCTV Supply & Installation', line: 'Dome, bullet, IP and PTZ cameras. DVR/NVR systems, remote viewing setup, and retention planning. For shops, offices, factories, schools and public buildings.' },
+  { key: 'other', icon: ShieldCheck, heading: 'Other Security Solutions', line: 'Access control, biometric attendance, video door phones, intercom systems, networking, structured cabling, and repairs to existing systems.' },
 ];
 
 function SecurityContent() {
@@ -76,13 +77,18 @@ function SecurityContent() {
       {/* Service cards */}
       <section className={styles.serviceCards}>
         <div className={styles.serviceCardsInner}>
-          {SERVICES.map(s => (
-            <button key={s.key} className={`${styles.serviceCard} ${selectedService === s.key ? styles.serviceCardActive : ''}`} onClick={() => setSelectedService(s.key)}>
-              <span className={styles.serviceIcon}>{s.icon}</span>
-              <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
-              <p className={styles.serviceCardLine}>{s.line}</p>
-            </button>
-          ))}
+          {SERVICES.map(s => {
+            const Icon = s.icon;
+            return (
+              <button key={s.key} className={`${styles.serviceCard} ${selectedService === s.key ? styles.serviceCardActive : ''}`} onClick={() => setSelectedService(s.key)}>
+                <div className={styles.serviceIconWrapper}>
+                  <Icon size={24} strokeWidth={1.75} aria-hidden="true" />
+                </div>
+                <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
+                <p className={styles.serviceCardLine}>{s.line}</p>
+              </button>
+            );
+          })}
         </div>
       </section>
 
@@ -93,7 +99,9 @@ function SecurityContent() {
             <div className={styles.infoPanelSticky}>
               {activeService ? (
                 <>
-                  <span className={styles.infoPanelIcon}>{activeService.icon}</span>
+                  <div className={styles.infoPanelIconWrapper}>
+                    <activeService.icon size={32} strokeWidth={1.75} aria-hidden="true" />
+                  </div>
                   <h2 className={styles.infoPanelHeading}>{activeService.heading}</h2>
                   <p className={styles.infoPanelText}>{activeService.line}</p>
                 </>

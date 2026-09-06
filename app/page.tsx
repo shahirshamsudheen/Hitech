@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { Wrench, Laptop, ShieldCheck, Plane, FileText } from 'lucide-react';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
@@ -14,31 +15,31 @@ const MODULES = [
     href: '/service',
     heading: 'Services',
     line: 'Computers, printers and board-level repair. Bring it in or we come to you.',
-    icon: '🔧',
+    icon: Wrench,
   },
   {
     href: '/technology',
     heading: 'Shop',
     line: 'Laptops, desktops, printers and accessories. Bought here, fixed here.',
-    icon: '💻',
+    icon: Laptop,
   },
   {
     href: '/security',
     heading: 'Security',
     line: 'CCTV, access control, networking and cabling. Installed and maintained.',
-    icon: '🔒',
+    icon: ShieldCheck,
   },
   {
     href: '/travel',
     heading: 'Travel',
     line: 'Tickets, visas and passports, as an Akbar Travels partner.',
-    icon: '✈️',
+    icon: Plane,
   },
   {
     href: '/online-services',
     heading: 'eGov',
     line: 'Government and online applications, payments and certificates.',
-    icon: '📋',
+    icon: FileText,
   },
 ];
 
@@ -137,20 +138,25 @@ export default function Home() {
         <div className={styles.modulesInner}>
           <p className={styles.sectionLabel}>What do you need?</p>
           <div className={styles.moduleGrid}>
-            {MODULES.map((mod) => (
-              <Link key={mod.href} href={mod.href} className={styles.moduleCard}>
-                <div className={styles.moduleCardContent}>
-                  <span className={styles.moduleIcon} aria-hidden="true">{mod.icon}</span>
-                  <h2 className={styles.moduleCardHeading}>{mod.heading}</h2>
-                  <p className={styles.moduleCardLine}>{mod.line}</p>
-                </div>
-                <div className={styles.moduleCardChevron}>
-                  <svg className={styles.chevronIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
-                </div>
-              </Link>
-            ))}
+            {MODULES.map((mod) => {
+              const Icon = mod.icon;
+              return (
+                <Link key={mod.href} href={mod.href} className={styles.moduleCard}>
+                  <div className={styles.moduleCardContent}>
+                    <div className={styles.moduleIconWrapper}>
+                      <Icon className={styles.moduleIconSvg} size={28} strokeWidth={1.75} aria-hidden="true" />
+                    </div>
+                    <h2 className={styles.moduleCardHeading}>{mod.heading}</h2>
+                    <p className={styles.moduleCardLine}>{mod.line}</p>
+                  </div>
+                  <div className={styles.moduleCardChevron}>
+                    <svg className={styles.chevronIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

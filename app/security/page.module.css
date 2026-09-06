@@ -46,17 +46,74 @@
 @media (min-width: 768px) { .serviceCardsInner { padding: 0 var(--space-xl); } }
 
 .serviceCard {
-  display: flex; flex-direction: column; align-items: flex-start; text-align: left;
-  background: var(--surface); border: 1.5px solid var(--rule); border-radius: var(--radius-lg);
-  padding: var(--space-xl); cursor: pointer; transition: all var(--transition-base);
-  position: relative; overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  background: var(--surface);
+  border: none;
+  border-radius: 20px;
+  padding: var(--space-xl);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
-.serviceCard:hover { border-color: var(--sage); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.serviceCardActive { border-color: var(--olive); background: var(--sage-pale); box-shadow: var(--shadow-sm); }
-.serviceIcon { font-size: 2rem; margin-bottom: var(--space-sm); }
-.serviceCardHeading { font-size: 1.125rem; font-weight: 700; color: var(--ink); margin-bottom: var(--space-sm); }
-.serviceCardLine { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+.serviceCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.serviceCardActive {
+  background: var(--sage-pale);
+  box-shadow: 0 6px 20px rgba(46, 71, 59, 0.12);
+}
+
+.serviceIconWrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--sage-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  color: var(--olive);
+  transition: all var(--transition-fast);
+}
+
+.serviceCard:hover .serviceIconWrapper,
+.serviceCardActive .serviceIconWrapper {
+  background: var(--olive);
+  color: #FFFFFF;
+}
+
+.infoPanelIconWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--sage-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  color: var(--olive);
+}
+
+.serviceCardHeading {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--space-sm);
+}
+
+.serviceCardLine {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
 
 /* ── Split layout ────────────────────────────────────────────────────────── */
 

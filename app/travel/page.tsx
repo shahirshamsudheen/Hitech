@@ -2,24 +2,25 @@
 
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Plane, Globe, Compass, HeartPulse, Map, Hotel, BookOpen } from 'lucide-react';
 import { generateReference } from '@/lib/referenceGenerator';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 const TRAVEL_SERVICES = [
-  { key: 'air-ticketing', icon: '✈️', heading: 'Air Ticketing', line: 'Domestic and international flights. Best fares from all major airlines.' },
-  { key: 'visa', icon: '🛂', heading: 'Visa Process', line: 'GCC countries, Schengen (all EU), USA, Australia, and others. Complete documentation support.' },
-  { key: 'visa-gcc', icon: '🛂', heading: 'Visa — GCC Countries', line: 'UAE, Saudi Arabia, Qatar, Oman, Bahrain, Kuwait. Employment, visit, and tourist visas.' },
-  { key: 'visa-schengen', icon: '🇪🇺', heading: 'Visa — Schengen (All EU)', line: 'Tourist, business, and student visas for all EU member countries.' },
-  { key: 'visa-usa', icon: '🇺🇸', heading: 'Visa — USA', line: 'B1/B2 tourist and business visas. DS-160 form assistance and interview preparation.' },
-  { key: 'visa-australia', icon: '🇦🇺', heading: 'Visa — Australia', line: 'Tourist, business, and student visas. Full documentation support.' },
-  { key: 'visa-other', icon: '🌍', heading: 'Visa — Other Countries', line: 'Any destination not listed. We handle documentation for most countries.' },
-  { key: 'medical', icon: '🏥', heading: 'Foreign Medical Appointments', line: 'Appointment booking and travel arrangements for medical treatment abroad.' },
-  { key: 'tours', icon: '🗺️', heading: 'Customized Tour Packages', line: 'Tailored itineraries for individuals, families, and groups.' },
-  { key: 'tour-dubai', icon: '🏙️', heading: 'Tour — Dubai & Abu Dhabi', line: 'City tours, desert safari, attractions, shopping, and hotel packages.' },
-  { key: 'tour-europe', icon: '🏰', heading: 'Tour — Europe Packages', line: 'Multi-country European tours with flights, hotels, and guided experiences.' },
-  { key: 'hotel', icon: '🏨', heading: 'Hotel Booking', line: 'Domestic and international hotel reservations at competitive rates.' },
-  { key: 'passport', icon: '📘', heading: 'Passport Application', line: 'New passport, renewal, and tatkal applications. Form filling and documentation.' },
+  { key: 'air-ticketing', icon: Plane, heading: 'Air Ticketing', line: 'Domestic and international flights. Best fares from all major airlines.' },
+  { key: 'visa', icon: Globe, heading: 'Visa Process', line: 'GCC countries, Schengen (all EU), USA, Australia, and others. Complete documentation support.' },
+  { key: 'visa-gcc', icon: Globe, heading: 'Visa — GCC Countries', line: 'UAE, Saudi Arabia, Qatar, Oman, Bahrain, Kuwait. Employment, visit, and tourist visas.' },
+  { key: 'visa-schengen', icon: Globe, heading: 'Visa — Schengen (All EU)', line: 'Tourist, business, and student visas for all EU member countries.' },
+  { key: 'visa-usa', icon: Globe, heading: 'Visa — USA', line: 'B1/B2 tourist and business visas. DS-160 form assistance and interview preparation.' },
+  { key: 'visa-australia', icon: Globe, heading: 'Visa — Australia', line: 'Tourist, business, and student visas. Full documentation support.' },
+  { key: 'visa-other', icon: Globe, heading: 'Visa — Other Countries', line: 'Any destination not listed. We handle documentation for most countries.' },
+  { key: 'medical', icon: HeartPulse, heading: 'Foreign Medical Appointments', line: 'Appointment booking and travel arrangements for medical treatment abroad.' },
+  { key: 'tours', icon: Compass, heading: 'Customized Tour Packages', line: 'Tailored itineraries for individuals, families, and groups.' },
+  { key: 'tour-dubai', icon: Compass, heading: 'Tour — Dubai & Abu Dhabi', line: 'City tours, desert safari, attractions, shopping, and hotel packages.' },
+  { key: 'tour-europe', icon: Compass, heading: 'Tour — Europe Packages', line: 'Multi-country European tours with flights, hotels, and guided experiences.' },
+  { key: 'hotel', icon: Hotel, heading: 'Hotel Booking', line: 'Domestic and international hotel reservations at competitive rates.' },
+  { key: 'passport', icon: BookOpen, heading: 'Passport Application', line: 'New passport, renewal, and tatkal applications. Form filling and documentation.' },
 ];
 
 function TravelContent() {
@@ -84,13 +85,18 @@ function TravelContent() {
         <div className={styles.serviceCardsInner}>
           <p className={styles.servicesLabel}>Select a service</p>
           <div className={styles.servicesGrid}>
-            {TRAVEL_SERVICES.map(s => (
-              <button key={s.key} className={`${styles.serviceCard} ${selectedService === s.key ? styles.serviceCardActive : ''}`} onClick={() => { setSelectedService(s.key); updateField('service', s.heading); }}>
-                <span className={styles.serviceIcon}>{s.icon}</span>
-                <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
-                <p className={styles.serviceCardLine}>{s.line}</p>
-              </button>
-            ))}
+            {TRAVEL_SERVICES.map(s => {
+              const Icon = s.icon;
+              return (
+                <button key={s.key} className={`${styles.serviceCard} ${selectedService === s.key ? styles.serviceCardActive : ''}`} onClick={() => { setSelectedService(s.key); updateField('service', s.heading); }}>
+                  <div className={styles.serviceIconWrapper}>
+                    <Icon size={24} strokeWidth={1.75} aria-hidden="true" />
+                  </div>
+                  <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
+                  <p className={styles.serviceCardLine}>{s.line}</p>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -102,7 +108,9 @@ function TravelContent() {
             <div className={styles.infoPanelSticky}>
               {activeService ? (
                 <>
-                  <span className={styles.infoPanelIcon}>{activeService.icon}</span>
+                  <div className={styles.infoPanelIconWrapper}>
+                    <activeService.icon size={32} strokeWidth={1.75} aria-hidden="true" />
+                  </div>
                   <h2 className={styles.infoPanelHeading}>{activeService.heading}</h2>
                   <p className={styles.infoPanelText}>{activeService.line}</p>
                 </>

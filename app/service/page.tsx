@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useCallback, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { FileCheck, Terminal, Laptop, Cpu, Printer, HardDrive, Building2, Wrench } from 'lucide-react';
 import { generateReference } from '@/lib/referenceGenerator';
 import { buildServiceWhatsAppUrl, buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
@@ -9,14 +10,14 @@ import styles from './page.module.css';
 /* ── Service definitions ───────────────────────────────────────────────── */
 
 const SERVICES = [
-  { key: 'amc', icon: '📋', heading: 'Annual Maintenance Contracts', line: 'Scheduled maintenance for businesses and offices. Regular check-ups, preventive care, and priority response when something breaks.' },
-  { key: 'os-software', icon: '⚙️', heading: 'Operating System & Software', line: 'Installation, updates, troubleshooting, virus removal, and software configuration for all platforms.' },
-  { key: 'laptop-desktop', icon: '💻', heading: 'Laptop / Desktop Repair', line: 'Hardware and software issues across all brands. Screen replacement, keyboard repair, battery issues, and more.' },
-  { key: 'motherboard', icon: '🔬', heading: 'Motherboard & Chip-Level Repair', line: 'BGA rework, component-level diagnostics. We repair the board instead of replacing it — saving you a significant cost.' },
-  { key: 'printer', icon: '🖨️', heading: 'Printer Service', line: 'Laser, inkjet, dot matrix — all brands. Drum replacement, paper feed issues, print quality problems, and network printing setup.' },
-  { key: 'data-recovery', icon: '💾', heading: 'Data Recovery', line: 'Recovery from failed hard drives, SSDs, USB drives, and memory cards. Logical and physical recovery options.' },
-  { key: 'on-site', icon: '🏢', heading: 'On-Site Service', line: 'We come to your location. For businesses and offices across Trivandrum district. Same-day availability for AMC customers.' },
-  { key: 'other', icon: '🔧', heading: 'Other Electronics', line: 'UPS, stabilizers, networking equipment, projectors, and other electronic devices. Ask us — we probably fix it.' },
+  { key: 'amc', icon: FileCheck, heading: 'Annual Maintenance Contracts', line: 'Scheduled maintenance for businesses and offices. Regular check-ups, preventive care, and priority response when something breaks.' },
+  { key: 'os-software', icon: Terminal, heading: 'Operating System & Software', line: 'Installation, updates, troubleshooting, virus removal, and software configuration for all platforms.' },
+  { key: 'laptop-desktop', icon: Laptop, heading: 'Laptop / Desktop Repair', line: 'Hardware and software issues across all brands. Screen replacement, keyboard repair, battery issues, and more.' },
+  { key: 'motherboard', icon: Cpu, heading: 'Motherboard & Chip-Level Repair', line: 'BGA rework, component-level diagnostics. We repair the board instead of replacing it — saving you a significant cost.' },
+  { key: 'printer', icon: Printer, heading: 'Printer Service', line: 'Laser, inkjet, dot matrix — all brands. Drum replacement, paper feed issues, print quality problems, and network printing setup.' },
+  { key: 'data-recovery', icon: HardDrive, heading: 'Data Recovery', line: 'Recovery from failed hard drives, SSDs, USB drives, and memory cards. Logical and physical recovery options.' },
+  { key: 'on-site', icon: Building2, heading: 'On-Site Service', line: 'We come to your location. For businesses and offices across Trivandrum district. Same-day availability for AMC customers.' },
+  { key: 'other', icon: Wrench, heading: 'Other Electronics', line: 'UPS, stabilizers, networking equipment, projectors, and other electronic devices. Ask us — we probably fix it.' },
 ];
 
 const AREA_SUGGESTIONS = [
@@ -123,17 +124,22 @@ function ServiceContent() {
         <div className={styles.servicesInner}>
           <p className={styles.servicesLabel}>Select a service</p>
           <div className={styles.servicesGrid}>
-            {SERVICES.map(s => (
-              <button
-                key={s.key}
-                className={`${styles.serviceCard} ${selectedService === s.key ? styles.serviceCardActive : ''}`}
-                onClick={() => selectService(s.key)}
-              >
-                <span className={styles.serviceIcon} aria-hidden="true">{s.icon}</span>
-                <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
-                <p className={styles.serviceCardLine}>{s.line}</p>
-              </button>
-            ))}
+            {SERVICES.map(s => {
+              const Icon = s.icon;
+              return (
+                <button
+                  key={s.key}
+                  className={`${styles.serviceCard} ${selectedService === s.key ? styles.serviceCardActive : ''}`}
+                  onClick={() => selectService(s.key)}
+                >
+                  <div className={styles.serviceIconWrapper}>
+                    <Icon size={24} strokeWidth={1.75} className={styles.serviceIconSvg} aria-hidden="true" />
+                  </div>
+                  <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
+                  <p className={styles.serviceCardLine}>{s.line}</p>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -146,7 +152,9 @@ function ServiceContent() {
             <div className={styles.infoPanelSticky}>
               {activeService ? (
                 <>
-                  <span className={styles.infoPanelIcon}>{activeService.icon}</span>
+                  <div className={styles.infoPanelIconWrapper}>
+                    <activeService.icon size={32} strokeWidth={1.75} aria-hidden="true" />
+                  </div>
                   <h2 className={styles.infoPanelHeading}>{activeService.heading}</h2>
                   <p className={styles.infoPanelText}>{activeService.line}</p>
                   <div className={styles.infoPanelDetails}>

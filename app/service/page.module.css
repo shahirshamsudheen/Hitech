@@ -92,13 +92,14 @@
   align-items: flex-start;
   text-align: left;
   background: var(--surface);
-  border: 1.5px solid var(--rule);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
+  border: none;
+  border-radius: 20px;
+  padding: 1.5rem;
   cursor: pointer;
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .serviceCard::before {
@@ -113,9 +114,8 @@
 }
 
 .serviceCard:hover {
-  border-color: var(--sage);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .serviceCard:hover::before {
@@ -123,20 +123,49 @@
 }
 
 .serviceCardActive {
-  border-color: var(--olive);
   background: var(--sage-pale);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 6px 20px rgba(46, 71, 59, 0.12);
 }
 
 .serviceCardActive::before {
   opacity: 0.06;
 }
 
-.serviceIcon {
-  font-size: 1.5rem;
+.serviceIconWrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--sage-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: var(--space-sm);
+  color: var(--olive);
+  transition: all var(--transition-fast);
   position: relative;
   z-index: 1;
+}
+
+.serviceCard:hover .serviceIconWrapper,
+.serviceCardActive .serviceIconWrapper {
+  background: var(--olive);
+  color: #FFFFFF;
+}
+
+.serviceIconSvg {
+  display: block;
+}
+
+.infoPanelIconWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--sage-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  color: var(--olive);
 }
 
 .serviceCardHeading {

@@ -2,18 +2,19 @@
 
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { FileEdit, Fingerprint, Receipt, Zap, Landmark, BadgePercent, FileText } from 'lucide-react';
 import { generateReference } from '@/lib/referenceGenerator';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 const EGOV_SERVICES = [
-  { key: 'psc', icon: '📝', heading: 'PSC Applications', line: 'Kerala Public Service Commission exam registration, one-time verification, and application form filling assistance.' },
-  { key: 'aadhaar', icon: '🆔', heading: 'Aadhaar Support', line: 'New Aadhaar enrollment, address update, mobile number linking, and biometric update appointments.' },
-  { key: 'bills', icon: '💳', heading: 'Online Bill Payments', line: 'KSEB electricity bills, government fees, tax payments, and other utility bill payments.' },
-  { key: 'kseb', icon: '⚡', heading: 'KSEB Bill Payment', line: 'Kerala State Electricity Board bill payment, new connection applications, and load change requests.' },
-  { key: 'gov-fees', icon: '🏛️', heading: 'Government Fees', line: 'Challan payments, license fees, permit fees, registration fees, and other government-related payments.' },
-  { key: 'tax', icon: '📊', heading: 'Tax Payments', line: 'Income tax, property tax, vehicle tax, and professional tax payment assistance and filing.' },
-  { key: 'bills-other', icon: '📄', heading: 'Other Payments', line: 'Water bills, phone bills, insurance premiums, and any other online payment assistance you need.' },
+  { key: 'psc', icon: FileEdit, heading: 'PSC Applications', line: 'Kerala Public Service Commission exam registration, one-time verification, and application form filling assistance.' },
+  { key: 'aadhaar', icon: Fingerprint, heading: 'Aadhaar Support', line: 'New Aadhaar enrollment, address update, mobile number linking, and biometric update appointments.' },
+  { key: 'bills', icon: Receipt, heading: 'Online Bill Payments', line: 'KSEB electricity bills, government fees, tax payments, and other utility bill payments.' },
+  { key: 'kseb', icon: Zap, heading: 'KSEB Bill Payment', line: 'Kerala State Electricity Board bill payment, new connection applications, and load change requests.' },
+  { key: 'gov-fees', icon: Landmark, heading: 'Government Fees', line: 'Challan payments, license fees, permit fees, registration fees, and other government-related payments.' },
+  { key: 'tax', icon: BadgePercent, heading: 'Tax Payments', line: 'Income tax, property tax, vehicle tax, and professional tax payment assistance and filing.' },
+  { key: 'bills-other', icon: FileText, heading: 'Other Payments', line: 'Water bills, phone bills, insurance premiums, and any other online payment assistance you need.' },
 ];
 
 function EGovServicesContent() {
@@ -79,13 +80,18 @@ function EGovServicesContent() {
         <div className={styles.serviceCardsInner}>
           <p className={styles.servicesLabel}>Select a service</p>
           <div className={styles.servicesGrid}>
-            {EGOV_SERVICES.map(s => (
-              <button key={s.key} className={`${styles.serviceCard} ${selectedService === s.key ? styles.serviceCardActive : ''}`} onClick={() => { setSelectedService(s.key); updateField('service', s.heading); }}>
-                <span className={styles.serviceIcon}>{s.icon}</span>
-                <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
-                <p className={styles.serviceCardLine}>{s.line}</p>
-              </button>
-            ))}
+            {EGOV_SERVICES.map(s => {
+              const Icon = s.icon;
+              return (
+                <button key={s.key} className={`${styles.serviceCard} ${selectedService === s.key ? styles.serviceCardActive : ''}`} onClick={() => { setSelectedService(s.key); updateField('service', s.heading); }}>
+                  <div className={styles.serviceIconWrapper}>
+                    <Icon size={24} strokeWidth={1.75} aria-hidden="true" />
+                  </div>
+                  <h3 className={styles.serviceCardHeading}>{s.heading}</h3>
+                  <p className={styles.serviceCardLine}>{s.line}</p>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -97,7 +103,9 @@ function EGovServicesContent() {
             <div className={styles.infoPanelSticky}>
               {activeService ? (
                 <>
-                  <span className={styles.infoPanelIcon}>{activeService.icon}</span>
+                  <div className={styles.infoPanelIconWrapper}>
+                    <activeService.icon size={32} strokeWidth={1.75} aria-hidden="true" />
+                  </div>
                   <h2 className={styles.infoPanelHeading}>{activeService.heading}</h2>
                   <p className={styles.infoPanelText}>{activeService.line}</p>
                 </>
