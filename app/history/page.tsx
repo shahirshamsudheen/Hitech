@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 };
 
 const STATS = [
-  { value: '2010', label: 'Year Established' },
-  { value: '11 Staff', label: '8 Senior Technicians' },
-  { value: 'Since 2016', label: 'Board-Level Lab' },
-  { value: '4 Brands', label: 'Authorised Partners' },
+  { value: '2010', label: 'Established' },
+  { value: '2016', label: 'Board level repair' },
+  { value: '2023', label: 'Chip level repair BGA' },
+  { value: '4', label: 'Authorized partners' },
 ];
 
 const TIMELINE = [

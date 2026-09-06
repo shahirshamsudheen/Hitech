@@ -173,9 +173,92 @@ function ShopContent() {
         </div>
       </section>
 
-      {/* Solutions & Consultation Section (Brand Badges + White Cards on Left, Form on Right) */}
-      <section className={styles.splitSection} aria-label="Hardware solutions and enquiry">
-        <div className={styles.splitContainer}>
+      {/* Main Content Section */}
+      <section className={styles.mainSection} aria-label="Hardware catalog and enquiry">
+        <div className={styles.container}>
+          {/* 1. Curated Product Catalog (First Section) */}
+          <div className={styles.catalogSection}>
+            <div className={styles.catalogHeader}>
+              <div>
+                <h2 className={styles.catalogTitle}>Curated In-Store Catalog</h2>
+              </div>
+              <div className={styles.categoryFilterInner} role="tablist">
+                {CATEGORIES.map(cat => (
+                  <button
+                    key={cat.key}
+                    className={`${styles.categoryBtn} ${category === cat.key ? styles.active : ''}`}
+                    onClick={() => setCategory(cat.key)}
+                    role="tab"
+                    aria-selected={category === cat.key}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {filtered.length > 0 ? (
+              <div className={styles.productGrid} role="tabpanel">
+                {filtered.map(product => (
+                  <article key={product.id} className={styles.productCard}>
+                    <div className={styles.productImagePlaceholder}>
+                      {product.images.length > 0 ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={product.images[0]} alt={`${product.brand} ${product.name}`} />
+                      ) : (
+                        <span>{product.brand} {product.name}</span>
+                      )}
+                    </div>
+                    <div className={styles.productInfo}>
+                      <p className={styles.productBrand}>{product.brand}</p>
+                      <h3 className={styles.productName}>{product.name}</h3>
+                      <div className={styles.productSpecs}>
+                        {product.specs.slice(0, 3).map(spec => (
+                          <span key={spec} className={styles.specTag}>{spec}</span>
+                        ))}
+                      </div>
+                      <div className={styles.productPricing}>
+                        <span className={styles.productPrice}>{formatPrice(product.price)}</span>
+                        {product.mrp > product.price && (
+                          <span className={styles.productMrp}>{formatPrice(product.mrp)}</span>
+                        )}
+                      </div>
+                      <StockPill stock={product.stock} leadTime={product.leadTime} />
+                      {product.highlight && (
+                        <p className={styles.productHighlight}>{product.highlight}</p>
+                      )}
+                      <p className={styles.productPromise}>Official warranty &amp; local service support.</p>
+                      <div className={styles.productActions}>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          style={{ fontSize: '0.8125rem', padding: '0.5rem 1rem', flex: 1 }}
+                          onClick={() => handleProductEnquire(`${product.brand} ${product.name}`)}
+                        >
+                          Enquire Quote
+                        </button>
+                        <a
+                          href={buildProductWhatsAppUrl(product.name, product.brand)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-whatsapp"
+                          style={{ fontSize: '0.8125rem', padding: '0.5rem 0.85rem' }}
+                        >
+                          WhatsApp
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>
+                <p>No products in this category yet. Contact our desk for direct model quotes.</p>
+              </div>
+            )}
+          </div>
+
+          {/* 2. Hardware Solutions & Consultation Form (Below Catalog) */}
           <div className={styles.splitGrid}>
             {/* Left Column: Official Badges & Solution Cards */}
             <div className={styles.leftColumn}>
@@ -314,88 +397,6 @@ function ShopContent() {
                 </button>
               </div>
             </div>
-          </div>
-
-          {/* Product Catalog Section (Secondary, Cleanly Positioned Below Solutions) */}
-          <div className={styles.catalogSection}>
-            <div className={styles.catalogHeader}>
-              <div>
-                <h2 className={styles.catalogTitle}>Curated In-Store Catalog</h2>
-              </div>
-              <div className={styles.categoryFilterInner} role="tablist">
-                {CATEGORIES.map(cat => (
-                  <button
-                    key={cat.key}
-                    className={`${styles.categoryBtn} ${category === cat.key ? styles.active : ''}`}
-                    onClick={() => setCategory(cat.key)}
-                    role="tab"
-                    aria-selected={category === cat.key}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {filtered.length > 0 ? (
-              <div className={styles.productGrid} role="tabpanel">
-                {filtered.map(product => (
-                  <article key={product.id} className={styles.productCard}>
-                    <div className={styles.productImagePlaceholder}>
-                      {product.images.length > 0 ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={product.images[0]} alt={`${product.brand} ${product.name}`} />
-                      ) : (
-                        <span>{product.brand} {product.name}</span>
-                      )}
-                    </div>
-                    <div className={styles.productInfo}>
-                      <p className={styles.productBrand}>{product.brand}</p>
-                      <h3 className={styles.productName}>{product.name}</h3>
-                      <div className={styles.productSpecs}>
-                        {product.specs.slice(0, 3).map(spec => (
-                          <span key={spec} className={styles.specTag}>{spec}</span>
-                        ))}
-                      </div>
-                      <div className={styles.productPricing}>
-                        <span className={styles.productPrice}>{formatPrice(product.price)}</span>
-                        {product.mrp > product.price && (
-                          <span className={styles.productMrp}>{formatPrice(product.mrp)}</span>
-                        )}
-                      </div>
-                      <StockPill stock={product.stock} leadTime={product.leadTime} />
-                      {product.highlight && (
-                        <p className={styles.productHighlight}>{product.highlight}</p>
-                      )}
-                      <p className={styles.productPromise}>Official warranty &amp; local service support.</p>
-                      <div className={styles.productActions}>
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          style={{ fontSize: '0.8125rem', padding: '0.5rem 1rem', flex: 1 }}
-                          onClick={() => handleProductEnquire(`${product.brand} ${product.name}`)}
-                        >
-                          Enquire Quote
-                        </button>
-                        <a
-                          href={buildProductWhatsAppUrl(product.name, product.brand)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-whatsapp"
-                          style={{ fontSize: '0.8125rem', padding: '0.5rem 0.85rem' }}
-                        >
-                          WhatsApp
-                        </a>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <div className={styles.emptyState}>
-                <p>No products in this category yet. Contact our desk for direct model quotes.</p>
-              </div>
-            )}
           </div>
         </div>
       </section>
