@@ -244,17 +244,38 @@ p {
   transform: translateY(-1px);
 }
 
-/* Secondary — outlined olive */
+/* Secondary — outlined / card style on light surfaces */
 .btn-secondary {
-  background-color: transparent;
-  color: var(--olive);
-  border-color: var(--olive);
+  background-color: var(--surface);
+  color: var(--deep-ground);
+  border: 1.5px solid var(--rule);
+  box-shadow: var(--shadow-xs);
 }
 
 .btn-secondary:hover {
-  background-color: var(--olive);
-  color: var(--surface);
+  background-color: var(--sage-pale);
+  color: var(--deep-ground);
+  border-color: var(--sage);
   box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+/* Secondary Light — for dark hero sections */
+.btn-secondary-light,
+.btn-outline-light {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-secondary-light:hover,
+.btn-outline-light:hover {
+  background-color: #FFFFFF;
+  color: var(--deep-ground) !important;
+  border-color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   transform: translateY(-1px);
 }
 

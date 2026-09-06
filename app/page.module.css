@@ -64,15 +64,20 @@
   gap: var(--space-sm);
 }
 
-.heroCtas .btn-secondary {
-  color: var(--surface);
-  border-color: rgba(255, 255, 255, 0.4);
+.heroCtas :global(.btn-secondary) {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #FFFFFF !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.heroCtas .btn-secondary:hover {
-  background-color: var(--surface);
-  color: var(--olive);
-  border-color: var(--surface);
+.heroCtas :global(.btn-secondary:hover) {
+  background-color: #FFFFFF;
+  color: var(--deep-ground) !important;
+  border-color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
 }
 
 /* ── Modules ─────────────────────────────────────────────────────────────── */

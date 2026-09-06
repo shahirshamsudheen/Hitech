@@ -125,7 +125,7 @@ export default function Home() {
             <Link href="/service" className="btn btn-primary">
               Book a repair
             </Link>
-            <Link href="/security" className="btn btn-secondary">
+            <Link href="/security" className="btn btn-secondary-light">
               Request a site visit
             </Link>
           </div>
