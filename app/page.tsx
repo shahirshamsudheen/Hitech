@@ -4,7 +4,7 @@ import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Hitech — Computer Repair, CCTV & Technology Services in Kallara, Trivandrum',
+  title: 'HITECH — Computer Repair, CCTV & Technology Services in Kallara, Trivandrum',
   description:
     'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Trivandrum district. Board-level repair since 2016. Serving Nedumangad, Kilimanoor, Palode, Pangode and surrounding areas since 2010.',
 };
@@ -12,28 +12,33 @@ export const metadata: Metadata = {
 const MODULES = [
   {
     href: '/service',
-    heading: 'Service',
+    heading: 'Services',
     line: 'Computers, printers and board-level repair. Bring it in or we come to you.',
+    icon: '🔧',
   },
   {
     href: '/technology',
-    heading: 'Technology',
+    heading: 'Shop',
     line: 'Laptops, desktops, printers and accessories. Bought here, fixed here.',
+    icon: '💻',
   },
   {
     href: '/security',
     heading: 'Security',
     line: 'CCTV, access control, networking and cabling. Installed and maintained.',
+    icon: '🔒',
   },
   {
     href: '/travel',
     heading: 'Travel',
     line: 'Tickets, visas and passports, as an Akbar Travels partner.',
+    icon: '✈️',
   },
   {
     href: '/online-services',
-    heading: 'Online Services',
+    heading: 'eGov',
     line: 'Government and online applications, payments and certificates.',
+    icon: '📋',
   },
 ];
 
@@ -95,7 +100,7 @@ export default function Home() {
     ],
     foundingDate: '2010-08',
     priceRange: '₹₹',
-    image: 'https://hitechkallara.com/brand/HITECH-wordmark-green.svg',
+    image: 'https://hitechkallara.com/brand/HITECH-logo-colour.svg',
   };
 
   return (
@@ -105,9 +110,11 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* A · Hero */}
+      {/* Hero */}
       <section className={styles.hero}>
+        <div className={styles.heroPattern} aria-hidden="true" />
         <div className={styles.heroInner}>
+          <p className={styles.heroLabel}>Since 2010 · Kallara, Trivandrum</p>
           <h1 className={styles.heroHeading}>We keep it working.</h1>
           <p className={styles.heroIntro}>
             Hitech has repaired, installed and maintained technology in and around
@@ -125,14 +132,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* C · Module selector */}
+      {/* Module selector */}
       <section className={styles.modules} aria-label="Our services">
         <div className={styles.modulesInner}>
           <p className={styles.sectionLabel}>What do you need?</p>
           <div className={styles.moduleGrid}>
             {MODULES.map((mod) => (
               <Link key={mod.href} href={mod.href} className={styles.moduleCard}>
-                <div>
+                <div className={styles.moduleCardContent}>
+                  <span className={styles.moduleIcon} aria-hidden="true">{mod.icon}</span>
                   <h2 className={styles.moduleCardHeading}>{mod.heading}</h2>
                   <p className={styles.moduleCardLine}>{mod.line}</p>
                 </div>
@@ -147,10 +155,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* D · Why people choose Hitech */}
-      <section className={styles.stats} aria-label="Why Hitech">
+      {/* Stats */}
+      <section className={styles.stats} aria-label="Why HITECH">
         <div className={styles.statsInner}>
-          <p className={styles.sectionLabel}>Why people choose Hitech</p>
+          <p className={styles.sectionLabel}>Why people choose HITECH</p>
           <div className={styles.statsGrid}>
             {STATS.map((stat) => (
               <div key={stat.value} className={styles.statTile}>
@@ -162,40 +170,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* E · Trusted by */}
+      {/* Trusted by */}
       <section className={styles.trust} aria-label="Trusted by">
         <div className={styles.trustInner}>
           <p className={styles.sectionLabel}>Trusted by</p>
-          <div className={styles.trustGroup}>
-            <p className={styles.trustGroupLabel}>Government and institutions</p>
-            <p className={styles.trustNames}>
-              {GOV_CUSTOMERS.map((name, i) => (
-                <span key={name}>
-                  {name}
-                  {i < GOV_CUSTOMERS.length - 1 && (
-                    <span className={styles.trustDivider}>·</span>
-                  )}
-                </span>
-              ))}
-            </p>
-          </div>
-          <div className={styles.trustGroup}>
-            <p className={styles.trustGroupLabel}>Businesses</p>
-            <p className={styles.trustNames}>
-              {BIZ_CUSTOMERS.map((name, i) => (
-                <span key={name}>
-                  {name}
-                  {i < BIZ_CUSTOMERS.length - 1 && (
-                    <span className={styles.trustDivider}>·</span>
-                  )}
-                </span>
-              ))}
-            </p>
+          <div className={styles.trustColumns}>
+            <div className={styles.trustGroup}>
+              <p className={styles.trustGroupLabel}>Government and institutions</p>
+              <div className={styles.trustNames}>
+                {GOV_CUSTOMERS.map((name) => (
+                  <span key={name} className={styles.trustBadge}>{name}</span>
+                ))}
+              </div>
+            </div>
+            <div className={styles.trustGroup}>
+              <p className={styles.trustGroupLabel}>Businesses</p>
+              <div className={styles.trustNames}>
+                {BIZ_CUSTOMERS.map((name) => (
+                  <span key={name} className={styles.trustBadge}>{name}</span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* F · Partners */}
+      {/* Partners */}
       <section className={styles.partners} aria-label="Authorised partners">
         <div className={styles.partnersInner}>
           <p className={styles.sectionLabel}>Authorised partners</p>
@@ -209,7 +209,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* G · WhatsApp block */}
+      {/* WhatsApp CTA */}
       <section className={styles.whatsappBlock} aria-label="Quick enquiry">
         <div className={styles.whatsappInner}>
           <h2 className={styles.whatsappHeading}>
@@ -232,7 +232,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* H · Location + hours + map */}
+      {/* Location */}
       <section className={styles.location} aria-label="Location and contact">
         <div className={styles.locationInner}>
           <div className={styles.locationGrid}>
@@ -265,7 +265,7 @@ export default function Home() {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Hitech Systems location on Google Maps"
+                title="HITECH Systems location on Google Maps"
               />
             </div>
           </div>

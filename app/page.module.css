@@ -1,34 +1,61 @@
 /* ── Hero ────────────────────────────────────────────────────────────────── */
 
 .hero {
-  padding: var(--space-3xl) 0;
-  background-color: var(--surface);
-  border-bottom: 1px solid var(--rule);
+  position: relative;
+  padding: var(--space-4xl) 0;
+  background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%);
+  overflow: hidden;
+}
+
+.heroPattern {
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-size: 800px;
+  background-repeat: repeat;
+  opacity: 0.06;
+  pointer-events: none;
 }
 
 .heroInner {
+  position: relative;
+  z-index: 1;
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-md);
 }
 
 @media (min-width: 768px) {
+  .hero {
+    padding: 6rem 0;
+  }
   .heroInner {
     padding: 0 var(--space-xl);
   }
 }
 
+.heroLabel {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: var(--space-md);
+}
+
 .heroHeading {
-  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  color: var(--surface);
   margin-bottom: var(--space-lg);
-  color: var(--ink);
+  max-width: 14ch;
 }
 
 .heroIntro {
-  font-size: 1.0625rem;
-  color: var(--ink-2);
-  max-width: 60ch;
+  font-size: 1.125rem;
+  color: var(--sage);
+  max-width: 55ch;
   margin-bottom: var(--space-xl);
+  line-height: 1.7;
 }
 
 .heroCtas {
@@ -37,7 +64,18 @@
   gap: var(--space-sm);
 }
 
-/* ── Module selector ────────────────────────────────────────────────────── */
+.heroCtas .btn-secondary {
+  color: var(--surface);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.heroCtas .btn-secondary:hover {
+  background-color: var(--surface);
+  color: var(--olive);
+  border-color: var(--surface);
+}
+
+/* ── Modules ─────────────────────────────────────────────────────────────── */
 
 .modules {
   padding: var(--space-3xl) 0;
@@ -57,11 +95,11 @@
 
 .sectionLabel {
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.75rem;
   color: var(--muted);
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
 }
 
 .moduleGrid {
@@ -88,39 +126,65 @@
   justify-content: space-between;
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-top: 3px solid var(--green);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   padding: var(--space-lg);
   text-decoration: none;
-  transition: border-color var(--transition-base),
-              transform var(--transition-base),
-              box-shadow var(--transition-base);
-  min-height: 160px;
+  transition: all var(--transition-base);
+  min-height: 180px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.moduleCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-mist-air.svg');
+  background-size: 400px;
+  background-repeat: repeat;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+}
+
+.moduleCard:hover::before {
+  opacity: 0.04;
 }
 
 .moduleCard:hover {
-  border-color: var(--green);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(7, 95, 51, 0.08);
+  border-color: var(--sage);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
 .moduleCard:focus-visible {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--olive);
   outline-offset: 2px;
+}
+
+.moduleCardContent {
+  position: relative;
+  z-index: 1;
+}
+
+.moduleIcon {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: var(--space-sm);
 }
 
 .moduleCardHeading {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .moduleCardLine {
   font-size: 0.875rem;
   color: var(--muted);
   line-height: 1.5;
-  flex-grow: 1;
 }
 
 .moduleCardChevron {
@@ -128,7 +192,9 @@
   align-items: center;
   justify-content: flex-end;
   margin-top: var(--space-md);
-  color: var(--green);
+  color: var(--olive);
+  position: relative;
+  z-index: 1;
 }
 
 .chevronIcon {
@@ -141,13 +207,11 @@
   transform: translateX(4px);
 }
 
-/* ── Stats section ──────────────────────────────────────────────────────── */
+/* ── Stats ───────────────────────────────────────────────────────────────── */
 
 .stats {
   padding: var(--space-3xl) 0;
   background-color: var(--surface);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
 }
 
 .statsInner {
@@ -175,17 +239,30 @@
 }
 
 .statTile {
-  border-top: 3px solid var(--green);
-  padding: var(--space-lg);
+  padding: var(--space-xl);
   background: var(--paper);
-  border-radius: 0 0 var(--radius) var(--radius);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.statTile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--olive), var(--grape));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .statValue {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
-  color: var(--ink);
+  color: var(--olive);
   margin-bottom: var(--space-xs);
 }
 
@@ -195,7 +272,7 @@
   line-height: 1.5;
 }
 
-/* ── Trust section ──────────────────────────────────────────────────────── */
+/* ── Trust ───────────────────────────────────────────────────────────────── */
 
 .trust {
   padding: var(--space-3xl) 0;
@@ -213,13 +290,25 @@
   }
 }
 
+.trustColumns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .trustColumns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .trustGroup {
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .trustGroupLabel {
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.6875rem;
   color: var(--muted);
@@ -227,24 +316,27 @@
 }
 
 .trustNames {
-  font-size: 0.9375rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.trustBadge {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
   color: var(--ink-2);
-  line-height: 1.8;
+  font-weight: 500;
 }
 
-.trustDivider {
-  display: inline;
-  margin: 0 0.375rem;
-  color: var(--rule);
-}
-
-/* ── Partners ───────────────────────────────────────────────────────────── */
+/* ── Partners ────────────────────────────────────────────────────────────── */
 
 .partners {
   padding: var(--space-2xl) 0;
   background-color: var(--surface);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
 }
 
 .partnersInner {
@@ -265,27 +357,47 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 
 .partnerBadge {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--ink-2);
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  color: var(--olive);
+  padding: 0.625rem 1.25rem;
+  border: 1.5px solid var(--sage);
+  border-radius: var(--radius-pill);
   white-space: nowrap;
+  transition: all var(--transition-fast);
 }
 
-/* ── WhatsApp CTA block ─────────────────────────────────────────────────── */
+.partnerBadge:hover {
+  background-color: var(--sage-pale);
+}
+
+/* ── WhatsApp CTA ────────────────────────────────────────────────────────── */
 
 .whatsappBlock {
   padding: var(--space-3xl) 0;
-  background-color: var(--green-wash);
+  background: linear-gradient(135deg, var(--sage-pale) 0%, var(--paper) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.whatsappBlock::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-sage-air.svg');
+  background-size: 600px;
+  background-repeat: repeat;
+  opacity: 0.05;
+  pointer-events: none;
 }
 
 .whatsappInner {
+  position: relative;
+  z-index: 1;
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-md);
@@ -299,7 +411,7 @@
 }
 
 .whatsappHeading {
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
   font-weight: 700;
   color: var(--ink);
   margin-bottom: var(--space-sm);
@@ -314,7 +426,7 @@
   margin-right: auto;
 }
 
-/* ── Location section ───────────────────────────────────────────────────── */
+/* ── Location ────────────────────────────────────────────────────────────── */
 
 .location {
   padding: var(--space-3xl) 0;
@@ -370,12 +482,12 @@
   gap: var(--space-sm);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--green);
+  color: var(--olive);
   transition: color var(--transition-fast);
 }
 
 .locationPhoneLink:hover {
-  color: var(--ink);
+  color: var(--grape);
 }
 
 .locationHours {
@@ -384,11 +496,12 @@
 }
 
 .mapContainer {
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--rule);
   min-height: 300px;
-  background-color: var(--green-wash);
+  background-color: var(--sage-pale);
+  box-shadow: var(--shadow-md);
 }
 
 .mapContainer iframe {
@@ -396,10 +509,4 @@
   height: 100%;
   min-height: 300px;
   border: 0;
-}
-
-/* ── JSON-LD (hidden) ───────────────────────────────────────────────────── */
-
-.jsonLd {
-  display: none;
 }

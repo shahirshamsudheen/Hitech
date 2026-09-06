@@ -1,237 +1,267 @@
-/* Technology page */
+/* ── Shop Page ────────────────────────────────────────────────────────────── */
 
-.techPage {
-  padding-bottom: var(--space-3xl);
-}
+.shopPage { }
 
 .hero {
-  padding: var(--space-3xl) 0 var(--space-2xl);
-  background-color: var(--surface);
-  border-bottom: 1px solid var(--rule);
+  position: relative;
+  padding: var(--space-3xl) 0;
+  background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%);
+  overflow: hidden;
+}
+
+.heroPattern {
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-size: 800px;
+  background-repeat: repeat;
+  opacity: 0.06;
+  pointer-events: none;
 }
 
 .heroInner {
+  position: relative;
+  z-index: 1;
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-md);
 }
 
 @media (min-width: 768px) {
-  .heroInner {
-    padding: 0 var(--space-xl);
-  }
+  .heroInner { padding: 0 var(--space-xl); }
 }
 
 .heading {
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  color: var(--surface);
   margin-bottom: var(--space-lg);
 }
 
 .intro {
   font-size: 1.0625rem;
-  color: var(--ink-2);
+  color: var(--sage);
   max-width: 60ch;
   line-height: 1.7;
 }
 
-/* Category filter */
+/* ── Category filter ─────────────────────────────────────────────────────── */
+
 .categoryFilter {
+  padding: var(--space-lg) 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 68px;
+  z-index: 50;
+}
+
+.categoryFilterInner {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-xl) var(--space-md) 0;
+  padding: 0 var(--space-md);
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
 }
 
 @media (min-width: 768px) {
-  .categoryFilter {
-    padding: var(--space-xl) var(--space-xl) 0;
-  }
+  .categoryFilterInner { padding: 0 var(--space-xl); }
 }
 
 .categoryBtn {
   padding: 0.5rem 1rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius-pill);
   background: var(--surface);
+  font-size: 0.8125rem;
+  font-weight: 500;
   color: var(--ink-2);
   cursor: pointer;
-  min-height: 44px;
   transition: all var(--transition-fast);
+  white-space: nowrap;
 }
 
 .categoryBtn:hover {
-  border-color: var(--green);
-  color: var(--green);
+  border-color: var(--sage);
+  background: var(--sage-pale);
 }
 
 .categoryBtn.active {
-  background: var(--green);
-  border-color: var(--green);
+  background: var(--olive);
   color: var(--surface);
+  border-color: var(--olive);
+  font-weight: 600;
 }
 
-/* Product grid */
-.productGrid {
+/* ── Product grid ────────────────────────────────────────────────────────── */
+
+.productSection {
+  padding: var(--space-3xl) 0;
+}
+
+.productSectionInner {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-xl) var(--space-md);
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .productSectionInner { padding: 0 var(--space-xl); }
+}
+
+.productGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
 @media (min-width: 640px) {
-  .productGrid {
-    grid-template-columns: 1fr 1fr;
-  }
+  .productGrid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (min-width: 1024px) {
-  .productGrid {
-    grid-template-columns: repeat(3, 1fr);
-    padding: var(--space-xl) var(--space-xl);
-  }
+  .productGrid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* Product card */
 .productCard {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.productCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--sage);
 }
 
 .productImagePlaceholder {
-  height: 180px;
-  background: var(--green-wash);
+  aspect-ratio: 4/3;
+  background: var(--paper);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: var(--space-lg);
   color: var(--muted);
   font-size: 0.875rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.productImagePlaceholder img {
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .productInfo {
   padding: var(--space-lg);
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  gap: var(--space-sm);
 }
 
 .productBrand {
   font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: var(--space-xs);
+  color: var(--olive);
 }
 
 .productName {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.125rem;
+  font-weight: 700;
   color: var(--ink);
-  margin-bottom: var(--space-sm);
+  line-height: 1.3;
 }
 
 .productSpecs {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-xs);
-  margin-bottom: var(--space-md);
 }
 
 .specTag {
+  display: inline-block;
+  padding: 0.1875rem 0.5rem;
+  background: var(--sage-pale);
+  border-radius: var(--radius-pill);
   font-size: 0.6875rem;
-  padding: 0.125rem 0.5rem;
-  background: var(--paper);
-  border-radius: var(--radius);
-  color: var(--ink-2);
+  font-weight: 500;
+  color: var(--olive);
 }
 
 .productPricing {
   display: flex;
   align-items: baseline;
   gap: var(--space-sm);
-  margin-bottom: var(--space-sm);
-  font-variant-numeric: tabular-nums;
 }
 
 .productPrice {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .productMrp {
   font-size: 0.875rem;
   color: var(--muted);
   text-decoration: line-through;
+  font-variant-numeric: tabular-nums;
 }
 
 .stockPill {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius);
+  gap: var(--space-xs);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
   font-size: 0.6875rem;
   font-weight: 600;
-  margin-bottom: var(--space-sm);
   width: fit-content;
 }
 
 .stockInStock {
-  background: var(--green-wash);
-  color: var(--green);
+  background-color: var(--sage-pale);
+  color: var(--olive);
 }
 
 .stockOnOrder {
-  background: var(--amber);
+  background-color: var(--grape);
   color: var(--surface);
 }
 
 .stockOutOfStock {
-  background: var(--rule);
+  background-color: var(--rule);
   color: var(--muted);
 }
 
 .productHighlight {
-  font-size: 0.75rem;
-  color: var(--green);
-  font-weight: 500;
-  margin-bottom: var(--space-sm);
+  font-size: 0.8125rem;
+  color: var(--grape);
+  font-weight: 600;
 }
 
 .productPromise {
   font-size: 0.75rem;
   color: var(--muted);
   font-style: italic;
-  margin-bottom: var(--space-md);
-  margin-top: auto;
 }
 
 .productActions {
   display: flex;
   gap: var(--space-sm);
+  margin-top: var(--space-sm);
 }
 
-.productActions .btn {
-  flex: 1;
-  font-size: 0.8125rem;
-  padding: 0.5rem 0.75rem;
-}
-
-/* Empty state */
 .emptyState {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: var(--space-3xl) var(--space-md);
   text-align: center;
+  padding: var(--space-3xl);
   color: var(--muted);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--rule);
 }

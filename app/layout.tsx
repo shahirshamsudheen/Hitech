@@ -1,20 +1,12 @@
 import type { Metadata } from 'next';
-import { Archivo } from 'next/font/google';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './globals.css';
 
-const archivo = Archivo({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-archivo',
-  axes: ['wdth'],
-});
-
 export const metadata: Metadata = {
   title: {
-    default: 'Hitech — Computer Repair, CCTV & Technology Services in Kallara, Trivandrum',
-    template: '%s | Hitech Kallara',
+    default: 'HITECH — Computer Repair, CCTV & Technology Services in Kallara, Trivandrum',
+    template: '%s | HITECH Kallara',
   },
   description:
     'Computer repair, laptop service, CCTV installation, and technology sales in Kallara, Trivandrum district. Board-level repair since 2016. Serving Nedumangad, Kilimanoor, Palode, Pangode and surrounding areas since 2010.',
@@ -32,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    siteName: 'Hitech Systems',
+    siteName: 'HITECH Systems',
   },
 };
 
@@ -42,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={archivo.variable}>
+    <html lang="en">
       <body>
         <Header />
         <main id="main-content">{children}</main>

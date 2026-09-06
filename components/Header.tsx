@@ -1,58 +1,252 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './Header.module.css';
 
-const MODULES = [
-  { href: '/service', label: 'Service' },
-  { href: '/technology', label: 'Technology' },
-  { href: '/security', label: 'Security' },
-  { href: '/travel', label: 'Travel' },
-  { href: '/online-services', label: 'Online Services' },
+/* ── Navigation Data ──────────────────────────────────────────────────── */
+
+interface NavChild {
+  label: string;
+  href: string;
+  children?: NavChild[];
+}
+
+interface NavItem {
+  label: string;
+  href: string;
+  children?: NavChild[];
+}
+
+const NAV_ITEMS: NavItem[] = [
+  {
+    label: 'Services',
+    href: '/service',
+    children: [
+      { label: 'Annual Maintenance Contracts', href: '/service?service=amc' },
+      { label: 'Operating System & Software', href: '/service?service=os-software' },
+      { label: 'Laptop / Desktop Repair', href: '/service?service=laptop-desktop' },
+      { label: 'Motherboard & Chip-Level Repair', href: '/service?service=motherboard' },
+      { label: 'Printer Service', href: '/service?service=printer' },
+      { label: 'Data Recovery', href: '/service?service=data-recovery' },
+      { label: 'On-Site Service', href: '/service?service=on-site' },
+      { label: 'Other Electronics', href: '/service?service=other' },
+    ],
+  },
+  {
+    label: 'Shop',
+    href: '/technology',
+    children: [
+      { label: 'All Products', href: '/technology?category=all' },
+      { label: 'Laptops', href: '/technology?category=laptops' },
+      { label: 'Custom Desktops', href: '/technology?category=desktops' },
+      { label: 'Printers & Scanners', href: '/technology?category=printers' },
+      { label: 'Monitors', href: '/technology?category=monitors' },
+      { label: 'Networking', href: '/technology?category=networking' },
+      { label: 'Storage', href: '/technology?category=storage' },
+      { label: 'Accessories', href: '/technology?category=accessories' },
+      { label: 'Other', href: '/technology?category=other' },
+    ],
+  },
+  {
+    label: 'Security',
+    href: '/security',
+    children: [
+      { label: 'CCTV Supply & Installation', href: '/security?service=cctv' },
+      { label: 'Other Security Solutions', href: '/security?service=other' },
+    ],
+  },
+  {
+    label: 'Travel',
+    href: '/travel',
+    children: [
+      { label: 'Air Ticketing', href: '/travel?service=air-ticketing' },
+      {
+        label: 'Visa Process',
+        href: '/travel?service=visa',
+        children: [
+          { label: 'GCC Countries', href: '/travel?service=visa-gcc' },
+          { label: 'Schengen (All EU Countries)', href: '/travel?service=visa-schengen' },
+          { label: 'USA', href: '/travel?service=visa-usa' },
+          { label: 'Australia', href: '/travel?service=visa-australia' },
+          { label: 'Other', href: '/travel?service=visa-other' },
+        ],
+      },
+      { label: 'Foreign Medical Appointments', href: '/travel?service=medical' },
+      {
+        label: 'Customized Tour Packages',
+        href: '/travel?service=tours',
+        children: [
+          { label: 'Dubai & Abu Dhabi', href: '/travel?service=tour-dubai' },
+          { label: 'Europe Packages', href: '/travel?service=tour-europe' },
+        ],
+      },
+      { label: 'Hotel Booking', href: '/travel?service=hotel' },
+      { label: 'Passport Application', href: '/travel?service=passport' },
+    ],
+  },
+  {
+    label: 'eGov',
+    href: '/online-services',
+    children: [
+      { label: 'PSC Applications', href: '/online-services?service=psc' },
+      { label: 'Aadhaar Support', href: '/online-services?service=aadhaar' },
+      {
+        label: 'Online Bill Payments',
+        href: '/online-services?service=bills',
+        children: [
+          { label: 'KSEB', href: '/online-services?service=kseb' },
+          { label: 'Government Fees', href: '/online-services?service=gov-fees' },
+          { label: 'Tax Payments', href: '/online-services?service=tax' },
+          { label: 'Other', href: '/online-services?service=bills-other' },
+        ],
+      },
+    ],
+  },
 ];
 
 const PHONE_PRIMARY = '+91 9496 818237';
 const PHONE_PRIMARY_TEL = 'tel:+919496818237';
 
+/* ── Component ─────────────────────────────────────────────────────────── */
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [mobileSubExpanded, setMobileSubExpanded] = useState<string | null>(null);
   const pathname = usePathname();
+  const dropdownTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setMobileExpanded(null);
+    setMobileSubExpanded(null);
+  };
+
+  // Close dropdown on route change
+  useEffect(() => {
+    setActiveDropdown(null);
+    closeMenu();
+  }, [pathname]);
+
+  // Close on ESC
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setActiveDropdown(null);
+        closeMenu();
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, []);
+
+  const handleMouseEnter = useCallback((label: string) => {
+    if (dropdownTimeout.current) clearTimeout(dropdownTimeout.current);
+    setActiveDropdown(label);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    dropdownTimeout.current = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 200);
+  }, []);
+
+  const toggleMobileExpand = (label: string) => {
+    setMobileExpanded(prev => prev === label ? null : label);
+    setMobileSubExpanded(null);
+  };
+
+  const toggleMobileSubExpand = (label: string) => {
+    setMobileSubExpanded(prev => prev === label ? null : label);
+  };
 
   return (
     <>
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      <header className={styles.header} role="banner">
+      <header className={styles.header} role="banner" ref={headerRef}>
         <div className={styles.headerInner}>
           {/* Logo */}
-          <Link href="/" className={styles.logo} aria-label="Hitech — Home" onClick={closeMenu}>
+          <Link href="/" className={styles.logo} aria-label="HITECH — Home" onClick={closeMenu}>
             <Image
-              src="/brand/HITECH-wordmark-green.svg"
+              src="/brand/HITECH-logo-colour.svg"
               alt="HITECH"
               width={160}
-              height={40}
+              height={44}
               priority
             />
           </Link>
 
           {/* Desktop navigation */}
           <nav className={styles.desktopNav} aria-label="Main navigation">
-            {MODULES.map((mod) => (
-              <Link
-                key={mod.href}
-                href={mod.href}
-                className={`${styles.navLink} ${pathname.startsWith(mod.href) ? styles.active : ''}`}
+            {NAV_ITEMS.map((item) => (
+              <div
+                key={item.label}
+                className={styles.navItemWrapper}
+                onMouseEnter={() => item.children ? handleMouseEnter(item.label) : undefined}
+                onMouseLeave={item.children ? handleMouseLeave : undefined}
               >
-                {mod.label}
-              </Link>
+                <Link
+                  href={item.href}
+                  className={`${styles.navLink} ${pathname.startsWith(item.href) ? styles.active : ''}`}
+                  onMouseEnter={() => item.children ? handleMouseEnter(item.label) : undefined}
+                >
+                  {item.label}
+                  {item.children && (
+                    <svg className={styles.navChevron} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                      <path d="M3 4.5L6 7.5L9 4.5" />
+                    </svg>
+                  )}
+                </Link>
+
+                {/* Dropdown */}
+                {item.children && activeDropdown === item.label && (
+                  <div
+                    className={styles.dropdown}
+                    onMouseEnter={() => handleMouseEnter(item.label)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <div className={styles.dropdownInner}>
+                      {item.children.map((child) => (
+                        <div key={child.label} className={styles.dropdownGroup}>
+                          {child.children ? (
+                            <>
+                              <span className={styles.dropdownGroupLabel}>{child.label}</span>
+                              <div className={styles.dropdownSubItems}>
+                                {child.children.map((sub) => (
+                                  <Link
+                                    key={sub.label}
+                                    href={sub.href}
+                                    className={styles.dropdownLink}
+                                    onClick={() => setActiveDropdown(null)}
+                                  >
+                                    {sub.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </>
+                          ) : (
+                            <Link
+                              href={child.href}
+                              className={styles.dropdownLink}
+                              onClick={() => setActiveDropdown(null)}
+                            >
+                              {child.label}
+                            </Link>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
 
@@ -81,7 +275,7 @@ export default function Header() {
             {/* Mobile menu toggle */}
             <button
               className={styles.mobileMenuBtn}
-              onClick={toggleMenu}
+              onClick={() => setMenuOpen(!menuOpen)}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -108,25 +302,76 @@ export default function Header() {
           className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}
           aria-label="Mobile navigation"
         >
-          {MODULES.map((mod) => (
-            <Link
-              key={mod.href}
-              href={mod.href}
-              className={`${styles.mobileNavLink} ${pathname.startsWith(mod.href) ? styles.active : ''}`}
-              onClick={closeMenu}
-            >
-              {mod.label}
-            </Link>
+          {NAV_ITEMS.map((item) => (
+            <div key={item.label} className={styles.mobileNavGroup}>
+              <div className={styles.mobileNavHeader}>
+                <Link
+                  href={item.href}
+                  className={`${styles.mobileNavLink} ${pathname.startsWith(item.href) ? styles.active : ''}`}
+                  onClick={closeMenu}
+                >
+                  {item.label}
+                </Link>
+                {item.children && (
+                  <button
+                    className={`${styles.mobileExpandBtn} ${mobileExpanded === item.label ? styles.expanded : ''}`}
+                    onClick={() => toggleMobileExpand(item.label)}
+                    aria-label={`Expand ${item.label}`}
+                  >
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                      <path d="M3 4.5L6 7.5L9 4.5" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+
+              {/* Mobile sub-items */}
+              {item.children && mobileExpanded === item.label && (
+                <div className={styles.mobileSubMenu}>
+                  {item.children.map((child) => (
+                    <div key={child.label}>
+                      {child.children ? (
+                        <>
+                          <button
+                            className={styles.mobileSubHeader}
+                            onClick={() => toggleMobileSubExpand(child.label)}
+                          >
+                            {child.label}
+                            <svg className={`${styles.mobileSubChevron} ${mobileSubExpanded === child.label ? styles.expanded : ''}`} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                              <path d="M3 4.5L6 7.5L9 4.5" />
+                            </svg>
+                          </button>
+                          {mobileSubExpanded === child.label && (
+                            <div className={styles.mobileNestedMenu}>
+                              {child.children.map((sub) => (
+                                <Link
+                                  key={sub.label}
+                                  href={sub.href}
+                                  className={styles.mobileNestedLink}
+                                  onClick={closeMenu}
+                                >
+                                  {sub.label}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <Link
+                          href={child.href}
+                          className={styles.mobileSubLink}
+                          onClick={closeMenu}
+                        >
+                          {child.label}
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
-          <Link href="/institutions" className={styles.mobileNavLink} onClick={closeMenu}>
-            For Institutions
-          </Link>
-          <Link href="/about" className={styles.mobileNavLink} onClick={closeMenu}>
-            About
-          </Link>
-          <Link href="/contact" className={styles.mobileNavLink} onClick={closeMenu}>
-            Contact
-          </Link>
+
           <div className={styles.mobileActions}>
             <a href={PHONE_PRIMARY_TEL} className={styles.mobilePhoneLink}>
               📞 {PHONE_PRIMARY}

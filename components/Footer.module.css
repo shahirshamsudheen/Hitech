@@ -1,8 +1,10 @@
 .footer {
-  background-color: var(--ink);
+  position: relative;
+  background-color: var(--deep-ground);
   color: var(--paper);
   padding-top: var(--space-3xl);
   padding-bottom: var(--space-xl);
+  overflow: hidden;
   /* Extra bottom padding on mobile for sticky bar */
   margin-bottom: 72px;
 }
@@ -13,7 +15,19 @@
   }
 }
 
+.footerPattern {
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-size: 700px;
+  background-repeat: repeat;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
 .footerInner {
+  position: relative;
+  z-index: 1;
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-md);
@@ -44,11 +58,11 @@
 }
 
 .footerSection h3 {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--sage);
   margin-bottom: var(--space-md);
 }
 
@@ -58,17 +72,23 @@
   gap: var(--space-md);
 }
 
+.footerLogo {
+  height: 36px;
+  width: auto;
+  opacity: 0.9;
+}
+
 .companyInfo p {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #B0B8B3;
+  color: var(--sage);
   max-width: 30ch;
 }
 
 .address {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #B0B8B3;
+  color: var(--sage);
   font-style: normal;
 }
 
@@ -84,12 +104,12 @@
   align-items: center;
   gap: var(--space-sm);
   font-size: 0.875rem;
-  color: #B0B8B3;
+  color: var(--sage);
   transition: color var(--transition-fast);
 }
 
 .footerPhone:hover {
-  color: var(--green-dark);
+  color: var(--olive-bright);
 }
 
 .footerLinks {
@@ -100,17 +120,17 @@
 
 .footerLink {
   font-size: 0.875rem;
-  color: #B0B8B3;
+  color: var(--sage);
   transition: color var(--transition-fast);
 }
 
 .footerLink:hover {
-  color: var(--green-dark);
+  color: var(--olive-bright);
 }
 
 /* Partners row */
 .partnersRow {
-  border-top: 1px solid var(--ink-2);
+  border-top: 1px solid rgba(169, 185, 164, 0.15);
   margin-top: var(--space-2xl);
   padding-top: var(--space-lg);
 }
@@ -124,19 +144,19 @@
 }
 
 .partnerBadge {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.05em;
-  color: #B0B8B3;
-  padding: 0.375rem 0.75rem;
-  border: 1px solid var(--ink-2);
-  border-radius: var(--radius);
+  color: var(--sage);
+  padding: 0.375rem 0.875rem;
+  border: 1px solid rgba(169, 185, 164, 0.2);
+  border-radius: var(--radius-pill);
   white-space: nowrap;
 }
 
 /* Bottom bar */
 .footerBottom {
-  border-top: 1px solid var(--ink-2);
+  border-top: 1px solid rgba(169, 185, 164, 0.15);
   margin-top: var(--space-lg);
   padding-top: var(--space-lg);
   display: flex;
@@ -160,7 +180,7 @@
 
 .boardRepair {
   font-weight: 600;
-  color: var(--green-dark);
+  color: var(--olive-bright);
 }
 
 .legalLinks {
@@ -175,5 +195,5 @@
 }
 
 .legalLink:hover {
-  color: var(--green-dark);
+  color: var(--olive-bright);
 }

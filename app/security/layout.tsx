@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'CCTV Installation & Security Systems — Trivandrum District',
+  title: 'Security',
   description:
-    'CCTV supply, installation, access control, biometric systems and networking for businesses and government offices. Installed and maintained by Hitech, Kallara.',
+    'CCTV supply and installation, access control, biometric attendance, networking, and structured cabling in Kallara, Trivandrum.',
 };
 
 export default function SecurityLayout({ children }: { children: React.ReactNode }) {

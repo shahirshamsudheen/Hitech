@@ -1,0 +1,54 @@
+/* ── eGov Services Page ───────────────────────────────────────────────────── */
+
+.page { }
+
+.hero { position: relative; padding: var(--space-3xl) 0; background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%); overflow: hidden; }
+.heroPattern { position: absolute; inset: 0; background-image: url('/brand/HITECH-circuit-deep-air.svg'); background-size: 800px; background-repeat: repeat; opacity: 0.06; pointer-events: none; }
+.heroInner { position: relative; z-index: 1; max-width: var(--container-max); margin: 0 auto; padding: 0 var(--space-md); }
+@media (min-width: 768px) { .heroInner { padding: 0 var(--space-xl); } }
+.heading { font-size: clamp(2rem, 5vw, 3.25rem); color: var(--surface); margin-bottom: var(--space-lg); max-width: 22ch; }
+.intro { font-size: 1.0625rem; color: var(--sage); max-width: 60ch; line-height: 1.7; }
+
+.serviceCards { padding: var(--space-3xl) 0; background: var(--paper); }
+.serviceCardsInner { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--space-md); }
+@media (min-width: 768px) { .serviceCardsInner { padding: 0 var(--space-xl); } }
+.servicesLabel { font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.75rem; color: var(--muted); margin-bottom: var(--space-lg); }
+.servicesGrid { display: grid; grid-template-columns: 1fr; gap: var(--space-md); }
+@media (min-width: 640px) { .servicesGrid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .servicesGrid { grid-template-columns: repeat(4, 1fr); } }
+
+.serviceCard { display: flex; flex-direction: column; align-items: flex-start; text-align: left; background: var(--surface); border: 1.5px solid var(--rule); border-radius: var(--radius-lg); padding: var(--space-lg); cursor: pointer; transition: all var(--transition-base); }
+.serviceCard:hover { border-color: var(--sage); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.serviceCardActive { border-color: var(--olive); background: var(--sage-pale); box-shadow: var(--shadow-sm); }
+.serviceIcon { font-size: 1.5rem; margin-bottom: var(--space-sm); }
+.serviceCardHeading { font-size: 0.9375rem; font-weight: 700; color: var(--ink); margin-bottom: var(--space-xs); }
+.serviceCardLine { font-size: 0.8125rem; color: var(--muted); line-height: 1.5; }
+
+.splitSection { padding: var(--space-3xl) 0; background: var(--surface); }
+.splitInner { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--space-md); display: grid; grid-template-columns: 1fr; gap: var(--space-xl); }
+@media (min-width: 768px) { .splitInner { padding: 0 var(--space-xl); } }
+@media (min-width: 900px) { .splitInner { grid-template-columns: 1fr 1.2fr; gap: var(--space-3xl); } }
+
+.infoPanel { }
+.infoPanelSticky { position: sticky; top: 100px; }
+.infoPanelIcon { font-size: 2.5rem; display: block; margin-bottom: var(--space-md); }
+.infoPanelHeading { font-size: 1.75rem; font-weight: 800; color: var(--ink); margin-bottom: var(--space-md); }
+.infoPanelText { font-size: 1.0625rem; color: var(--ink-2); line-height: 1.7; margin-bottom: var(--space-xl); }
+.infoPanelDetails { display: flex; flex-direction: column; gap: var(--space-md); }
+.infoItem { display: flex; flex-direction: column; gap: 2px; padding: var(--space-md); background: var(--paper); border-radius: var(--radius); border: 1px solid var(--rule); }
+.infoItemLabel { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.infoItemValue { font-size: 0.9375rem; font-weight: 600; color: var(--olive); }
+
+.formPanel { }
+.formCard { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius-lg); padding: var(--space-xl); position: relative; overflow: hidden; }
+.formCard::before { content: ''; position: absolute; inset: 0; background-image: url('/brand/HITECH-circuit-mist-air.svg'); background-size: 500px; opacity: 0.03; pointer-events: none; }
+.formCard > * { position: relative; z-index: 1; }
+.formHeading { font-size: 1.5rem; font-weight: 800; color: var(--ink); margin-bottom: var(--space-xs); }
+.formSubheading { font-size: 0.9375rem; color: var(--muted); margin-bottom: var(--space-xl); }
+
+.confirmSection { padding: var(--space-3xl) 0; display: flex; justify-content: center; }
+.confirmCard { max-width: 520px; text-align: center; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-xl); padding: var(--space-3xl); box-shadow: var(--shadow-lg); }
+.confirmIcon { width: 56px; height: 56px; margin: 0 auto var(--space-lg); color: var(--olive); }
+.confirmHeading { font-size: 1.75rem; font-weight: 800; margin-bottom: var(--space-sm); }
+.referenceNumber { font-size: 1rem; font-weight: 700; color: var(--olive); margin-bottom: var(--space-lg); }
+.confirmText { font-size: 0.9375rem; color: var(--ink-2); margin-bottom: var(--space-xl); line-height: 1.6; }

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './Footer.module.css';
 
 const PARTNERS = [
@@ -13,13 +14,21 @@ export default function Footer() {
 
   return (
     <footer className={styles.footer} role="contentinfo">
+      <div className={styles.footerPattern} aria-hidden="true" />
       <div className={styles.footerInner}>
         <div className={styles.footerGrid}>
           {/* Company info */}
           <div className={styles.footerSection}>
             <div className={styles.companyInfo}>
+              <Image
+                src="/brand/HITECH-logo-white.svg"
+                alt="HITECH"
+                width={140}
+                height={38}
+                className={styles.footerLogo}
+              />
               <p>
-                Hitech has repaired, installed and maintained technology in and around
+                HITECH has repaired, installed and maintained technology in and around
                 Kallara since 2010.
               </p>
               <address className={styles.address}>
@@ -41,7 +50,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Modules */}
+          {/* Services */}
           <div className={styles.footerSection}>
             <h3>Services</h3>
             <div className={styles.footerLinks}>
@@ -49,7 +58,7 @@ export default function Footer() {
                 Service &amp; Repair
               </Link>
               <Link href="/technology" className={styles.footerLink}>
-                Technology &amp; Store
+                Shop
               </Link>
               <Link href="/security" className={styles.footerLink}>
                 Security Systems
@@ -58,7 +67,7 @@ export default function Footer() {
                 Travel
               </Link>
               <Link href="/online-services" className={styles.footerLink}>
-                Online Services
+                eGov Services
               </Link>
             </div>
           </div>
@@ -108,7 +117,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className={styles.footerBottom}>
           <p>
-            © {currentYear} Hitech Systems, Kallara.{' '}
+            © {currentYear} HITECH Systems, Kallara.{' '}
             <span className={styles.boardRepair}>Board-level repair since 2016.</span>
           </p>
           <div className={styles.legalLinks}>

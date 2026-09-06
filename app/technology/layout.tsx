@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Laptops, Desktops, Printers & Accessories — Hitech Kallara',
+  title: 'Shop',
   description:
-    'Buy laptops, desktops, printers and accessories from Acer, Asus, HP, Dell, Epson and Canon. Authorised partner. Everything you buy here gets serviced here.',
+    'Laptops, desktops, printers, monitors, networking equipment, storage, and accessories. Acer, Epson, Asus, and Canon authorised partner in Kallara, Trivandrum.',
 };
 
-export default function TechnologyLayout({ children }: { children: React.ReactNode }) {
+export default function ShopLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

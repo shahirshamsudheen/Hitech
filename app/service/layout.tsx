@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Computer Repair & Service — Laptop, Desktop, Printer, Board-Level Repair in Kallara',
+  title: 'Service & Repair',
   description:
-    'Book a repair for your laptop, desktop, printer or any computer equipment. Board-level and chip-level repair since 2016. Serving Kallara, Nedumangad, Kilimanoor, Palode and Trivandrum district.',
+    'Computer repair, laptop service, motherboard and chip-level repair, printer service, data recovery, and annual maintenance contracts in Kallara, Trivandrum.',
 };
 
 export default function ServiceLayout({ children }: { children: React.ReactNode }) {

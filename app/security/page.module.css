@@ -1,297 +1,126 @@
-/* Security, Travel, Online Services, Institutions — shared layout styles */
+/* ── Security Page ────────────────────────────────────────────────────────── */
+/* Shares split-layout pattern with service page */
 
-.page {
-  padding-bottom: var(--space-3xl);
-}
+.page { }
 
 .hero {
-  padding: var(--space-3xl) 0 var(--space-2xl);
-  background-color: var(--surface);
-  border-bottom: 1px solid var(--rule);
+  position: relative;
+  padding: var(--space-3xl) 0;
+  background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%);
+  overflow: hidden;
+}
+
+.heroPattern {
+  position: absolute; inset: 0;
+  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-size: 800px; background-repeat: repeat; opacity: 0.06; pointer-events: none;
 }
 
 .heroInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
+  position: relative; z-index: 1;
+  max-width: var(--container-max); margin: 0 auto; padding: 0 var(--space-md);
 }
 
-@media (min-width: 768px) {
-  .heroInner {
-    padding: 0 var(--space-xl);
-  }
-}
+@media (min-width: 768px) { .heroInner { padding: 0 var(--space-xl); } }
 
 .heading {
-  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
-  margin-bottom: var(--space-lg);
-  max-width: 28ch;
+  font-size: clamp(2rem, 5vw, 3.25rem); color: var(--surface); margin-bottom: var(--space-lg); max-width: 20ch;
 }
 
 .intro {
-  font-size: 1.0625rem;
-  color: var(--ink-2);
-  max-width: 60ch;
-  line-height: 1.7;
+  font-size: 1.0625rem; color: var(--sage); max-width: 60ch; line-height: 1.7;
 }
 
-/* Services grid */
-.servicesList {
-  padding: var(--space-2xl) 0;
+/* ── Service cards ───────────────────────────────────────────────────────── */
+
+.serviceCards {
+  padding: var(--space-3xl) 0; background: var(--paper);
 }
 
-.servicesInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
+.serviceCardsInner {
+  max-width: var(--container-max); margin: 0 auto; padding: 0 var(--space-md);
+  display: grid; grid-template-columns: 1fr; gap: var(--space-md);
 }
 
-@media (min-width: 768px) {
-  .servicesInner {
-    padding: 0 var(--space-xl);
-  }
-}
-
-.servicesGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
-}
-
-@media (min-width: 640px) {
-  .servicesGrid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width: 1024px) {
-  .servicesGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+@media (min-width: 640px) { .serviceCardsInner { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 768px) { .serviceCardsInner { padding: 0 var(--space-xl); } }
 
 .serviceCard {
-  padding: var(--space-lg);
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  display: flex; flex-direction: column; align-items: flex-start; text-align: left;
+  background: var(--surface); border: 1.5px solid var(--rule); border-radius: var(--radius-lg);
+  padding: var(--space-xl); cursor: pointer; transition: all var(--transition-base);
+  position: relative; overflow: hidden;
 }
 
-.serviceCardHeading {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: var(--space-xs);
+.serviceCard:hover { border-color: var(--sage); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.serviceCardActive { border-color: var(--olive); background: var(--sage-pale); box-shadow: var(--shadow-sm); }
+.serviceIcon { font-size: 2rem; margin-bottom: var(--space-sm); }
+.serviceCardHeading { font-size: 1.125rem; font-weight: 700; color: var(--ink); margin-bottom: var(--space-sm); }
+.serviceCardLine { font-size: 0.875rem; color: var(--muted); line-height: 1.6; }
+
+/* ── Split layout ────────────────────────────────────────────────────────── */
+
+.splitSection { padding: var(--space-3xl) 0; background: var(--surface); }
+
+.splitInner {
+  max-width: var(--container-max); margin: 0 auto; padding: 0 var(--space-md);
+  display: grid; grid-template-columns: 1fr; gap: var(--space-xl);
 }
 
-.serviceCardLine {
-  font-size: 0.8125rem;
-  color: var(--muted);
-  line-height: 1.5;
-}
+@media (min-width: 768px) { .splitInner { padding: 0 var(--space-xl); } }
+@media (min-width: 900px) { .splitInner { grid-template-columns: 1fr 1.2fr; gap: var(--space-3xl); } }
 
-/* Credibility block */
-.credibility {
-  padding: var(--space-2xl) 0;
-  background-color: var(--green-wash);
-}
+.infoPanel { }
+.infoPanelSticky { position: sticky; top: 100px; }
+.infoPanelIcon { font-size: 2.5rem; display: block; margin-bottom: var(--space-md); }
+.infoPanelHeading { font-size: 1.75rem; font-weight: 800; color: var(--ink); margin-bottom: var(--space-md); }
+.infoPanelText { font-size: 1.0625rem; color: var(--ink-2); line-height: 1.7; margin-bottom: var(--space-xl); }
 
-.credibilityInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-}
+.infoPanelDetails { display: flex; flex-direction: column; gap: var(--space-md); }
+.infoItem { display: flex; flex-direction: column; gap: 2px; padding: var(--space-md); background: var(--paper); border-radius: var(--radius); border: 1px solid var(--rule); }
+.infoItemLabel { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.infoItemValue { font-size: 0.9375rem; font-weight: 600; color: var(--olive); }
 
-@media (min-width: 768px) {
-  .credibilityInner {
-    padding: 0 var(--space-xl);
-  }
+.formPanel { }
+.formCard {
+  background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius-lg);
+  padding: var(--space-xl); position: relative; overflow: hidden;
 }
+.formCard::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: url('/brand/HITECH-circuit-mist-air.svg');
+  background-size: 500px; opacity: 0.03; pointer-events: none;
+}
+.formCard > * { position: relative; z-index: 1; }
+.formHeading { font-size: 1.5rem; font-weight: 800; color: var(--ink); margin-bottom: var(--space-xs); }
+.formSubheading { font-size: 0.9375rem; color: var(--muted); margin-bottom: var(--space-xl); }
 
-.credibilityInner p {
-  font-size: 1rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-  max-width: 65ch;
-}
+/* ── Confirmation ────────────────────────────────────────────────────────── */
 
-/* Form */
-.formSection {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: var(--space-2xl) var(--space-md);
+.confirmSection { padding: var(--space-3xl) 0; display: flex; justify-content: center; }
+.confirmCard {
+  max-width: 520px; text-align: center; background: var(--surface);
+  border: 1px solid var(--rule); border-radius: var(--radius-xl);
+  padding: var(--space-3xl); box-shadow: var(--shadow-lg);
 }
+.confirmIcon { width: 56px; height: 56px; margin: 0 auto var(--space-lg); color: var(--olive); }
+.confirmHeading { font-size: 1.75rem; font-weight: 800; margin-bottom: var(--space-sm); }
+.referenceNumber { font-size: 1rem; font-weight: 700; color: var(--olive); margin-bottom: var(--space-lg); }
+.confirmText { font-size: 0.9375rem; color: var(--ink-2); margin-bottom: var(--space-xl); line-height: 1.6; }
 
-@media (min-width: 768px) {
-  .formSection {
-    padding: var(--space-2xl) var(--space-xl);
-  }
-}
-
-.formContainer {
-  max-width: 640px;
-  margin: 0 auto;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: var(--space-xl);
-}
-
-@media (min-width: 768px) {
-  .formContainer {
-    padding: var(--space-2xl);
-  }
-}
-
-.formHeading {
-  font-size: 1.5rem;
-  margin-bottom: var(--space-xs);
-}
-
-.formSubheading {
-  font-size: 0.9375rem;
-  color: var(--muted);
-  margin-bottom: var(--space-xl);
-}
-
-/* Confirmation */
-.confirmation {
-  text-align: center;
-  padding: var(--space-2xl) 0;
-}
-
-.confirmIcon {
-  width: 64px;
-  height: 64px;
-  color: var(--success);
-  margin: 0 auto var(--space-lg);
-}
-
-.confirmHeading {
-  font-size: 1.25rem;
-  margin-bottom: var(--space-xs);
-}
-
-.referenceNumber {
-  font-size: 1.5rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--green);
-  margin-bottom: var(--space-lg);
-}
-
-.confirmText {
-  font-size: 0.9375rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-  max-width: 45ch;
-  margin: 0 auto var(--space-lg);
-}
-
-/* Content blocks (institutions) */
-.contentSection {
-  padding: var(--space-2xl) 0;
-}
-
-.contentInner {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-}
-
-@media (min-width: 768px) {
-  .contentInner {
-    padding: 0 var(--space-xl);
-  }
-}
-
-.contentBlock {
-  margin-bottom: var(--space-2xl);
-  max-width: 65ch;
-}
-
-.contentBlock h2 {
-  font-size: 1.25rem;
-  margin-bottom: var(--space-md);
-}
-
-.contentBlock p {
-  font-size: 1rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-  margin-bottom: var(--space-md);
-}
-
-.contentBlock ul {
-  list-style: disc;
-  padding-left: var(--space-lg);
-}
-
-.contentBlock li {
-  font-size: 0.9375rem;
-  color: var(--ink-2);
-  line-height: 1.7;
-  margin-bottom: var(--space-xs);
-}
-
-/* Service item list (travel, online) */
-.serviceItemList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-2xl);
-}
-
-.serviceItem {
-  padding: var(--space-md) var(--space-lg);
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  font-size: 0.9375rem;
-  color: var(--ink);
-}
-
-/* Online services detail card */
-.onlineServiceCard {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: var(--space-lg);
-  margin-bottom: var(--space-md);
-}
-
-.onlineServiceCard h3 {
-  font-size: 1rem;
-  margin-bottom: var(--space-sm);
-}
-
-.onlineServiceCard p {
-  font-size: 0.875rem;
-  color: var(--ink-2);
-  margin-bottom: var(--space-sm);
-}
-
-.docsLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: var(--space-xs);
-}
-
-.docsList {
-  list-style: disc;
-  padding-left: var(--space-lg);
-  margin-bottom: var(--space-sm);
-}
-
-.docsList li {
-  font-size: 0.8125rem;
-  color: var(--ink-2);
-}
-
-.timeEstimate {
-  font-size: 0.8125rem;
-  color: var(--muted);
-}
+/* ── Legacy compat — used by travel page ─────────────────────────────────── */
+.contentSection { padding: var(--space-3xl) 0; }
+.contentInner { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--space-md); }
+@media (min-width: 768px) { .contentInner { padding: 0 var(--space-xl); } }
+.serviceItemList { display: flex; flex-direction: column; gap: var(--space-sm); }
+.serviceItem { padding: var(--space-md); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); font-size: 0.9375rem; color: var(--ink-2); }
+.onlineServiceCard { padding: var(--space-xl); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-lg); margin-bottom: var(--space-md); }
+.onlineServiceCard h3 { font-size: 1.125rem; margin-bottom: var(--space-sm); }
+.onlineServiceCard p { font-size: 0.9375rem; color: var(--ink-2); }
+.docsLabel { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-top: var(--space-md); margin-bottom: var(--space-xs); }
+.docsList { padding-left: var(--space-md); }
+.docsList li { font-size: 0.875rem; color: var(--ink-2); padding: 2px 0; list-style: disc; }
+.timeEstimate { font-size: 0.8125rem; color: var(--muted); margin-top: var(--space-sm); font-style: italic; }
+.formSection { padding: var(--space-3xl) 0; }
+.formContainer { max-width: 600px; margin: 0 auto; padding: 0 var(--space-md); }
+@media (min-width: 768px) { .formContainer { padding: 0; } }

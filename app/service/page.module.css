@@ -1,41 +1,56 @@
-.servicePage {
-  padding-bottom: var(--space-3xl);
+/* ── Service Page ─────────────────────────────────────────────────────────── */
+
+.page { }
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  padding: var(--space-3xl) 0;
+  background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%);
+  overflow: hidden;
 }
 
-/* ── Hero ────────────────────────────────────────────────────────────────── */
-.hero {
-  padding: var(--space-3xl) 0 var(--space-2xl);
-  background-color: var(--surface);
-  border-bottom: 1px solid var(--rule);
+.heroPattern {
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-size: 800px;
+  background-repeat: repeat;
+  opacity: 0.06;
+  pointer-events: none;
 }
 
 .heroInner {
+  position: relative;
+  z-index: 1;
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-md);
 }
 
 @media (min-width: 768px) {
-  .heroInner {
-    padding: 0 var(--space-xl);
-  }
+  .heroInner { padding: 0 var(--space-xl); }
 }
 
 .heading {
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  color: var(--surface);
   margin-bottom: var(--space-lg);
 }
 
 .intro {
   font-size: 1.0625rem;
-  color: var(--ink-2);
+  color: var(--sage);
   max-width: 60ch;
   line-height: 1.7;
 }
 
-/* ── Services list ──────────────────────────────────────────────────────── */
+/* ── Service cards grid ──────────────────────────────────────────────────── */
+
 .servicesList {
-  padding: var(--space-2xl) 0;
+  padding: var(--space-3xl) 0;
+  background: var(--paper);
 }
 
 .servicesInner {
@@ -45,9 +60,16 @@
 }
 
 @media (min-width: 768px) {
-  .servicesInner {
-    padding: 0 var(--space-xl);
-  }
+  .servicesInner { padding: 0 var(--space-xl); }
+}
+
+.servicesLabel {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: var(--space-lg);
 }
 
 .servicesGrid {
@@ -57,74 +79,203 @@
 }
 
 @media (min-width: 640px) {
-  .servicesGrid {
-    grid-template-columns: 1fr 1fr;
-  }
+  .servicesGrid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (min-width: 1024px) {
-  .servicesGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  .servicesGrid { grid-template-columns: repeat(4, 1fr); }
 }
 
 .serviceCard {
-  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
   background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.serviceCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-mist-air.svg');
+  background-size: 400px;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+}
+
+.serviceCard:hover {
+  border-color: var(--sage);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.serviceCard:hover::before {
+  opacity: 0.04;
+}
+
+.serviceCardActive {
+  border-color: var(--olive);
+  background: var(--sage-pale);
+  box-shadow: var(--shadow-sm);
+}
+
+.serviceCardActive::before {
+  opacity: 0.06;
 }
 
 .serviceIcon {
-  width: 32px;
-  height: 32px;
-  color: var(--green);
+  font-size: 1.5rem;
   margin-bottom: var(--space-sm);
+  position: relative;
+  z-index: 1;
 }
 
 .serviceCardHeading {
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
   margin-bottom: var(--space-xs);
+  position: relative;
+  z-index: 1;
 }
 
 .serviceCardLine {
   font-size: 0.8125rem;
   color: var(--muted);
   line-height: 1.5;
+  position: relative;
+  z-index: 1;
 }
 
-/* ── Form section ───────────────────────────────────────────────────────── */
-.formSection {
+/* ── Split layout ────────────────────────────────────────────────────────── */
+
+.splitSection {
+  padding: var(--space-3xl) 0;
+  background: var(--surface);
+}
+
+.splitInner {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 var(--space-md) var(--space-3xl);
+  padding: 0 var(--space-md);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
 }
 
 @media (min-width: 768px) {
-  .formSection {
-    padding: 0 var(--space-xl) var(--space-3xl);
+  .splitInner {
+    padding: 0 var(--space-xl);
   }
 }
 
-.formContainer {
-  max-width: 720px;
-  margin: 0 auto;
-  background: var(--surface);
-  border: 1px solid var(--rule);
+@media (min-width: 900px) {
+  .splitInner {
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--space-3xl);
+  }
+}
+
+/* ── Info panel (left) ───────────────────────────────────────────────────── */
+
+.infoPanel { }
+
+.infoPanelSticky {
+  position: sticky;
+  top: 100px;
+}
+
+.infoPanelIcon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: var(--space-md);
+}
+
+.infoPanelHeading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: var(--space-md);
+}
+
+.infoPanelText {
+  font-size: 1.0625rem;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: var(--space-xl);
+}
+
+.infoPanelDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-md);
+  background: var(--paper);
   border-radius: var(--radius);
-  padding: var(--space-xl);
+  border: 1px solid var(--rule);
 }
 
-@media (min-width: 768px) {
-  .formContainer {
-    padding: var(--space-2xl);
-  }
+.infoItemLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.infoItemValue {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--olive);
+}
+
+/* ── Form panel (right) ──────────────────────────────────────────────────── */
+
+.formPanel { }
+
+.formCard {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.formCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-mist-air.svg');
+  background-size: 500px;
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.formCard > * {
+  position: relative;
+  z-index: 1;
 }
 
 .formHeading {
   font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink);
   margin-bottom: var(--space-xs);
 }
 
@@ -134,283 +285,48 @@
   margin-bottom: var(--space-xl);
 }
 
-/* ── Progress indicator ─────────────────────────────────────────────────── */
-.progress {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--space-xl);
-  gap: var(--space-xs);
-}
+/* ── Confirmation ────────────────────────────────────────────────────────── */
 
-.progressStep {
+.formSection {
+  padding: var(--space-3xl) 0;
   display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-}
-
-.progressDot {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 2px solid var(--rule);
-  color: var(--muted);
-  background: var(--surface);
-  flex-shrink: 0;
 }
 
-.progressDot.active {
-  border-color: var(--green);
-  background: var(--green);
-  color: var(--surface);
-}
-
-.progressDot.done {
-  border-color: var(--green);
-  background: var(--green-wash);
-  color: var(--green);
-}
-
-.progressLabel {
-  font-size: 0.75rem;
-  color: var(--muted);
-  display: none;
-}
-
-@media (min-width: 640px) {
-  .progressLabel {
-    display: block;
-  }
-}
-
-.progressLabel.active {
-  color: var(--green);
-  font-weight: 600;
-}
-
-.progressLine {
-  flex: 1;
-  height: 2px;
-  background: var(--rule);
-  min-width: 16px;
-}
-
-.progressLine.done {
-  background: var(--green);
-}
-
-/* ── Step content ───────────────────────────────────────────────────────── */
-.stepTitle {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: var(--space-lg);
-  color: var(--ink);
-}
-
-/* ── Navigation buttons ─────────────────────────────────────────────────── */
-.formNav {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-md);
-  margin-top: var(--space-xl);
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--rule);
-}
-
-.backBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: 0.625rem 1rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--ink-2);
-  background: none;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  cursor: pointer;
-  min-height: 44px;
-  transition: border-color var(--transition-fast);
-}
-
-.backBtn:hover {
-  border-color: var(--ink-2);
-}
-
-.nextBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: 0.625rem 1.5rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: var(--surface);
-  background: var(--green);
-  border: 2px solid var(--green);
-  border-radius: var(--radius);
-  cursor: pointer;
-  min-height: 44px;
-  margin-left: auto;
-  transition: background-color var(--transition-fast);
-}
-
-.nextBtn:hover {
-  background: #064D2A;
-  border-color: #064D2A;
-}
-
-.nextBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.submitBtn {
-  composes: nextBtn;
-  background: var(--amber);
-  border-color: var(--amber);
-}
-
-.submitBtn:hover {
-  background: #8C4709;
-  border-color: #8C4709;
-}
-
-/* ── Confirmation ───────────────────────────────────────────────────────── */
-.confirmation {
+.confirmationCard {
+  max-width: 520px;
   text-align: center;
-  padding: var(--space-2xl) 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3xl);
+  box-shadow: var(--shadow-lg);
 }
 
 .confirmIcon {
-  width: 64px;
-  height: 64px;
-  color: var(--success);
+  width: 56px;
+  height: 56px;
   margin: 0 auto var(--space-lg);
+  color: var(--olive);
 }
 
 .confirmHeading {
-  font-size: 1.25rem;
-  margin-bottom: var(--space-xs);
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
 }
 
 .referenceNumber {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--green);
+  color: var(--olive);
   margin-bottom: var(--space-lg);
-  font-family: var(--font);
+  font-variant-numeric: tabular-nums;
 }
 
 .confirmText {
   font-size: 0.9375rem;
   color: var(--ink-2);
-  line-height: 1.7;
-  max-width: 45ch;
-  margin: 0 auto var(--space-lg);
-}
-
-.confirmActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-  justify-content: center;
-}
-
-/* ── File upload ────────────────────────────────────────────────────────── */
-.fileUpload {
-  border: 2px dashed var(--rule);
-  border-radius: var(--radius);
-  padding: var(--space-lg);
-  text-align: center;
-  cursor: pointer;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
-}
-
-.fileUpload:hover {
-  border-color: var(--green);
-  background-color: var(--green-wash);
-}
-
-.fileUploadLabel {
-  font-size: 0.875rem;
-  color: var(--muted);
+  margin-bottom: var(--space-xl);
   line-height: 1.6;
-}
-
-.fileUploadLabel strong {
-  color: var(--green);
-  font-weight: 600;
-}
-
-.filePreviews {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
-}
-
-.filePreview {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--rule);
-}
-
-.filePreview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.filePreviewName {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(14, 26, 20, 0.7);
-  color: var(--surface);
-  font-size: 0.625rem;
-  padding: 2px 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.fileRemove {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--error);
-  color: var(--surface);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  line-height: 1;
-}
-
-/* ── "Not sure" hint ────────────────────────────────────────────────────── */
-.notSureHint {
-  font-size: 0.8125rem;
-  color: var(--muted);
-  font-style: italic;
-  margin-top: var(--space-xs);
-}
-
-/* ── Conditional field animation ────────────────────────────────────────── */
-.conditionalField {
-  overflow: hidden;
-  transition: max-height var(--transition-base), opacity var(--transition-base);
 }

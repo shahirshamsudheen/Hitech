@@ -1,40 +1,41 @@
 /*
- * HITECH Design System
- * =====================
- * All colour tokens, typography, and layout primitives.
- * Based on the brand specification — do not modify token values without checking contrast.
+ * HITECH Design System — Issue 02
+ * ================================
+ * Brand palette, typography, layout, and components.
+ * Based on HITECH Brand Standards Issue 02 (5 September 2026).
+ * Apple-inspired: rounded, premium, minimal.
  */
 
-/* ── Font ────────────────────────────────────────────────────────────────── */
-
-/* Archivo is loaded via next/font/google in layout.tsx for automatic self-hosting */
+/* ── Google Font — Inter ────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* ── Brand ────────────────────────────────────────────────────────────── */
-  --green:        #075F33;   /* primary. 7.80:1 on white, 7.02:1 on paper */
-  --green-dark:   #3FBE7F;   /* dark surfaces ONLY */
-  --green-wash:   #E4EDE7;
+  /* ── Brand — Issue 02 ────────────────────────────────────────────────── */
+  --olive:          #3A4A2C;   /* Deep olive — primary */
+  --olive-mid:      #5C6E3C;   /* Olive mid — secondary */
+  --olive-bright:   #A9BE8A;   /* Screen only — bright olive */
+  --grape:          #7A2E45;   /* Grape — accent / CTA */
+  --rose:           #C97B7B;   /* Rose — secondary accent */
+  --rose-light:     #E0A0A0;   /* Screen only — light rose */
+  --sage:           #A9B9A4;   /* Sage — tertiary */
+  --sage-pale:      #D3DCCE;   /* Sage pale — wash/background */
 
-  /* ── Neutrals (biased slightly green) ─────────────────────────────────── */
-  --ink:          #0E1A14;   /* 16.08:1 on paper */
-  --ink-2:        #39463F;
-  --muted:        #6E7A74;
-  --paper:        #F4F3EF;
-  --surface:      #FFFFFF;
-  --rule:         #DEDDD5;
+  /* ── Neutrals ────────────────────────────────────────────────────────── */
+  --ink:            #14180F;   /* Ink — primary text */
+  --ink-2:          #39463F;   /* Secondary text */
+  --muted:          #6E7A74;   /* Muted text */
+  --paper:          #F3F2EC;   /* Page background */
+  --surface:        #FFFFFF;   /* Card/panel background */
+  --rule:           #DEDDD5;   /* Borders/dividers */
+  --deep-ground:    #1A2114;   /* Dark ground — footer, dark sections */
 
-  /* ── Action ───────────────────────────────────────────────────────────── */
-  --amber:        #A0520D;   /* 5.10:1 on paper, 5.66:1 on white */
-  --amber-dark:   #E0964A;   /* dark surfaces */
-  --amber-wash:   #F6EADC;
-
-  /* ── System states — reserved, never decorative ──────────────────────── */
-  --error:        #9C2B21;
-  --success:      #1F6B47;
-  --warning:      #8A6100;
+  /* ── System states ───────────────────────────────────────────────────── */
+  --error:          #9C2B21;
+  --success:        #1F6B47;
+  --warning:        #8A6100;
 
   /* ── Typography ───────────────────────────────────────────────────────── */
-  --font: var(--font-archivo), -apple-system, "Segoe UI", Helvetica, sans-serif;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
   /* ── Spacing scale ────────────────────────────────────────────────────── */
   --space-xs:     0.25rem;   /* 4px */
@@ -48,12 +49,31 @@
 
   /* ── Layout ───────────────────────────────────────────────────────────── */
   --container-max:  1200px;
-  --radius:         3px;
   --border:         1px solid var(--rule);
+
+  /* ── Radii — Apple-style rounded ──────────────────────────────────────── */
+  --radius-sm:      8px;
+  --radius:         12px;
+  --radius-lg:      20px;
+  --radius-xl:      28px;
+  --radius-pill:    999px;
+
+  /* ── Shadows ──────────────────────────────────────────────────────────── */
+  --shadow-xs:      0 1px 2px rgba(20, 24, 15, 0.05);
+  --shadow-sm:      0 2px 8px rgba(20, 24, 15, 0.06);
+  --shadow-md:      0 4px 16px rgba(20, 24, 15, 0.08);
+  --shadow-lg:      0 8px 32px rgba(20, 24, 15, 0.10);
+  --shadow-xl:      0 16px 48px rgba(20, 24, 15, 0.12);
+
+  /* ── Glass ────────────────────────────────────────────────────────────── */
+  --glass-bg:       rgba(255, 255, 255, 0.72);
+  --glass-border:   rgba(255, 255, 255, 0.3);
+  --glass-blur:     20px;
 
   /* ── Transitions ──────────────────────────────────────────────────────── */
   --transition-fast: 150ms ease;
-  --transition-base: 200ms ease;
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── Reset ──────────────────────────────────────────────────────────────── */
@@ -69,6 +89,7 @@ html {
   font-variant-ligatures: common-ligatures;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -102,23 +123,23 @@ ul, ol {
 /* ── Typography ─────────────────────────────────────────────────────────── */
 
 h1 {
-  font-weight: 750;
-  font-stretch: 105%;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   text-wrap: balance;
-  line-height: 1.15;
+  line-height: 1.1;
   color: var(--ink);
 }
 
 h2 {
   font-weight: 700;
-  font-stretch: 100%;
-  line-height: 1.25;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   color: var(--ink);
 }
 
 h3 {
   font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.3;
   color: var(--ink);
 }
@@ -130,7 +151,7 @@ h4, h5, h6 {
 
 p {
   max-width: 65ch;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 /* Tabular numerals — mandatory for prices, quantities, tables */
@@ -141,7 +162,7 @@ p {
 /* Labels, division names */
 .label-text {
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.75rem;
   color: var(--muted);
@@ -183,69 +204,69 @@ p {
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1.75rem;
   font-weight: 600;
   font-size: 0.9375rem;
   line-height: 1;
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   border: 2px solid transparent;
   cursor: pointer;
-  min-height: 44px;
-  min-width: 44px;
-  transition: background-color var(--transition-fast),
-              border-color var(--transition-fast),
-              transform var(--transition-fast),
-              box-shadow var(--transition-fast);
+  min-height: 48px;
+  min-width: 48px;
+  transition: all var(--transition-base);
   text-decoration: none;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--olive);
   outline-offset: 2px;
 }
 
-/* Primary — amber filled, white text */
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Primary — grape filled, white text */
 .btn-primary {
-  background-color: var(--amber);
+  background-color: var(--grape);
   color: var(--surface);
-  border-color: var(--amber);
+  border-color: var(--grape);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-  background-color: #8C4709;
-  border-color: #8C4709;
+  background-color: #6A243A;
+  border-color: #6A243A;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
-.btn-primary:active {
-  transform: scale(0.98);
-}
-
-/* Secondary — outlined green */
+/* Secondary — outlined olive */
 .btn-secondary {
   background-color: transparent;
-  color: var(--green);
-  border-color: var(--green);
+  color: var(--olive);
+  border-color: var(--olive);
 }
 
 .btn-secondary:hover {
-  background-color: var(--green);
+  background-color: var(--olive);
   color: var(--surface);
-}
-
-.btn-secondary:active {
-  transform: scale(0.98);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
 /* Ghost — minimal */
 .btn-ghost {
   background-color: transparent;
-  color: var(--green);
+  color: var(--olive);
   border-color: transparent;
 }
 
 .btn-ghost:hover {
-  background-color: var(--green-wash);
+  background-color: var(--sage-pale);
 }
 
 /* WhatsApp */
@@ -254,17 +275,20 @@ p {
   color: var(--surface);
   border-color: #25D366;
   font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-whatsapp:hover {
   background-color: #1EBE59;
   border-color: #1EBE59;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 /* ── Focus states ───────────────────────────────────────────────────────── */
 
 :focus-visible {
-  outline: 2px solid var(--green);
+  outline: 2px solid var(--olive);
   outline-offset: 2px;
 }
 
@@ -274,10 +298,10 @@ p {
   position: absolute;
   top: -100%;
   left: var(--space-md);
-  background: var(--green);
+  background: var(--olive);
   color: var(--surface);
   padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   z-index: 9999;
   font-weight: 600;
 }
@@ -302,25 +326,25 @@ p {
 }
 
 .form-label .required {
-  color: var(--error);
+  color: var(--grape);
   margin-left: 2px;
 }
 
 .form-input {
-  padding: 0.625rem 0.75rem;
-  border: 1px solid var(--rule);
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--rule);
   border-radius: var(--radius);
   background: var(--surface);
   font-size: 1rem;
   line-height: 1.5;
-  transition: border-color var(--transition-fast);
-  min-height: 44px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  min-height: 48px;
 }
 
 .form-input:focus {
-  border-color: var(--green);
-  outline: 2px solid var(--green);
-  outline-offset: -1px;
+  border-color: var(--olive);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(58, 74, 44, 0.12);
 }
 
 .form-input.error {
@@ -328,7 +352,7 @@ p {
 }
 
 .form-input.error:focus {
-  outline-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(156, 43, 33, 0.12);
 }
 
 .form-help {
@@ -369,30 +393,31 @@ p {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--rule);
+  padding: 0.625rem 1rem;
+  border: 1.5px solid var(--rule);
   border-radius: var(--radius);
   cursor: pointer;
-  min-height: 44px;
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  min-height: 48px;
+  transition: all var(--transition-fast);
   font-size: 0.875rem;
 }
 
 .radio-option:hover,
 .checkbox-option:hover {
-  border-color: var(--green);
-  background-color: var(--green-wash);
+  border-color: var(--olive);
+  background-color: var(--sage-pale);
 }
 
 .radio-option.selected,
 .checkbox-option.selected {
-  border-color: var(--green);
-  background-color: var(--green-wash);
+  border-color: var(--olive);
+  background-color: var(--sage-pale);
+  font-weight: 500;
 }
 
 .radio-option input,
 .checkbox-option input {
-  accent-color: var(--green);
+  accent-color: var(--olive);
 }
 
 /* ── Stock pill ─────────────────────────────────────────────────────────── */
@@ -401,25 +426,48 @@ p {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
   font-size: 0.75rem;
   font-weight: 600;
 }
 
 .stock-pill.in-stock {
-  background-color: var(--green-wash);
-  color: var(--green);
+  background-color: var(--sage-pale);
+  color: var(--olive);
 }
 
 .stock-pill.on-order {
-  background-color: var(--amber);
+  background-color: var(--grape);
   color: var(--surface);
 }
 
 .stock-pill.out-of-stock {
   background-color: var(--rule);
   color: var(--muted);
+}
+
+/* ── Circuit pattern overlay utility ───────────────────────────────────── */
+
+.circuit-overlay {
+  position: relative;
+}
+
+.circuit-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-mist-air.svg');
+  background-size: 600px;
+  background-repeat: repeat;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.circuit-overlay > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Reduced motion ─────────────────────────────────────────────────────── */
@@ -436,7 +484,7 @@ p {
 /* ── Selection ──────────────────────────────────────────────────────────── */
 
 ::selection {
-  background-color: var(--green-wash);
+  background-color: var(--sage-pale);
   color: var(--ink);
 }
 
@@ -452,4 +500,21 @@ p {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ── Fade-in animation ──────────────────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.6s var(--transition-base) forwards;
 }
