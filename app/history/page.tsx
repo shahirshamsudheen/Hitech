@@ -57,6 +57,27 @@ const PARTNERS = [
   { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
 ];
 
+const CERTIFICATES = [
+  {
+    image: '/certificates/kaspersky-partner.jpg',
+    tag: 'Authorization',
+    title: 'Kaspersky Authorised Partner',
+    desc: 'Authorised partner for Kaspersky Consumer Solutions Products for the state of Kerala.',
+  },
+  {
+    image: '/certificates/asus-premium-partner.jpg',
+    tag: 'Partnership',
+    title: 'ASUS Premium Partner 2026',
+    desc: 'Certified ASUS Premium Partner by ASUS India for the year 2026.',
+  },
+  {
+    image: '/certificates/canon-megatank-award.jpg',
+    tag: 'Award',
+    title: 'Canon MegaTank 10 Years of Excellence',
+    desc: 'Recognized by Canon for 10 years of excellence in building their MegaTank legacy.',
+  },
+];
+
 const GALLERIES = [
   {
     image: '/images/bga-chip-repair.jpg',
@@ -202,7 +223,47 @@ export default function HistoryPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
+      {/* Certificates & Awards */}
+      <section className={styles.certificatesSection} aria-label="Certificates and awards" id="certificates">
+        <div className={styles.container}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionLabel}>Certificates &amp; Awards</span>
+            <h2 className={styles.sectionTitle}>Verified Authorizations</h2>
+          </div>
+
+          <div className={styles.certificatesGrid}>
+            {CERTIFICATES.map((cert, idx) => (
+              <div key={idx} className={styles.certificateCard}>
+                <div className={styles.certificateImageWrapper}>
+                  <Image
+                    src={cert.image}
+                    alt={cert.title}
+                    width={600}
+                    height={450}
+                    className={styles.certificateImage}
+                  />
+                </div>
+                <div className={styles.certificateContent}>
+                  <span className={styles.certificateTag}>{cert.tag}</span>
+                  <h3 className={styles.certificateTitle}>{cert.title}</h3>
+                  <p className={styles.certificateDesc}>{cert.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Core Principles */}
+      <section className={styles.accreditationsSection} aria-label="Core Principles">
+        <div className={styles.container}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionLabel}>Our Philosophy</span>
+            <h2 className={styles.sectionTitle}>Core Principles</h2>
+          </div>
           <div className={styles.principlesGrid}>
             {PRINCIPLES.map((p, idx) => {
               const Icon = p.icon;

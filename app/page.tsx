@@ -200,7 +200,7 @@ export default function Home() {
           </div>
           <div className={styles.partnersGrid}>
             {PARTNERS.map((partner) => (
-              <div key={partner.name} className={styles.partnerCard}>
+              <Link key={partner.name} href="/history#certificates" className={styles.partnerCard}>
                 <Image
                   src={partner.src}
                   alt={partner.name}
@@ -208,7 +208,7 @@ export default function Home() {
                   height={120}
                   className={styles.partnerImage}
                 />
-              </div>
+              </Link>
             ))}
           </div>
         </div>
