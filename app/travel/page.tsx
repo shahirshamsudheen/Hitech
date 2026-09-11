@@ -2,20 +2,15 @@
 
 import { Suspense, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Plane, Globe, Compass, HeartPulse, Hotel, BookOpen } from 'lucide-react';
+import { Plane, Globe, HeartPulse } from 'lucide-react';
 import { generateReference } from '@/lib/referenceGenerator';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 const TRAVEL_SERVICES = [
-  { key: 'air-ticketing', icon: Plane, heading: 'Air Ticketing', line: 'Domestic and international flights with competitive fares on all major airlines worldwide.' },
-  { key: 'visa-gcc', icon: Globe, heading: 'Visa — GCC Countries', line: 'UAE, Saudi Arabia, Qatar, Oman, Bahrain, Kuwait employment, family, and visit visas.' },
-  { key: 'visa-schengen', icon: Globe, heading: 'Visa — Schengen & EU', line: 'Complete documentation for Europe tourist, business, conference, and student visas.' },
-  { key: 'visa-usa', icon: Globe, heading: 'Visa — USA & Australia', line: 'DS-160 application filling, interview scheduling, and document checklist verification.' },
-  { key: 'tours', icon: Compass, heading: 'Custom Tour Packages', line: 'Curated itineraries for Dubai, Europe, Southeast Asia, Kashmir, and domestic escapes.' },
-  { key: 'passport', icon: BookOpen, heading: 'Passport Services', line: 'Fresh passport applications, renewals, tatkal processing, and document verification.' },
-  { key: 'medical', icon: HeartPulse, heading: 'Overseas Medical Travel', line: 'International hospital appointments and accompanying travel arrangements.' },
-  { key: 'hotel', icon: Hotel, heading: 'Hotel Reservations', line: 'Worldwide confirmed hotel bookings and seamless airport transfer coordination.' },
+  { key: 'visa', icon: Globe, heading: 'Visa Services', line: 'Visa applications and visa stamping services.' },
+  { key: 'travel-support', icon: HeartPulse, heading: 'Travel & Medical Support', line: 'International medical appointment booking and international travel insurance.' },
+  { key: 'bookings', icon: Plane, heading: 'Bookings', line: 'Air tickets (international and domestic), hotel bookings, and travel packages.' }
 ];
 
 function TravelContent() {

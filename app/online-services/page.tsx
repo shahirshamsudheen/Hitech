@@ -2,19 +2,21 @@
 
 import { Suspense, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { FileEdit, Fingerprint, Receipt, Zap, Landmark, BadgePercent, FileText, Globe } from 'lucide-react';
+import { FileEdit, Globe, FileCheck, Receipt, Building, Pickaxe, Car, ShieldAlert, GraduationCap } from 'lucide-react';
 import { generateReference } from '@/lib/referenceGenerator';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './page.module.css';
 
 const EGOV_SERVICES = [
-  { key: 'psc', icon: FileEdit, heading: 'Kerala PSC Applications', line: 'One-time registration, profile updates, certificates upload, and competitive exam applications.' },
-  { key: 'aadhaar', icon: Fingerprint, heading: 'Aadhaar Service Desk', line: 'Biometric appointments, address & mobile updates, PVC card orders, and document linking.' },
-  { key: 'kseb', icon: Zap, heading: 'KSEB Electricity Services', line: 'Instant bill payment, tariff changes, meter shifting applications, and load enhancement.' },
-  { key: 'gov-fees', icon: Landmark, heading: 'Government Treasury & Fees', line: 'e-Treasury challans, university exam fees, police verification fees, and vehicle road tax.' },
-  { key: 'tax', icon: BadgePercent, heading: 'Panchayat & Property Tax', line: 'Building tax payments, land tax receipts (Sanchaya / Thandapper), and professional tax.' },
-  { key: 'bills', icon: Receipt, heading: 'Utility & Bill Payments', line: 'Water authority payments, BSNL & telephone bills, insurance premiums, and FASTag recharges.' },
-  { key: 'other-egov', icon: FileText, heading: 'Certificates & Other Online', line: 'Income, caste, nativity certificate applications via Akshaya / e-District portals.' },
+  { key: 'psc-employment', icon: FileEdit, heading: 'PSC & Employment', line: 'PSC profile registration, application submission, certificate upload/verification, and UPSC assistance.' },
+  { key: 'passport-police', icon: Globe, heading: 'Passport & Police Certificates', line: 'Passport applications (new, renewal, reissue) and Police Clearance Certificates (PCC) via domestic and international routes.' },
+  { key: 'certificate-attestation', icon: FileCheck, heading: 'Certificate Attestation (NORKA)', line: 'Educational (HRD + Embassy/MOFA) and Non-educational (Home Dept + Embassy/MOFA) certificate attestation.' },
+  { key: 'utility-bills', icon: Receipt, heading: 'Utility Bill Payments', line: 'KSEB electricity, KWA water, BSNL, mobile postpaid, and Asianet cable/DTH recharge payments.' },
+  { key: 'registration-dept', icon: Building, heading: 'Registration Department', line: 'Encumbrance Certificate applications and document registration fee & stamp duty e-payments.' },
+  { key: 'mining-geology', icon: Pickaxe, heading: 'Mining & Geology', line: 'Mineral movement permit fees and royalty e-payments via KOMPAS portal.' },
+  { key: 'transport', icon: Car, heading: 'Transport', line: 'Vehicle registration (RC), Driving licence, road tax, e-Challan, and fitness certificates.' },
+  { key: 'kerala-police', icon: ShieldAlert, heading: 'Kerala Police e-Services', line: 'FIR copy downloads, Vehicle NOCs, and Character/antecedent verification certificates.' },
+  { key: 'university', icon: GraduationCap, heading: 'University Admissions & Payments', line: 'Admission apps, Entrance exams (including VCI and AICEE - TBC), and University fee payments.' },
 ];
 
 function EGovServicesContent() {
