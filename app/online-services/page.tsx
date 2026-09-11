@@ -30,7 +30,6 @@ function EGovServicesContent() {
     name: '', mobile: '', service: '', notes: '', consent: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState('');
 
   const updateField = (field: string, value: unknown) => {
@@ -53,30 +52,19 @@ function EGovServicesContent() {
     if (!formData.service) errs.service = 'Select a service.';
     if (!formData.consent) errs.consent = 'You must agree to be contacted.';
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
-    setReference(generateReference('OS'));
-    setSubmitted(true);
+    
+    const ref = generateReference('OS');
+    setReference(ref);
+    const whatsappUrl = buildWhatsAppUrl({
+      reference: ref,
+      module: 'online-services',
+      name: formData.name,
+      mobile: formData.mobile,
+      service: formData.service,
+      notes: formData.notes,
+    });
+    window.open(whatsappUrl, '_blank');
   };
-
-  if (submitted) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.splitContainer}>
-          <div className={styles.confirmCard}>
-            <svg className={styles.confirmIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <h1 className={styles.confirmHeading}>Enquiry received.</h1>
-            <p className={styles.referenceNumber}>Reference: {reference}</p>
-            <p className={styles.confirmText}>We will call you on {formData.mobile} within one working day.</p>
-            <a href={buildWhatsAppUrl({ reference, module: 'online-services' })} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
-              Ask on WhatsApp
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.page}>

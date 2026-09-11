@@ -37,7 +37,6 @@ function ServiceContent() {
     problem: '', urgency: 'Normal', notes: '', consent: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState('');
 
   const updateField = useCallback((field: string, value: unknown) => {
@@ -52,6 +51,8 @@ function ServiceContent() {
 
   const activeService = SERVICES.find(s => s.key === selectedService);
 
+  const isHardwareRepair = ['motherboard', 'laptop-desktop', 'printer', 'data-recovery'].includes(selectedService);
+
   const handleSubmit = () => {
     const errs: Record<string, string> = {};
     if (!formData.fullName.trim()) errs.fullName = 'Enter your full name.';
@@ -65,40 +66,20 @@ function ServiceContent() {
 
     const ref = generateReference('SR');
     setReference(ref);
-    setSubmitted(true);
-  };
-
-  if (submitted) {
-    const whatsAppUrl = buildServiceWhatsAppUrl({
-      reference,
+    const whatsappUrl = buildWhatsAppUrl({
+      reference: ref,
+      module: 'service',
       name: formData.fullName,
-      equipment: formData.equipmentType || 'Not specified',
-      brand: formData.brand || 'Not specified',
+      mobile: formData.mobile,
+      area: formData.area,
+      customerType: formData.customerType,
+      equipment: isHardwareRepair ? formData.equipmentType : undefined,
+      brand: isHardwareRepair ? formData.brand : undefined,
       problem: formData.problem.slice(0, 100),
+      service: activeService?.heading,
     });
-
-    return (
-      <div className={styles.page}>
-        <div className={styles.splitContainer}>
-          <div className={styles.confirmCard}>
-            <svg className={styles.confirmIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <h1 className={styles.confirmHeading}>Request received.</h1>
-            <p className={styles.referenceNumber}>Reference: {reference}</p>
-            <p className={styles.confirmText}>
-              We will call you on {formData.mobile} within one working day.
-              If urgent, call us directly on +91 472 296007 or send details on WhatsApp.
-            </p>
-            <a href={whatsAppUrl} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
-              Send details on WhatsApp instead
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    window.open(whatsappUrl, '_blank');
+  };
 
   return (
     <div className={styles.page}>
@@ -236,37 +217,39 @@ function ServiceContent() {
                   </div>
                 </div>
 
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                  <div className="form-group">
-                    <label htmlFor="sr-equipment" className="form-label">Equipment</label>
-                    <select
-                      id="sr-equipment"
-                      className="form-input"
-                      value={formData.equipmentType}
-                      onChange={e => updateField('equipmentType', e.target.value)}
-                    >
-                      <option value="">Select</option>
-                      {['Laptop', 'Desktop', 'Motherboard only', 'Printer', 'CCTV DVR/NVR', 'Data Storage', 'Other'].map(t => (
-                        <option key={t} value={t}>{t}</option>
-                      ))}
-                    </select>
-                  </div>
+                {isHardwareRepair && (
+                  <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div className="form-group">
+                      <label htmlFor="sr-equipment" className="form-label">Equipment</label>
+                      <select
+                        id="sr-equipment"
+                        className="form-input"
+                        value={formData.equipmentType}
+                        onChange={e => updateField('equipmentType', e.target.value)}
+                      >
+                        <option value="">Select</option>
+                        {['Laptop', 'Desktop', 'Motherboard only', 'Printer', 'CCTV DVR/NVR', 'Data Storage', 'Other'].map(t => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
+                    </div>
 
-                  <div className="form-group">
-                    <label htmlFor="sr-brand" className="form-label">Brand</label>
-                    <select
-                      id="sr-brand"
-                      className="form-input"
-                      value={formData.brand}
-                      onChange={e => updateField('brand', e.target.value)}
-                    >
-                      <option value="">Select</option>
-                      {['Apple', 'HP', 'Dell', 'Lenovo', 'Asus', 'Acer', 'Canon', 'Epson', 'Other'].map(b => (
-                        <option key={b} value={b}>{b}</option>
-                      ))}
-                    </select>
+                    <div className="form-group">
+                      <label htmlFor="sr-brand" className="form-label">Brand</label>
+                      <select
+                        id="sr-brand"
+                        className="form-input"
+                        value={formData.brand}
+                        onChange={e => updateField('brand', e.target.value)}
+                      >
+                        <option value="">Select</option>
+                        {['Apple', 'HP', 'Dell', 'Lenovo', 'Asus', 'Acer', 'Canon', 'Epson', 'Other'].map(b => (
+                          <option key={b} value={b}>{b}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="form-group">
                   <label htmlFor="sr-problem" className="form-label">Problem description <span className="required">*</span></label>

@@ -30,7 +30,6 @@ function TravelContent() {
     travellers: '', destination: '', notes: '', consent: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState('');
 
   const updateField = (field: string, value: unknown) => {
@@ -46,6 +45,8 @@ function TravelContent() {
 
   const activeService = TRAVEL_SERVICES.find(s => s.key === selectedService);
 
+  const isBookings = selectedService === 'bookings';
+
   const handleSubmit = () => {
     const errs: Record<string, string> = {};
     if (!formData.name.trim()) errs.name = 'Enter your name.';
@@ -53,30 +54,22 @@ function TravelContent() {
     if (!formData.service) errs.service = 'Select a service.';
     if (!formData.consent) errs.consent = 'You must agree to be contacted.';
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
-    setReference(generateReference('TR'));
-    setSubmitted(true);
+    
+    const ref = generateReference('TR');
+    setReference(ref);
+    const whatsappUrl = buildWhatsAppUrl({
+      reference: ref,
+      module: 'travel',
+      name: formData.name,
+      mobile: formData.mobile,
+      service: activeService?.heading,
+      dateFrom: isBookings ? formData.dateFrom : undefined,
+      destination: formData.destination,
+      travellers: isBookings ? formData.travellers : undefined,
+      notes: formData.notes,
+    });
+    window.open(whatsappUrl, '_blank');
   };
-
-  if (submitted) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.splitContainer}>
-          <div className={styles.confirmCard}>
-            <svg className={styles.confirmIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <h1 className={styles.confirmHeading}>Travel enquiry received.</h1>
-            <p className={styles.referenceNumber}>Reference: {reference}</p>
-            <p className={styles.confirmText}>We will call you on {formData.mobile} within one working day.</p>
-            <a href={buildWhatsAppUrl({ reference, module: 'travel' })} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
-              Ask on WhatsApp
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.page}>
@@ -196,17 +189,19 @@ function TravelContent() {
                 </div>
 
                 <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                  <div className="form-group">
-                    <label htmlFor="tr-from" className="form-label">Travel date (from)</label>
-                    <input
-                      id="tr-from"
-                      type="date"
-                      className="form-input"
-                      value={formData.dateFrom}
-                      onChange={e => updateField('dateFrom', e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
+                  {isBookings && (
+                    <div className="form-group">
+                      <label htmlFor="tr-from" className="form-label">Travel date (from)</label>
+                      <input
+                        id="tr-from"
+                        type="date"
+                        className="form-input"
+                        value={formData.dateFrom}
+                        onChange={e => updateField('dateFrom', e.target.value)}
+                      />
+                    </div>
+                  )}
+                  <div className="form-group" style={{ gridColumn: isBookings ? 'auto' : '1 / -1' }}>
                     <label htmlFor="tr-dest" className="form-label">Destination</label>
                     <input
                       id="tr-dest"
@@ -219,18 +214,20 @@ function TravelContent() {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="tr-travellers" className="form-label">Number of travellers</label>
-                  <input
-                    id="tr-travellers"
-                    type="number"
-                    min="1"
-                    className="form-input"
-                    value={formData.travellers}
-                    onChange={e => updateField('travellers', e.target.value)}
-                    placeholder="e.g. 2 adults, 1 child"
-                  />
-                </div>
+                {isBookings && (
+                  <div className="form-group">
+                    <label htmlFor="tr-travellers" className="form-label">Number of travellers</label>
+                    <input
+                      id="tr-travellers"
+                      type="number"
+                      min="1"
+                      className="form-input"
+                      value={formData.travellers}
+                      onChange={e => updateField('travellers', e.target.value)}
+                      placeholder="e.g. 2 adults, 1 child"
+                    />
+                  </div>
+                )}
 
                 <div className="form-group">
                   <label htmlFor="tr-notes" className="form-label">Additional notes</label>

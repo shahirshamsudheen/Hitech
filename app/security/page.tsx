@@ -25,7 +25,6 @@ function SecurityContent() {
     cameraCount: '', timeline: '', notes: '', consent: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState('');
 
   const updateField = (field: string, value: unknown) => {
@@ -48,30 +47,24 @@ function SecurityContent() {
     if (!formData.siteLocation.trim()) errs.siteLocation = 'Enter the site location.';
     if (!formData.consent) errs.consent = 'You must agree to be contacted.';
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
-    setReference(generateReference('SS'));
-    setSubmitted(true);
+    
+    const ref = generateReference('SS');
+    setReference(ref);
+    const whatsappUrl = buildWhatsAppUrl({
+      reference: ref,
+      module: 'security',
+      name: formData.name,
+      mobile: formData.mobile,
+      orgName: formData.organisation,
+      customerType: formData.customerType,
+      siteLocation: formData.siteLocation,
+      cameraCount: selectedService === 'cctv' ? formData.cameraCount : undefined,
+      timeline: formData.timeline,
+      notes: formData.notes,
+      service: activeService?.heading,
+    });
+    window.open(whatsappUrl, '_blank');
   };
-
-  if (submitted) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.splitContainer}>
-          <div className={styles.confirmCard}>
-            <svg className={styles.confirmIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
-            <h1 className={styles.confirmHeading}>Site survey request received.</h1>
-            <p className={styles.referenceNumber}>Reference: {reference}</p>
-            <p className={styles.confirmText}>We will call you on {formData.mobile} within one working day to arrange a visit.</p>
-            <a href={buildWhatsAppUrl({ reference, module: 'security' })} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
-              Send site photos on WhatsApp
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.page}>
@@ -217,20 +210,22 @@ function SecurityContent() {
                   {errors.siteLocation && <p className="form-error" role="alert">{errors.siteLocation}</p>}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="ss-cameras" className="form-label">Approximate number of cameras</label>
-                  <select
-                    id="ss-cameras"
-                    className="form-input"
-                    value={formData.cameraCount}
-                    onChange={e => updateField('cameraCount', e.target.value)}
-                  >
-                    <option value="">Select quantity</option>
-                    {['1–4 cameras', '5–8 cameras', '9–16 cameras', '17–32 cameras', '32+ enterprise', 'Not sure'].map(o => (
-                      <option key={o} value={o}>{o}</option>
-                    ))}
-                  </select>
-                </div>
+                {selectedService === 'cctv' && (
+                  <div className="form-group">
+                    <label htmlFor="ss-cameras" className="form-label">Approximate number of cameras</label>
+                    <select
+                      id="ss-cameras"
+                      className="form-input"
+                      value={formData.cameraCount}
+                      onChange={e => updateField('cameraCount', e.target.value)}
+                    >
+                      <option value="">Select quantity</option>
+                      {['1–4 cameras', '5–8 cameras', '9–16 cameras', '17–32 cameras', '32+ enterprise', 'Not sure'].map(o => (
+                        <option key={o} value={o}>{o}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
                 <div className="form-group">
                   <label htmlFor="ss-timeline" className="form-label">Required timeline</label>

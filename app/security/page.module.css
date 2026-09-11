@@ -21,7 +21,7 @@
   background-image: url('/brand/HITECH-circuit-deep-air.svg');
   background-size: 800px;
   background-repeat: repeat;
-  opacity: 0.06;
+  opacity: 0.26;
   pointer-events: none;
 }
 
@@ -140,7 +140,8 @@
   align-items: flex-start;
   text-align: left;
   background: #FFFFFF;
-  border: 2px solid transparent;
+  border: none;
+  outline: none;
   border-radius: 22px;
   padding: 1.75rem;
   cursor: pointer;
@@ -151,12 +152,10 @@
 .serviceCard:hover {
   transform: translateY(-3px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-  border-color: rgba(74, 107, 83, 0.3);
 }
 
 .serviceCardActive {
   background: #FFFFFF;
-  border-color: var(--olive);
   box-shadow: 0 10px 30px rgba(74, 107, 83, 0.16);
 }
 
