@@ -73,8 +73,20 @@ const CERTIFICATES = [
   {
     image: '/certificates/canon-megatank-award.jpg',
     tag: 'Award',
-    title: 'Canon MegaTank 10 Years of Excellence',
-    desc: 'Recognized by Canon for 10 years of excellence in building their MegaTank legacy.',
+    title: 'Canon MegaTank — 10 Years of Excellence',
+    desc: 'Recognized by Canon for 10 years of excellence in building the MegaTank legacy.',
+  },
+  {
+    image: '/certificates/canon-authorized-reseller.jpg',
+    tag: 'Authorization',
+    title: 'Canon Authorised Reseller',
+    desc: 'Authorized to stock and sell Canon Inkjet and Laser Printers to end customers across Kerala.',
+  },
+  {
+    image: '/certificates/canon-training-certificate.jpg',
+    tag: 'Training',
+    title: 'Canon Product & Sales Training',
+    desc: 'Certificate of completion for Inkjet Product & Sales Training programme by Canon India.',
   },
 ];
 

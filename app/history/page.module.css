@@ -466,6 +466,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-xl);
+  justify-items: center;
 }
 
 @media (min-width: 768px) {
