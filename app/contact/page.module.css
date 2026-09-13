@@ -1,0 +1,350 @@
+/* ── Contact Page — matches the split hero + form pattern used across
+   /service, /security, /travel, /online-services ────────────────────────── */
+
+.page {
+  background-color: var(--paper);
+  padding-bottom: var(--space-4xl);
+}
+
+/* ── Hero Banner ─────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  padding: 4rem 0 3.5rem;
+  background: linear-gradient(160deg, var(--olive) 0%, var(--deep-ground) 100%);
+  color: #FFFFFF;
+  overflow: hidden;
+}
+
+.heroPattern {
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-deep-air.svg');
+  background-size: 800px;
+  background-repeat: repeat;
+  opacity: 0.26;
+  pointer-events: none;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .heroInner {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--sage);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-md);
+  backdrop-filter: blur(10px);
+}
+
+.heading {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.15;
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+}
+
+.intro {
+  font-size: 1.125rem;
+  color: var(--sage);
+  max-width: 58ch;
+  line-height: 1.7;
+}
+
+/* ── Split Section (Info + Map on Left, Form on Right) ────────────────────── */
+
+.splitSection {
+  padding: var(--space-3xl) 0;
+}
+
+.splitContainer {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .splitContainer {
+    padding: 0 var(--space-xl);
+  }
+}
+
+.splitGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .splitGrid {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: var(--space-3xl);
+  }
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Address card */
+.addressCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: var(--space-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.cardIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--sage-pale);
+  color: var(--olive);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cardHeading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+
+.addressText {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  font-style: normal;
+}
+
+/* Phone directory */
+.phonesContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.phoneCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  border-radius: 18px;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  transition: all var(--transition-fast);
+}
+
+.phoneCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+.phoneIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--sage-pale);
+  color: var(--olive);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.phoneCard:hover .phoneIconBox {
+  background: var(--olive);
+  color: #FFFFFF;
+}
+
+.phoneCardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 500px) {
+  .phoneCardContent {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.phoneNumber {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.phoneRole {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* WhatsApp + hours row */
+.miscRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.hoursBox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.hoursIcon {
+  color: var(--muted);
+}
+
+/* Map */
+.mapContainer {
+  border-radius: 24px;
+  overflow: hidden;
+  border: none;
+  min-height: 320px;
+  background-color: var(--sage-pale);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.mapContainer iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border: 0;
+  display: block;
+}
+
+/* ── Right Column: Form ───────────────────────────────────────────────────── */
+
+.rightColumn {
+  position: sticky;
+  top: 90px;
+}
+
+.formCard {
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 24px;
+  padding: 2.25rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.formCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/brand/HITECH-circuit-sage-air.svg');
+  background-size: 500px;
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.formCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.formHeading {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+.formSubheading {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: var(--space-lg);
+}
+
+/* ── Confirmation ────────────────────────────────────────────────────────── */
+
+.confirmCard {
+  max-width: 540px;
+  margin: var(--space-4xl) auto;
+  text-align: center;
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+}
+
+.confirmIcon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--space-lg);
+  color: var(--olive);
+}
+
+.confirmHeading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+  color: var(--ink);
+}
+
+.referenceNumber {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--olive);
+  margin-bottom: var(--space-lg);
+}
+
+.confirmText {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  margin-bottom: var(--space-xl);
+  line-height: 1.6;
+}
