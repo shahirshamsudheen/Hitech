@@ -1,0 +1,2827 @@
+From 0b234c21f16c4d133053e850b2dc63922a093c1d Mon Sep 17 00:00:00 2001
+From: Shahir <shahir@hitechkallara.com>
+Date: Sun, 13 Sep 2026 10:13:49 +0000
+Subject: [PATCH] Fix broken nav links, silent form failures, and duplicated
+ site data
+
+Bugs
+- Header dropdowns for eGov and Travel linked to 12 service keys that do not
+  exist on the target pages (?service=psc, aadhaar, visa-australia, tour-dubai,
+  ...). Every one landed with nothing pre-selected. Nav is now generated from
+  the same arrays the pages render, so the keys cannot drift again.
+- /travel gated the travel-date and traveller-count fields on
+  selectedService === 'bookings', a key that is not in the list. Both fields
+  were permanently hidden. Now gated on services that involve a journey.
+- /contact validated, displayed "Message sent", and sent nothing anywhere.
+  There is no backend; it now delivers via WhatsApp like the other forms.
+- /institutions only reached us if the user clicked WhatsApp on the
+  confirmation screen. Now fires on submit.
+- /service, /security, /travel, /online-services generated a reference number
+  and never rendered it. Shared FormConfirmation panel added to all four.
+- generateReference could collide: random(100-999) + counter then .slice(-3)
+  turned 1004 into "004". Rewritten with a session block plus a counter.
+- Header called setState synchronously inside an effect (React 19 lint error).
+  Guarded with a ref so it only fires on an actual navigation.
+
+Single source of truth
+- data/business.ts, data/partners.ts, data/services.ts, data/navigation.ts.
+  Address, phone numbers, hours and the partner list were duplicated across
+  six files.
+- Landline standardised to +91 472 2960076. The displayed "+91 472 296007"
+  was six digits and not dialable; the tel: link already used seven.
+  Confirmed correct by the owner.
+- Opening hours standardised to 9:00 AM - 7:30 PM. The homepage published
+  this while the footer and contact page said "to be confirmed".
+  Confirmed correct by the owner.
+
+Routing and SEO
+- /about rendered app/history/page.tsx verbatim. Removed, 308 to /history.
+- /history added to sitemap.ts, /about removed.
+- Added metadata to /travel, /online-services, /institutions, /contact, which
+  shipped with no title or description.
+
+Content
+- Removed unverifiable claims: "saving up to 70% in repair costs" and
+  "one of a kind in Kerala".
+
+Cleanup
+- WhatsApp SVG was pasted inline four times, now components/BrandIcons.tsx.
+- Emoji phone icons in the header and footer replaced with lucide.
+- Off-palette hex #3A6351 and #5A6D63 on /contact replaced with tokens.
+- Removed dead imports (WrenchIcon, buildServiceWhatsAppUrl, five on /history).
+- Header 415 -> 194 lines, app/page.tsx 447 -> 162 (split into components/home).
+
+Verified: next build passes, tsc clean, eslint 0 errors 0 warnings, all routes
+200, /about redirects, 35 nav deep links checked against the service registry
+with 0 broken.
+---
+ app/about/page.tsx                  |   7 -
+ app/contact/layout.tsx              |  11 +
+ app/contact/page.tsx                |  65 +++--
+ app/globals.css                     |   8 +-
+ app/history/page.tsx                |  13 +-
+ app/institutions/layout.tsx         |  11 +
+ app/institutions/page.tsx           |  35 ++-
+ app/legal/privacy/page.tsx          |   7 +-
+ app/online-services/layout.tsx      |  11 +
+ app/online-services/page.tsx        |  58 +++--
+ app/page.tsx                        | 379 ++++------------------------
+ app/security/page.module.css        |  46 ++++
+ app/security/page.tsx               |  44 +++-
+ app/service/page.tsx                |  69 +++--
+ app/sitemap.ts                      |   5 +-
+ app/technology/page.tsx             |   3 +-
+ app/travel/layout.tsx               |  11 +
+ app/travel/page.tsx                 |  61 +++--
+ components/BrandIcons.tsx           |  44 ++++
+ components/Footer.tsx               |  52 ++--
+ components/FormConfirmation.tsx     |  58 +++++
+ components/Header.tsx               | 293 +++------------------
+ components/HeaderMobileNav.tsx      |  84 ++++++
+ components/home/BgaSpotlight.tsx    | 104 ++++++++
+ components/home/LocationContact.tsx |  73 ++++++
+ components/home/TrustedBy.tsx       |  73 ++++++
+ data/business.ts                    |  95 +++++++
+ data/navigation.ts                  |  81 ++++++
+ data/partners.ts                    |  24 ++
+ data/services.ts                    |  88 +++++++
+ lib/referenceGenerator.ts           |  37 +--
+ next.config.ts                      |  11 +-
+ 32 files changed, 1208 insertions(+), 753 deletions(-)
+ delete mode 100644 app/about/page.tsx
+ create mode 100644 app/contact/layout.tsx
+ create mode 100644 app/institutions/layout.tsx
+ create mode 100644 app/online-services/layout.tsx
+ create mode 100644 app/travel/layout.tsx
+ create mode 100644 components/BrandIcons.tsx
+ create mode 100644 components/FormConfirmation.tsx
+ create mode 100644 components/HeaderMobileNav.tsx
+ create mode 100644 components/home/BgaSpotlight.tsx
+ create mode 100644 components/home/LocationContact.tsx
+ create mode 100644 components/home/TrustedBy.tsx
+ create mode 100644 data/business.ts
+ create mode 100644 data/navigation.ts
+ create mode 100644 data/partners.ts
+ create mode 100644 data/services.ts
+
+diff --git a/app/about/page.tsx b/app/about/page.tsx
+deleted file mode 100644
+index 2166789..0000000
+--- a/app/about/page.tsx
++++ /dev/null
+@@ -1,7 +0,0 @@
+-import HistoryPage from '../history/page';
+-
+-export { metadata } from '../history/page';
+-
+-export default function AboutPage() {
+-  return <HistoryPage />;
+-}
+diff --git a/app/contact/layout.tsx b/app/contact/layout.tsx
+new file mode 100644
+index 0000000..3876785
+--- /dev/null
++++ b/app/contact/layout.tsx
+@@ -0,0 +1,11 @@
++import type { Metadata } from 'next';
++
++export const metadata: Metadata = {
++  title: 'Contact',
++  description:
++    'Call, WhatsApp or visit HITECH at KG Building, Main Road, Kallara P.O, Trivandrum, Kerala 695608.',
++};
++
++export default function SegmentLayout({ children }: { children: React.ReactNode }) {
++  return <>{children}</>;
++}
+diff --git a/app/contact/page.tsx b/app/contact/page.tsx
+index f9fb7af..e70b94b 100644
+--- a/app/contact/page.tsx
++++ b/app/contact/page.tsx
+@@ -3,6 +3,9 @@
+ import { useState } from 'react';
+ import { generateReference } from '@/lib/referenceGenerator';
+ import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import FormConfirmation from '@/components/FormConfirmation';
++import { WhatsAppIcon } from '@/components/BrandIcons';
++import { ADDRESS, PHONES, HOURS } from '@/data/business';
+ import styles from '../security/page.module.css';
+ 
+ export default function ContactPage() {
+@@ -12,6 +15,7 @@ export default function ContactPage() {
+   const [errors, setErrors] = useState<Record<string, string>>({});
+   const [submitted, setSubmitted] = useState(false);
+   const [reference, setReference] = useState('');
++  const [whatsappUrl, setWhatsappUrl] = useState('');
+ 
+   const updateField = (field: string, value: unknown) => {
+     setFormData(prev => ({ ...prev, [field]: value }));
+@@ -25,8 +29,17 @@ export default function ContactPage() {
+     if (!formData.message.trim()) errs.message = 'Enter your message.';
+     if (!formData.consent) errs.consent = 'You must agree to be contacted.';
+     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+-    setReference(generateReference('GE'));
++    const ref = generateReference('GE');
++    setReference(ref);
++    const url = buildWhatsAppUrl({
++      reference: ref,
++      name: formData.name,
++      mobile: formData.mobile,
++      notes: formData.message,
++    });
++    setWhatsappUrl(url);
+     setSubmitted(true);
++    window.open(url, '_blank');
+   };
+ 
+   if (submitted) {
+@@ -34,12 +47,14 @@ export default function ContactPage() {
+       <div className={styles.page}>
+         <div className={styles.formSection}>
+           <div className={styles.formContainer}>
+-            <div className={styles.confirmation}>
+-              <svg className={styles.confirmIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+-              <h1 className={styles.confirmHeading}>Message sent.</h1>
+-              <p className={styles.referenceNumber}>{reference}</p>
+-              <p className={styles.confirmText}>We will get back to you on {formData.mobile}.</p>
+-            </div>
++            <FormConfirmation
++              styles={styles}
++              reference={reference}
++              heading="Message received."
++              mobile={formData.mobile}
++              whatsappUrl={whatsappUrl}
++              autoOpened
++            />
+           </div>
+         </div>
+       </div>
+@@ -61,27 +76,26 @@ export default function ContactPage() {
+               <div className={styles.contentBlock}>
+                 <h2>Address</h2>
+                 <p>
+-                  KG Building, Main Road<br />
+-                  Kallara P.O, Trivandrum<br />
+-                  Kerala 695608
++                  {ADDRESS.line1}<br />
++                  {ADDRESS.line2}<br />
++                  {ADDRESS.line3}
+                 </p>
+               </div>
+ 
+               <div className={styles.contentBlock}>
+                 <h2>Phone Directory</h2>
+-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', marginTop: '0.5rem' }}>
+-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.5rem', background: 'var(--olive)', color: '#fff', borderRadius: '4px' }}>Tel 1</span>
+-                    <a href="tel:+919496818237" style={{ color: 'var(--ink)', fontWeight: 600, textDecoration: 'none' }}>+91 9496 818237 <span style={{ fontSize: '0.8125rem', color: 'var(--muted)', fontWeight: 400 }}>(WhatsApp / Primary)</span></a>
+-                  </div>
+-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.5rem', background: '#3A6351', color: '#fff', borderRadius: '4px' }}>Landline</span>
+-                    <a href="tel:+914722960076" style={{ color: 'var(--ink)', fontWeight: 600, textDecoration: 'none' }}>+91 472 296007 <span style={{ fontSize: '0.8125rem', color: 'var(--muted)', fontWeight: 400 }}>(Office)</span></a>
+-                  </div>
+-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '0.2rem 0.5rem', background: '#5A6D63', color: '#fff', borderRadius: '4px' }}>Tel 2</span>
+-                    <a href="tel:+919447765757" style={{ color: 'var(--ink)', fontWeight: 600, textDecoration: 'none' }}>+91 9447 765757 <span style={{ fontSize: '0.8125rem', color: 'var(--muted)', fontWeight: 400 }}>(Direct Helpline)</span></a>
+-                  </div>
++                <div className={styles.phoneDirectory}>
++                  {PHONES.map((phone) => (
++                    <div key={phone.tel} className={styles.phoneDirectoryRow}>
++                      <span className={styles.phoneDirectoryTag}>
++                        {phone.kind === 'landline' ? 'Landline' : 'Mobile'}
++                      </span>
++                      <a href={`tel:${phone.tel}`} className={styles.phoneDirectoryLink}>
++                        {phone.display}
++                        <span className={styles.phoneDirectoryRole}>({phone.label})</span>
++                      </a>
++                    </div>
++                  ))}
+                 </div>
+               </div>
+ 
+@@ -93,15 +107,14 @@ export default function ContactPage() {
+                   rel="noopener noreferrer"
+                   className="btn btn-whatsapp"
+                 >
++                  <WhatsAppIcon size={20} />
+                   Message us on WhatsApp
+                 </a>
+               </div>
+ 
+               <div className={styles.contentBlock}>
+                 <h2>Hours</h2>
+-                <p style={{ color: 'var(--muted)', fontStyle: 'italic' }}>
+-                  Monday – Saturday · Hours to be confirmed
+-                </p>
++                <p>{HOURS.full}</p>
+               </div>
+             </div>
+ 
+diff --git a/app/globals.css b/app/globals.css
+index c7f074a..4e56cd2 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -6,9 +6,13 @@
+  * Apple-inspired: rounded, premium, minimal.
+  */
+ 
+-/* ── Google Font — Inter ────────────────────────────────────────────────── */
++/* ── Google Font — Inter ───────────────────────────────────────────────────
++   NOT VERIFIED: this @import is render-blocking. Moving to next/font in
++   app/layout.tsx self-hosts and preloads the files, but that build could not
++   be tested in the environment these edits were made in. Change it locally
++   and confirm the build before shipping.
++   Brand Standards Issue 02 specifies Archivo, not Inter. Open decision.   */
+ @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+-
+ :root {
+   /* ── Brand — Issue 02 ────────────────────────────────────────────────── */
+   --olive:          #3A4A2C;   /* Deep olive — primary */
+diff --git a/app/history/page.tsx b/app/history/page.tsx
+index 589a77a..0fc67d5 100644
+--- a/app/history/page.tsx
++++ b/app/history/page.tsx
+@@ -1,7 +1,7 @@
+ import Image from 'next/image';
+-import Link from 'next/link';
+ import type { Metadata } from 'next';
+-import { Cpu, ShieldCheck, Award, Wrench, Building2, Landmark, CheckCircle, Clock } from 'lucide-react';
++import { Award, Wrench, Landmark, Clock } from 'lucide-react';
++import { PARTNERS } from '@/data/partners';
+ import styles from './page.module.css';
+ 
+ export const metadata: Metadata = {
+@@ -45,17 +45,12 @@ const TIMELINE = [
+   {
+     year: '2023 – Present',
+     title: 'Advanced BGA Lab & Multi-Brand Accreditations',
+-    text: 'Upgraded the laboratory with an infrared Ball Grid Array (BGA) rework station for micro-pitch ICs and GPU reflows (one of a kind in Kerala). Formally accredited as Acer Authorised Partner, Asus Gold Partner, Canon Premium Partner, and Epson Authorised Partner.',
++    text: 'Upgraded the laboratory with an infrared Ball Grid Array (BGA) rework station for micro-pitch ICs and GPU reflows. Formally accredited as Acer Authorised Partner, Asus Gold Partner, Canon Premium Partner, and Epson Authorised Partner.',
+     side: 'left',
+   },
+ ];
+ 
+-const PARTNERS = [
+-  { name: 'Acer Authorised Partner', src: '/partners/acer-partner.png' },
+-  { name: 'Asus Business Partner Gold', src: '/partners/asus-partner.png' },
+-  { name: 'Canon Premium Partner', src: '/partners/canon-partner.png' },
+-  { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
+-];
++
+ 
+ const CERTIFICATES = [
+   {
+diff --git a/app/institutions/layout.tsx b/app/institutions/layout.tsx
+new file mode 100644
+index 0000000..b50e2b8
+--- /dev/null
++++ b/app/institutions/layout.tsx
+@@ -0,0 +1,11 @@
++import type { Metadata } from 'next';
++
++export const metadata: Metadata = {
++  title: 'For Institutions',
++  description:
++    'Supply, installation and AMC under one contract for government offices, health centres, schools and businesses across the Trivandrum region.',
++};
++
++export default function SegmentLayout({ children }: { children: React.ReactNode }) {
++  return <>{children}</>;
++}
+diff --git a/app/institutions/page.tsx b/app/institutions/page.tsx
+index 2c8cdcf..dc9afed 100644
+--- a/app/institutions/page.tsx
++++ b/app/institutions/page.tsx
+@@ -3,6 +3,7 @@
+ import { useState } from 'react';
+ import { generateReference } from '@/lib/referenceGenerator';
+ import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import FormConfirmation from '@/components/FormConfirmation';
+ import styles from '../security/page.module.css';
+ 
+ const NEEDS_OPTIONS = [
+@@ -19,6 +20,7 @@ export default function InstitutionsPage() {
+   const [errors, setErrors] = useState<Record<string, string>>({});
+   const [submitted, setSubmitted] = useState(false);
+   const [reference, setReference] = useState('');
++  const [whatsappUrl, setWhatsappUrl] = useState('');
+ 
+   const updateField = (field: string, value: unknown) => {
+     setFormData(prev => ({ ...prev, [field]: value }));
+@@ -39,8 +41,24 @@ export default function InstitutionsPage() {
+     if (formData.needs.length === 0) errs.needs = 'Select at least one option.';
+     if (!formData.consent) errs.consent = 'You must agree to be contacted.';
+     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+-    setReference(generateReference('IN'));
++    const ref = generateReference('IN');
++    setReference(ref);
++    const url = buildWhatsAppUrl({
++      reference: ref,
++      name: formData.contactName,
++      mobile: formData.mobile,
++      orgName: formData.organisation,
++      customerType: 'Government / Institution',
++      area: formData.location,
++      service: formData.needs.join(', '),
++      timeline: formData.timeline,
++      notes: [formData.department, formData.designation, formData.quantity, formData.notes]
++        .filter(Boolean)
++        .join(' · '),
++    });
++    setWhatsappUrl(url);
+     setSubmitted(true);
++    window.open(url, '_blank');
+   };
+ 
+   if (submitted) {
+@@ -48,13 +66,14 @@ export default function InstitutionsPage() {
+       <div className={styles.page}>
+         <div className={styles.formSection}>
+           <div className={styles.formContainer}>
+-            <div className={styles.confirmation}>
+-              <svg className={styles.confirmIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+-              <h1 className={styles.confirmHeading}>Quotation request received.</h1>
+-              <p className={styles.referenceNumber}>{reference}</p>
+-              <p className={styles.confirmText}>We will call you on {formData.mobile} within one working day.</p>
+-              <a href={buildWhatsAppUrl({ reference, module: 'technology' })} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">Send details on WhatsApp</a>
+-            </div>
++            <FormConfirmation
++              styles={styles}
++              reference={reference}
++              heading="Quotation request received."
++              mobile={formData.mobile}
++              whatsappUrl={whatsappUrl}
++              autoOpened
++            />
+           </div>
+         </div>
+       </div>
+diff --git a/app/legal/privacy/page.tsx b/app/legal/privacy/page.tsx
+index 61515a1..ba2c75c 100644
+--- a/app/legal/privacy/page.tsx
++++ b/app/legal/privacy/page.tsx
+@@ -1,4 +1,5 @@
+ import type { Metadata } from 'next';
++import { ADDRESS, PHONE_PRIMARY } from '@/data/business';
+ 
+ export const metadata: Metadata = {
+   title: 'Privacy Notice',
+@@ -14,7 +15,7 @@ export default function PrivacyPage() {
+         <h2 style={{ fontSize: '1.125rem', marginTop: 'var(--space-xl)', marginBottom: 'var(--space-md)' }}>Who we are</h2>
+         <p style={{ marginBottom: 'var(--space-md)', lineHeight: 1.7, color: 'var(--ink-2)' }}>
+           Hitech Systems (&quot;Hitech&quot;, &quot;we&quot;, &quot;us&quot;) is a technology service and sales business based at KG Building,
+-          Main Road, Kallara P.O, Trivandrum, Kerala 695608, India.
++          {ADDRESS.street}, {ADDRESS.locality} P.O, Trivandrum, {ADDRESS.region} {ADDRESS.postalCode}, India.
+         </p>
+ 
+         <h2 style={{ fontSize: '1.125rem', marginTop: 'var(--space-xl)', marginBottom: 'var(--space-md)' }}>What we collect</h2>
+@@ -40,12 +41,12 @@ export default function PrivacyPage() {
+ 
+         <h2 style={{ fontSize: '1.125rem', marginTop: 'var(--space-xl)', marginBottom: 'var(--space-md)' }}>Your rights</h2>
+         <p style={{ marginBottom: 'var(--space-md)', lineHeight: 1.7, color: 'var(--ink-2)' }}>
+-          You can ask us to delete your data at any time by calling +91 9496 818237 or sending a WhatsApp message.
++          You can ask us to delete your data at any time by calling {PHONE_PRIMARY.display} or sending a WhatsApp message.
+         </p>
+ 
+         <h2 style={{ fontSize: '1.125rem', marginTop: 'var(--space-xl)', marginBottom: 'var(--space-md)' }}>Contact</h2>
+         <p style={{ marginBottom: 'var(--space-md)', lineHeight: 1.7, color: 'var(--ink-2)' }}>
+-          For any privacy-related questions, contact us at +91 9496 818237 or visit us at the shop.
++          For any privacy-related questions, contact us at {PHONE_PRIMARY.display} or visit us at the shop.
+         </p>
+       </div>
+     </div>
+diff --git a/app/online-services/layout.tsx b/app/online-services/layout.tsx
+new file mode 100644
+index 0000000..56a88e6
+--- /dev/null
++++ b/app/online-services/layout.tsx
+@@ -0,0 +1,11 @@
++import type { Metadata } from 'next';
++
++export const metadata: Metadata = {
++  title: 'eGov & Online Services',
++  description:
++    'Kerala PSC, passport and police certificates, NORKA attestation, KSEB and utility bill payments, transport and registration department e-services, handled at the counter in Kallara.',
++};
++
++export default function SegmentLayout({ children }: { children: React.ReactNode }) {
++  return <>{children}</>;
++}
+diff --git a/app/online-services/page.tsx b/app/online-services/page.tsx
+index 295a509..a2798f9 100644
+--- a/app/online-services/page.tsx
++++ b/app/online-services/page.tsx
+@@ -3,21 +3,26 @@
+ import { Suspense, useState, useRef } from 'react';
+ import { useSearchParams } from 'next/navigation';
+ import { FileEdit, Globe, FileCheck, Receipt, Building, Pickaxe, Car, ShieldAlert, GraduationCap } from 'lucide-react';
++import FormConfirmation from '@/components/FormConfirmation';
++import { EGOV_SERVICES as EGOV_LIST } from '@/data/services';
+ import { generateReference } from '@/lib/referenceGenerator';
+ import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import { PHONE_LANDLINE } from '@/data/business';
+ import styles from './page.module.css';
+ 
+-const EGOV_SERVICES = [
+-  { key: 'psc-employment', icon: FileEdit, heading: 'PSC & Employment', line: 'PSC profile registration, application submission, certificate upload/verification, and UPSC assistance.' },
+-  { key: 'passport-police', icon: Globe, heading: 'Passport & Police Certificates', line: 'Passport applications (new, renewal, reissue) and Police Clearance Certificates (PCC) via domestic and international routes.' },
+-  { key: 'certificate-attestation', icon: FileCheck, heading: 'Certificate Attestation (NORKA)', line: 'Educational (HRD + Embassy/MOFA) and Non-educational (Home Dept + Embassy/MOFA) certificate attestation.' },
+-  { key: 'utility-bills', icon: Receipt, heading: 'Utility Bill Payments', line: 'KSEB electricity, KWA water, BSNL, mobile postpaid, and Asianet cable/DTH recharge payments.' },
+-  { key: 'registration-dept', icon: Building, heading: 'Registration Department', line: 'Encumbrance Certificate applications and document registration fee & stamp duty e-payments.' },
+-  { key: 'mining-geology', icon: Pickaxe, heading: 'Mining & Geology', line: 'Mineral movement permit fees and royalty e-payments via KOMPAS portal.' },
+-  { key: 'transport', icon: Car, heading: 'Transport', line: 'Vehicle registration (RC), Driving licence, road tax, e-Challan, and fitness certificates.' },
+-  { key: 'kerala-police', icon: ShieldAlert, heading: 'Kerala Police e-Services', line: 'FIR copy downloads, Vehicle NOCs, and Character/antecedent verification certificates.' },
+-  { key: 'university', icon: GraduationCap, heading: 'University Admissions & Payments', line: 'Admission apps, Entrance exams (including VCI and AICEE - TBC), and University fee payments.' },
+-];
++const ICONS: Record<string, typeof FileEdit> = {
++  'psc-employment': FileEdit,
++  'passport-police': Globe,
++  'certificate-attestation': FileCheck,
++  'utility-bills': Receipt,
++  'registration-dept': Building,
++  'mining-geology': Pickaxe,
++  'transport': Car,
++  'kerala-police': ShieldAlert,
++  'university': GraduationCap,
++};
++
++const EGOV_SERVICES = EGOV_LIST;
+ 
+ function EGovServicesContent() {
+   const searchParams = useSearchParams();
+@@ -31,6 +36,8 @@ function EGovServicesContent() {
+   });
+   const [errors, setErrors] = useState<Record<string, string>>({});
+   const [reference, setReference] = useState('');
++  const [submitted, setSubmitted] = useState(false);
++  const [whatsappUrl, setWhatsappUrl] = useState('');
+ 
+   const updateField = (field: string, value: unknown) => {
+     setFormData(prev => ({ ...prev, [field]: value }));
+@@ -55,7 +62,7 @@ function EGovServicesContent() {
+     
+     const ref = generateReference('OS');
+     setReference(ref);
+-    const whatsappUrl = buildWhatsAppUrl({
++    const url = buildWhatsAppUrl({
+       reference: ref,
+       module: 'online-services',
+       name: formData.name,
+@@ -63,9 +70,30 @@ function EGovServicesContent() {
+       service: formData.service,
+       notes: formData.notes,
+     });
+-    window.open(whatsappUrl, '_blank');
++    setWhatsappUrl(url);
++    setSubmitted(true);
++    window.open(url, '_blank');
+   };
+ 
++  if (submitted) {
++    return (
++      <div className={styles.page}>
++        <section className={styles.splitSection}>
++          <div className={styles.splitContainer}>
++            <FormConfirmation
++              styles={styles}
++              reference={reference}
++              heading="eGov enquiry received."
++              mobile={formData.mobile}
++              whatsappUrl={whatsappUrl}
++              autoOpened
++            />
++          </div>
++        </section>
++      </div>
++    );
++  }
++
+   return (
+     <div className={styles.page}>
+       {/* Hero Banner */}
+@@ -93,7 +121,7 @@ function EGovServicesContent() {
+               <p className={styles.sectionSubhead}>Select required eGov service</p>
+               <div className={styles.servicesGrid}>
+                 {EGOV_SERVICES.map(s => {
+-                  const Icon = s.icon;
++                  const Icon = ICONS[s.key] ?? FileEdit;
+                   const isSelected = selectedService === s.key;
+                   return (
+                     <button
+@@ -123,7 +151,7 @@ function EGovServicesContent() {
+                 </div>
+                 <div className={styles.infoMetaItem}>
+                   <span className={styles.metaLabel}>Office Phone</span>
+-                  <span className={styles.metaValue}>+91 472 296007</span>
++                  <span className={styles.metaValue}>{PHONE_LANDLINE.display}</span>
+                 </div>
+               </div>
+             </div>
+diff --git a/app/page.tsx b/app/page.tsx
+index dde94f5..76db3f6 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -1,137 +1,61 @@
+ import Link from 'next/link';
+ import Image from 'next/image';
+ import type { Metadata } from 'next';
+-import {
+-  Wrench,
+-  Laptop,
+-  ShieldCheck,
+-  Plane,
+-  FileText,
+-  Cpu,
+-  Landmark,
+-  Building2,
+-  Phone,
+-  Smartphone,
+-  PhoneCall,
+-  MapPin,
+-  Clock,
+-  ArrowRight,
+-  Sparkles,
+-} from 'lucide-react';
++import { Wrench, Laptop, ShieldCheck, Plane, FileText } from 'lucide-react';
+ import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import { WhatsAppIcon } from '@/components/BrandIcons';
++import BgaSpotlight from '@/components/home/BgaSpotlight';
++import TrustedBy from '@/components/home/TrustedBy';
++import LocationContact from '@/components/home/LocationContact';
++import { PARTNERS } from '@/data/partners';
++import {
++  ADDRESS, BUSINESS, HOURS, PHONES, AREAS_SERVED, SITE_URL,
++} from '@/data/business';
+ import styles from './page.module.css';
+ 
+ export const metadata: Metadata = {
+   title: 'HITECH — Computer Repair, CCTV & Technology Services in Kallara, Kerala',
+   description:
+-    'Specialized BGA chip-level motherboard repair, computer service, CCTV installation, and technology sales across Kerala. Board-level repair since 2016.',
++    'BGA chip-level motherboard repair, computer service, CCTV installation and technology sales across Kerala. Board-level repair since 2016.',
+ };
+ 
++/** Module labels here must match the header labels in data/navigation.ts. */
+ const MODULES = [
+-  {
+-    href: '/service',
+-    heading: 'Services',
+-    line: 'Computers, printers and board-level repair. Bring it in or we come to you.',
+-    icon: Wrench,
+-  },
+-  {
+-    href: '/technology',
+-    heading: 'Shop',
+-    line: 'Laptops, desktops, printers and accessories. Bought here, fixed here.',
+-    icon: Laptop,
+-  },
+-  {
+-    href: '/security',
+-    heading: 'Security',
+-    line: 'CCTV, access control, networking and cabling. Installed and maintained.',
+-    icon: ShieldCheck,
+-  },
+-  {
+-    href: '/travel',
+-    heading: 'Travel',
+-    line: 'Tickets, visas and passports, as an Akbar Travels partner.',
+-    icon: Plane,
+-  },
+-  {
+-    href: '/online-services',
+-    heading: 'eGov',
+-    line: 'Government and online applications, payments and certificates.',
+-    icon: FileText,
+-  },
+-];
+-
+-const GOV_CUSTOMERS = [
+-  'Community Health Centres',
+-  'Family Health Centres',
+-  'Village Offices',
+-  'Panchayat Offices',
+-  'Government Schools',
+-];
+-
+-const BIZ_CUSTOMERS = [
+-  'Daily Foods',
+-  'Vrindhavanam Group',
+-  'Ponmudi Mills',
+-  'AKR Industries',
+-  'MURKO',
+-];
+-
+-const PARTNERS = [
+-  { name: 'Acer Authorised Partner', src: '/partners/acer-partner.png' },
+-  { name: 'Asus Business Partner Gold', src: '/partners/asus-partner.png' },
+-  { name: 'Canon Premium Partner', src: '/partners/canon-partner.png' },
+-  { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
+-];
+-
+-const BGA_FEATURES = [
+-  {
+-    title: 'Ball Grid Array (BGA) Rework Station',
+-    desc: 'Precision infrared & hot-air rework station for safely desoldering, reballing, and re-soldering micro-pitch ICs.',
+-  },
+-  {
+-    title: 'Component-Level Motherboard Diagnostics',
+-    desc: 'Deep schematic tracing, short-circuit thermal imaging, and oscilloscopes to pinpoint failed capacitors, MOSFETs, and power controllers.',
+-  },
+-  {
+-    title: 'GPU, CPU & Chipset Micro-Soldering',
+-    desc: 'Reviving graphics chips, processor rails, BIOS corruption, and power management units instead of costly full board replacements.',
+-  },
+-  {
+-    title: 'One-of-a-Kind Facility in Kerala',
+-    desc: 'State-of-the-art micro-soldering and board repair lab in Kallara — trusted by clients and technicians across Kerala.',
+-  },
++  { href: '/service', heading: 'Services', icon: Wrench, line: 'Computers, printers and board-level repair. Bring it in or we come to you.' },
++  { href: '/technology', heading: 'Shop', icon: Laptop, line: 'Laptops, desktops, printers and accessories. Bought here, fixed here.' },
++  { href: '/security', heading: 'Security', icon: ShieldCheck, line: 'CCTV, access control, networking and cabling. Installed and maintained.' },
++  { href: '/travel', heading: 'Travel', icon: Plane, line: 'Tickets, visas and passports, as an Akbar Travels partner.' },
++  { href: '/online-services', heading: 'eGov', icon: FileText, line: 'Government and online applications, payments and certificates.' },
+ ];
+ 
+ export default function Home() {
+   const jsonLd = {
+     '@context': 'https://schema.org',
+     '@type': 'LocalBusiness',
+-    name: 'Hitech Systems',
+-    alternateName: 'HITECH',
++    name: BUSINESS.name,
++    alternateName: BUSINESS.shortName,
+     description:
+-      'Computer repair, laptop service, CCTV installation, and technology sales across Kerala. Specialized BGA chip-level repair since 2016.',
+-    url: 'https://hitechkallara.com',
+-    telephone: ['+914722960076', '+919496818237', '+919447765757'],
++      'Computer repair, laptop service, CCTV installation and technology sales across Kerala. BGA chip-level repair since 2016.',
++    url: SITE_URL,
++    telephone: PHONES.map(p => p.tel),
+     address: {
+       '@type': 'PostalAddress',
+-      streetAddress: 'KG Building, Main Road',
+-      addressLocality: 'Kallara',
+-      addressRegion: 'Kerala',
+-      postalCode: '695608',
+-      addressCountry: 'IN',
++      streetAddress: ADDRESS.street,
++      addressLocality: ADDRESS.locality,
++      addressRegion: ADDRESS.region,
++      postalCode: ADDRESS.postalCode,
++      addressCountry: ADDRESS.country,
+     },
+     geo: {
+       '@type': 'GeoCoordinates',
+-      latitude: 8.6544,
+-      longitude: 77.0232,
++      latitude: ADDRESS.latitude,
++      longitude: ADDRESS.longitude,
+     },
+-    areaServed: [
+-      'Kerala', 'Kallara', 'Trivandrum', 'Nedumangad', 'Kilimanoor', 'Palode',
+-      'Pangode', 'Attingal',
+-    ],
++    areaServed: AREAS_SERVED,
++    openingHours: HOURS.schema,
+     foundingDate: '2010-08',
+     priceRange: '₹₹',
+-    image: 'https://hitechkallara.com/brand/HITECH-logo-colour.svg',
++    image: `${SITE_URL}/brand/HITECH-logo-colour.svg`,
+   };
+ 
+   return (
+@@ -141,29 +65,25 @@ export default function Home() {
+         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+       />
+ 
+-      {/* Hero */}
+       <section className={styles.hero}>
+         <div className={styles.heroPattern} aria-hidden="true" />
+         <div className={styles.heroInner}>
+-          <p className={styles.heroLabel}>Since 2010 · Kallara, Kerala</p>
++          <p className={styles.heroLabel}>
++            Since {BUSINESS.foundedYear} · {BUSINESS.locality}, Kerala
++          </p>
+           <h1 className={styles.heroHeading}>We keep it working.</h1>
+           <p className={styles.heroIntro}>
+-            Hitech has repaired, installed and maintained technology since 2010.
+-            Computers, cameras and networks — for homes, businesses, schools and
+-            government offices across Kerala and beyond.
++            Hitech has repaired, installed and maintained technology since {BUSINESS.foundedYear}.
++            Computers, cameras and networks, for homes, businesses, schools and government
++            offices across Kerala.
+           </p>
+           <div className={styles.heroCtas}>
+-            <Link href="/service" className="btn btn-primary">
+-              Book a repair
+-            </Link>
+-            <Link href="/security" className="btn btn-secondary-light">
+-              Request a site visit
+-            </Link>
++            <Link href="/service" className="btn btn-primary">Book a repair</Link>
++            <Link href="/security" className="btn btn-secondary-light">Request a site visit</Link>
+           </div>
+         </div>
+       </section>
+ 
+-      {/* Module selector */}
+       <section className={styles.modules} aria-label="Our services">
+         <div className={styles.modulesInner}>
+           <p className={styles.sectionLabel}>What do you need?</p>
+@@ -191,12 +111,13 @@ export default function Home() {
+         </div>
+       </section>
+ 
+-      {/* Authorised Partners - Immediately following Modules, matching full container width */}
+       <section className={styles.partners} aria-label="Authorised partners">
+         <div className={styles.partnersInner}>
+           <div className={styles.partnersHeader}>
+             <p className={styles.sectionLabel}>Official Authorised Partners</p>
+-            <span className={styles.partnersSubtitle}>Direct manufacturer warranty and genuine sales support</span>
++            <span className={styles.partnersSubtitle}>
++              Direct manufacturer warranty and genuine sales support
++            </span>
+           </div>
+           <div className={styles.partnersGrid}>
+             {PARTNERS.map((partner) => (
+@@ -214,133 +135,12 @@ export default function Home() {
+         </div>
+       </section>
+ 
+-      {/* Specialized BGA Chip-Level Motherboard Repair Spotlight (Distinct Light Separated Background) */}
+-      <section className={styles.bgaSpotlight} aria-label="Chip-level motherboard repair">
+-        <div className={styles.bgaPattern} aria-hidden="true" />
+-        <div className={styles.bgaInner}>
+-          <div className={styles.bgaGrid}>
+-            <div className={styles.bgaContent}>
+-              <div className={styles.bgaPill}>
+-                <Cpu size={16} strokeWidth={2} />
+-                <span>Specialized Motherboard Engineering</span>
+-              </div>
+-              <h2 className={styles.bgaHeading}>
+-                Advanced Chip-Level &amp; BGA Rework Laboratory.
+-              </h2>
+-              <p className={styles.bgaLead}>
+-                One of a kind in Kerala — we specialize in Ball Grid Array (BGA) rework,
+-                micro-soldering, and board-level component diagnosis. Why replace an expensive
+-                motherboard when the damaged chip can be precision-repaired?
+-              </p>
+-
+-              <div className={styles.bgaFeatureList}>
+-                {BGA_FEATURES.map((feat, idx) => (
+-                  <div key={idx} className={styles.bgaFeatureItem}>
+-                    <div className={styles.bgaFeatureDot} aria-hidden="true" />
+-                    <div>
+-                      <h3 className={styles.bgaFeatureTitle}>{feat.title}</h3>
+-                      <p className={styles.bgaFeatureDesc}>{feat.desc}</p>
+-                    </div>
+-                  </div>
+-                ))}
+-              </div>
+-
+-              <div className={styles.bgaActions}>
+-                <Link href="/service" className="btn btn-primary">
+-                  <span>Explore Repair Services</span>
+-                  <ArrowRight size={18} />
+-                </Link>
+-                <a
+-                  href={buildWhatsAppUrl({ module: 'service' })}
+-                  target="_blank"
+-                  rel="noopener noreferrer"
+-                  className="btn btn-secondary"
+-                >
+-                  Consult a Technician
+-                </a>
+-              </div>
+-            </div>
+-
+-            <div className={styles.bgaVisualWrapper}>
+-              <div className={styles.bgaImageCard}>
+-                <Image
+-                  src="/images/bga-chip-repair.jpg"
+-                  alt="Specialized BGA Chip Level Repair Laboratory at Hitech Kallara"
+-                  width={640}
+-                  height={480}
+-                  className={styles.bgaImage}
+-                  priority
+-                />
+-                <div className={styles.bgaFloatingBadge}>
+-                  <Sparkles size={16} className={styles.badgeSparkle} />
+-                  <div>
+-                    <div className={styles.badgeTitle}>BGA Micro-Soldering</div>
+-                    <div className={styles.badgeSub}>Precision Motherboard Rework</div>
+-                  </div>
+-                </div>
+-              </div>
+-            </div>
+-          </div>
+-        </div>
+-      </section>
+-
+-      {/* Highlighted & Impressive Trusted by Section (Clean, without tick marks) */}
+-      <section className={styles.trust} aria-label="Trusted by">
+-        <div className={styles.trustInner}>
+-          <div className={styles.trustHeader}>
+-            <p className={styles.sectionLabel}>Trusted by</p>
+-            <h2 className={styles.trustHeading}>Serving institutions and local businesses since 2010.</h2>
+-          </div>
+-          <div className={styles.trustColumns}>
+-            {/* Government & Institutions */}
+-            <div className={styles.trustCard}>
+-              <div className={styles.trustCardHeader}>
+-                <div className={styles.trustIconWrapper}>
+-                  <Landmark size={24} strokeWidth={1.75} />
+-                </div>
+-                <div>
+-                  <h3 className={styles.trustCardTitle}>Government &amp; Institutions</h3>
+-                  <p className={styles.trustCardSub}>Healthcare centres, offices and educational bodies</p>
+-                </div>
+-              </div>
+-              <div className={styles.trustNames}>
+-                {GOV_CUSTOMERS.map((name) => (
+-                  <div key={name} className={styles.trustBadge}>
+-                    <span>{name}</span>
+-                  </div>
+-                ))}
+-              </div>
+-            </div>
+-
+-            {/* Businesses */}
+-            <div className={styles.trustCard}>
+-              <div className={styles.trustCardHeader}>
+-                <div className={styles.trustIconWrapper}>
+-                  <Building2 size={24} strokeWidth={1.75} />
+-                </div>
+-                <div>
+-                  <h3 className={styles.trustCardTitle}>Commercial Enterprises</h3>
+-                  <p className={styles.trustCardSub}>Manufacturers, retail brands and corporate teams</p>
+-                </div>
+-              </div>
+-              <div className={styles.trustNames}>
+-                {BIZ_CUSTOMERS.map((name) => (
+-                  <div key={name} className={styles.trustBadge}>
+-                    <span>{name}</span>
+-                  </div>
+-                ))}
+-              </div>
+-            </div>
+-          </div>
+-        </div>
+-      </section>
++      <BgaSpotlight />
++      <TrustedBy />
+ 
+-      {/* WhatsApp CTA */}
+       <section className={styles.whatsappBlock} aria-label="Quick enquiry">
+         <div className={styles.whatsappInner}>
+-          <h2 className={styles.whatsappHeading}>
+-            Not sure if it is worth repairing?
+-          </h2>
++          <h2 className={styles.whatsappHeading}>Not sure if it is worth repairing?</h2>
+           <p className={styles.whatsappText}>
+             Send us a photo of the problem. We will tell you before you bring it in.
+           </p>
+@@ -350,98 +150,13 @@ export default function Home() {
+             rel="noopener noreferrer"
+             className="btn btn-whatsapp"
+           >
+-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+-            </svg>
++            <WhatsAppIcon size={20} />
+             WhatsApp us
+           </a>
+         </div>
+       </section>
+ 
+-      {/* Styled Location & Contact Section (Landline First, Elegant Icons) */}
+-      <section className={styles.location} aria-label="Location and contact">
+-        <div className={styles.locationInner}>
+-          <div className={styles.locationGrid}>
+-            <div className={styles.locationInfo}>
+-              <div className={styles.locationHeaderBlock}>
+-                <p className={styles.sectionLabel}>Visit &amp; Contact</p>
+-                <h2 className={styles.locationMainHeading}>Find us in Kallara</h2>
+-                <p className={styles.locationSubText}>
+-                  Conveniently located at Main Road, Kallara with direct service counters and dedicated technical lab.
+-                </p>
+-              </div>
+-
+-              {/* Styled Address Card */}
+-              <div className={styles.styledAddressCard}>
+-                <div className={styles.cardIconBox}>
+-                  <MapPin size={22} strokeWidth={2} />
+-                </div>
+-                <div>
+-                  <h3 className={styles.cardHeading}>Office &amp; Service Centre</h3>
+-                  <address className={styles.addressText}>
+-                    KG Building, Main Road<br />
+-                    Kallara P.O, Trivandrum<br />
+-                    Kerala 695608
+-                  </address>
+-                </div>
+-              </div>
+-
+-              {/* Styled Phone Directory Cards (Landline First, No Badges, Elegant Icons) */}
+-              <div className={styles.phonesContainer}>
+-                {/* Landline */}
+-                <a href="tel:+914722960076" className={styles.phoneCard}>
+-                  <div className={styles.phoneIconBox}>
+-                    <Phone size={20} strokeWidth={2} />
+-                  </div>
+-                  <div className={styles.phoneCardContent}>
+-                    <span className={styles.phoneNumber}>+91 472 296007</span>
+-                    <span className={styles.phoneRole}>Office Landline</span>
+-                  </div>
+-                </a>
+-
+-                {/* Mobile 1 */}
+-                <a href="tel:+919496818237" className={styles.phoneCard}>
+-                  <div className={styles.phoneIconBox}>
+-                    <Smartphone size={20} strokeWidth={2} />
+-                  </div>
+-                  <div className={styles.phoneCardContent}>
+-                    <span className={styles.phoneNumber}>+91 9496 818237</span>
+-                    <span className={styles.phoneRole}>Primary &amp; WhatsApp</span>
+-                  </div>
+-                </a>
+-
+-                {/* Mobile 2 */}
+-                <a href="tel:+919447765757" className={styles.phoneCard}>
+-                  <div className={styles.phoneIconBox}>
+-                    <PhoneCall size={20} strokeWidth={2} />
+-                  </div>
+-                  <div className={styles.phoneCardContent}>
+-                    <span className={styles.phoneNumber}>+91 9447 765757</span>
+-                    <span className={styles.phoneRole}>Direct Helpline</span>
+-                  </div>
+-                </a>
+-              </div>
+-
+-              {/* Working Hours */}
+-              <div className={styles.hoursBox}>
+-                <Clock size={16} className={styles.hoursIcon} />
+-                <span>Monday – Saturday · 9:00 AM – 7:30 PM</span>
+-              </div>
+-            </div>
+-
+-            {/* Interactive Map */}
+-            <div className={styles.mapContainer}>
+-              <iframe
+-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.5!2d77.023!3d8.654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMzknMTQuNCJOIDc3wrAwMScyMy41IkU!5e0!3m2!1sen!2sin!4v1"
+-                allowFullScreen
+-                loading="lazy"
+-                referrerPolicy="no-referrer-when-downgrade"
+-                title="HITECH Systems location on Google Maps"
+-              />
+-            </div>
+-          </div>
+-        </div>
+-      </section>
++      <LocationContact />
+     </>
+   );
+ }
+diff --git a/app/security/page.module.css b/app/security/page.module.css
+index 04d91c2..88fb004 100644
+--- a/app/security/page.module.css
++++ b/app/security/page.module.css
+@@ -319,3 +319,49 @@
+   margin-bottom: var(--space-xl);
+   line-height: 1.6;
+ }
++
++/* ── Contact page: phone directory ─────────────────────────────────────────
++   Was three hand-written rows using off-palette hex values (#3A6351,
++   #5A6D63). Tokenised so the palette stays in one place.                   */
++
++.phoneDirectory {
++  display: flex;
++  flex-direction: column;
++  gap: 0.625rem;
++  margin-top: var(--space-sm);
++}
++
++.phoneDirectoryRow {
++  display: flex;
++  align-items: center;
++  gap: var(--space-sm);
++}
++
++.phoneDirectoryTag {
++  font-size: 0.75rem;
++  font-weight: 700;
++  padding: 0.2rem 0.5rem;
++  border-radius: var(--radius-sm);
++  background: var(--olive);
++  color: #fff;
++  min-width: 72px;
++  text-align: center;
++}
++
++.phoneDirectoryLink {
++  color: var(--ink);
++  font-weight: 600;
++  display: flex;
++  align-items: baseline;
++  gap: 0.4rem;
++}
++
++.phoneDirectoryLink:hover {
++  color: var(--olive);
++}
++
++.phoneDirectoryRole {
++  font-size: 0.8125rem;
++  color: var(--muted);
++  font-weight: 400;
++}
+diff --git a/app/security/page.tsx b/app/security/page.tsx
+index 022c25c..4a9d413 100644
+--- a/app/security/page.tsx
++++ b/app/security/page.tsx
+@@ -3,14 +3,19 @@
+ import { Suspense, useState, useRef } from 'react';
+ import { useSearchParams } from 'next/navigation';
+ import { Video, ShieldCheck, Shield } from 'lucide-react';
++import FormConfirmation from '@/components/FormConfirmation';
++import { SECURITY_SERVICES } from '@/data/services';
+ import { generateReference } from '@/lib/referenceGenerator';
+ import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import { PHONE_LANDLINE } from '@/data/business';
+ import styles from './page.module.css';
+ 
+-const SERVICES = [
+-  { key: 'cctv', icon: Video, heading: 'CCTV Supply & Installation', line: 'Dome, bullet, IP and PTZ cameras. DVR/NVR systems, remote viewing setup, and retention planning for shops, offices, factories, schools, and public buildings.' },
+-  { key: 'other', icon: ShieldCheck, heading: 'Other Security Solutions', line: 'Access control, biometric attendance, video door phones, intercom systems, networking, structured cabling, and repairs to existing systems.' },
+-];
++const ICONS: Record<string, typeof Video> = {
++  'cctv': Video,
++  'other': ShieldCheck,
++};
++
++const SERVICES = SECURITY_SERVICES;
+ 
+ function SecurityContent() {
+   const searchParams = useSearchParams();
+@@ -26,6 +31,8 @@ function SecurityContent() {
+   });
+   const [errors, setErrors] = useState<Record<string, string>>({});
+   const [reference, setReference] = useState('');
++  const [submitted, setSubmitted] = useState(false);
++  const [whatsappUrl, setWhatsappUrl] = useState('');
+ 
+   const updateField = (field: string, value: unknown) => {
+     setFormData(prev => ({ ...prev, [field]: value }));
+@@ -50,7 +57,7 @@ function SecurityContent() {
+     
+     const ref = generateReference('SS');
+     setReference(ref);
+-    const whatsappUrl = buildWhatsAppUrl({
++    const url = buildWhatsAppUrl({
+       reference: ref,
+       module: 'security',
+       name: formData.name,
+@@ -63,9 +70,30 @@ function SecurityContent() {
+       notes: formData.notes,
+       service: activeService?.heading,
+     });
+-    window.open(whatsappUrl, '_blank');
++    setWhatsappUrl(url);
++    setSubmitted(true);
++    window.open(url, '_blank');
+   };
+ 
++  if (submitted) {
++    return (
++      <div className={styles.page}>
++        <section className={styles.splitSection}>
++          <div className={styles.splitContainer}>
++            <FormConfirmation
++              styles={styles}
++              reference={reference}
++              heading="Site survey request received."
++              mobile={formData.mobile}
++              whatsappUrl={whatsappUrl}
++              autoOpened
++            />
++          </div>
++        </section>
++      </div>
++    );
++  }
++
+   return (
+     <div className={styles.page}>
+       {/* Hero Banner */}
+@@ -93,7 +121,7 @@ function SecurityContent() {
+               <p className={styles.sectionSubhead}>Select requirement</p>
+               <div className={styles.servicesGrid}>
+                 {SERVICES.map(s => {
+-                  const Icon = s.icon;
++                  const Icon = ICONS[s.key] ?? Shield;
+                   const isSelected = selectedService === s.key;
+                   return (
+                     <button
+@@ -123,7 +151,7 @@ function SecurityContent() {
+                 </div>
+                 <div className={styles.infoMetaItem}>
+                   <span className={styles.metaLabel}>Office Phone</span>
+-                  <span className={styles.metaValue}>+91 472 296007</span>
++                  <span className={styles.metaValue}>{PHONE_LANDLINE.display}</span>
+                 </div>
+               </div>
+             </div>
+diff --git a/app/service/page.tsx b/app/service/page.tsx
+index f2190ea..52b01cd 100644
+--- a/app/service/page.tsx
++++ b/app/service/page.tsx
+@@ -2,21 +2,26 @@
+ 
+ import { Suspense, useState, useCallback, useRef } from 'react';
+ import { useSearchParams } from 'next/navigation';
+-import { FileCheck, Terminal, Laptop, Cpu, Printer, HardDrive, Building2, Wrench, WrenchIcon } from 'lucide-react';
++import { FileCheck, Terminal, Laptop, Cpu, Printer, HardDrive, Building2, Wrench } from 'lucide-react';
+ import { generateReference } from '@/lib/referenceGenerator';
+-import { buildServiceWhatsAppUrl, buildWhatsAppUrl } from '@/lib/whatsapp';
++import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import FormConfirmation from '@/components/FormConfirmation';
++import { REPAIR_SERVICES, HARDWARE_REPAIR_KEYS } from '@/data/services';
++import { PHONE_LANDLINE } from '@/data/business';
+ import styles from './page.module.css';
+ 
+-const SERVICES = [
+-  { key: 'motherboard', icon: Cpu, heading: 'Motherboard & Chip-Level Repair', line: 'BGA rework & component diagnostics. Repairing logic boards directly instead of expensive replacements.' },
+-  { key: 'laptop-desktop', icon: Laptop, heading: 'Laptop / Desktop Repair', line: 'Hardware & OS troubleshooting across Apple, HP, Dell, Asus, Acer and Lenovo.' },
+-  { key: 'printer', icon: Printer, heading: 'Printer Service', line: 'Laser, inkjet, and ink tank printers. Canon, Epson & HP drum, head, and feed repairs.' },
+-  { key: 'data-recovery', icon: HardDrive, heading: 'Data Recovery', line: 'Logical and hardware recovery from failed SSDs, mechanical hard drives, and flash media.' },
+-  { key: 'amc', icon: FileCheck, heading: 'Annual Maintenance (AMC)', line: 'Scheduled preventive care, routine check-ups, and priority response for institutions.' },
+-  { key: 'os-software', icon: Terminal, heading: 'OS & Software Solutions', line: 'OS setup, data backup, licensing, malware disinfection, and system optimization.' },
+-  { key: 'on-site', icon: Building2, heading: 'On-Site Field Service', line: 'Direct technician visits for offices, clinics, and educational campuses across the state.' },
+-  { key: 'other', icon: Wrench, heading: 'Other Electronics', line: 'UPS, stabilizers, power supplies, network switches, and peripheral repair.' },
+-];
++const ICONS: Record<string, typeof Cpu> = {
++  'motherboard': Cpu,
++  'laptop-desktop': Laptop,
++  'printer': Printer,
++  'data-recovery': HardDrive,
++  'amc': FileCheck,
++  'os-software': Terminal,
++  'on-site': Building2,
++  'other': Wrench,
++};
++
++const SERVICES = REPAIR_SERVICES;
+ 
+ const AREA_SUGGESTIONS = [
+   'Kallara', 'Trivandrum', 'Nedumangad', 'Kilimanoor', 'Palode', 'Pangode',
+@@ -38,6 +43,8 @@ function ServiceContent() {
+   });
+   const [errors, setErrors] = useState<Record<string, string>>({});
+   const [reference, setReference] = useState('');
++  const [submitted, setSubmitted] = useState(false);
++  const [whatsappUrl, setWhatsappUrl] = useState('');
+ 
+   const updateField = useCallback((field: string, value: unknown) => {
+     setFormData(prev => ({ ...prev, [field]: value }));
+@@ -51,7 +58,7 @@ function ServiceContent() {
+ 
+   const activeService = SERVICES.find(s => s.key === selectedService);
+ 
+-  const isHardwareRepair = ['motherboard', 'laptop-desktop', 'printer', 'data-recovery'].includes(selectedService);
++  const isHardwareRepair = HARDWARE_REPAIR_KEYS.includes(selectedService);
+ 
+   const handleSubmit = () => {
+     const errs: Record<string, string> = {};
+@@ -66,7 +73,7 @@ function ServiceContent() {
+ 
+     const ref = generateReference('SR');
+     setReference(ref);
+-    const whatsappUrl = buildWhatsAppUrl({
++    const url = buildWhatsAppUrl({
+       reference: ref,
+       module: 'service',
+       name: formData.fullName,
+@@ -78,9 +85,30 @@ function ServiceContent() {
+       problem: formData.problem.slice(0, 100),
+       service: activeService?.heading,
+     });
+-    window.open(whatsappUrl, '_blank');
++    setWhatsappUrl(url);
++    setSubmitted(true);
++    window.open(url, '_blank');
+   };
+ 
++  if (submitted) {
++    return (
++      <div className={styles.page}>
++        <section className={styles.splitSection}>
++          <div className={styles.splitContainer}>
++            <FormConfirmation
++              styles={styles}
++              reference={reference}
++              heading="Repair request received."
++              mobile={formData.mobile}
++              whatsappUrl={whatsappUrl}
++              autoOpened
++            />
++          </div>
++        </section>
++      </div>
++    );
++  }
++
+   return (
+     <div className={styles.page}>
+       {/* Hero Banner */}
+@@ -88,13 +116,14 @@ function ServiceContent() {
+         <div className={styles.heroPattern} aria-hidden="true" />
+         <div className={styles.heroInner}>
+           <div className={styles.heroBadge}>
+-            <WrenchIcon size={14} />
++            <Wrench size={14} />
+             <span>Diagnostic &amp; Board-Level Lab</span>
+           </div>
+           <h1 className={styles.heading}>Repaired, not replaced.</h1>
+           <p className={styles.intro}>
+-            Most repair shops replace the whole board. We repair individual components at chip level.
+-            It has been our core specialty since 2016, saving customers and businesses up to 70% in repair costs.
++            Most repair shops replace the whole board. We repair individual components at
++            chip level. It has been our core specialty since 2016, and it is usually a
++            fraction of the cost of a replacement board.
+           </p>
+         </div>
+       </section>
+@@ -108,7 +137,7 @@ function ServiceContent() {
+               <p className={styles.sectionSubhead}>Select required repair or service</p>
+               <div className={styles.servicesGrid}>
+                 {SERVICES.map(s => {
+-                  const Icon = s.icon;
++                  const Icon = ICONS[s.key] ?? Wrench;
+                   const isSelected = selectedService === s.key;
+                   return (
+                     <button
+@@ -138,7 +167,7 @@ function ServiceContent() {
+                 </div>
+                 <div className={styles.infoMetaItem}>
+                   <span className={styles.metaLabel}>Office Phone</span>
+-                  <span className={styles.metaValue}>+91 472 296007</span>
++                  <span className={styles.metaValue}>{PHONE_LANDLINE.display}</span>
+                 </div>
+               </div>
+             </div>
+diff --git a/app/sitemap.ts b/app/sitemap.ts
+index 85acde9..dd90b8d 100644
+--- a/app/sitemap.ts
++++ b/app/sitemap.ts
+@@ -1,7 +1,8 @@
+ import type { MetadataRoute } from 'next';
++import { SITE_URL } from '@/data/business';
+ 
+ export default function sitemap(): MetadataRoute.Sitemap {
+-  const baseUrl = 'https://hitechkallara.com';
++  const baseUrl = SITE_URL;
+ 
+   return [
+     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
+@@ -11,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
+     { url: `${baseUrl}/travel`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+     { url: `${baseUrl}/online-services`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+     { url: `${baseUrl}/institutions`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+-    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
++    { url: `${baseUrl}/history`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+     { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+     { url: `${baseUrl}/legal/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.2 },
+     { url: `${baseUrl}/legal/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.2 },
+diff --git a/app/technology/page.tsx b/app/technology/page.tsx
+index a2b114e..bd0da2c 100644
+--- a/app/technology/page.tsx
++++ b/app/technology/page.tsx
+@@ -7,6 +7,7 @@ import { Laptop, ShoppingBag, Cpu, Printer, ShieldCheck } from 'lucide-react';
+ import { buildProductWhatsAppUrl, buildWhatsAppUrl } from '@/lib/whatsapp';
+ import { generateReference } from '@/lib/referenceGenerator';
+ import productsData from '@/data/products.json';
++import { PHONE_LANDLINE } from '@/data/business';
+ import styles from './page.module.css';
+ 
+ interface Product {
+@@ -303,7 +304,7 @@ function ShopContent() {
+                 </div>
+                 <div className={styles.infoMetaItem}>
+                   <span className={styles.metaLabel}>Store Desk</span>
+-                  <span className={styles.metaValue}>+91 472 296007</span>
++                  <span className={styles.metaValue}>{PHONE_LANDLINE.display}</span>
+                 </div>
+               </div>
+             </div>
+diff --git a/app/travel/layout.tsx b/app/travel/layout.tsx
+new file mode 100644
+index 0000000..8158f1d
+--- /dev/null
++++ b/app/travel/layout.tsx
+@@ -0,0 +1,11 @@
++import type { Metadata } from 'next';
++
++export const metadata: Metadata = {
++  title: 'Travel & Visa',
++  description:
++    'Air ticketing, GCC and Schengen visa processing, passport services, tour packages and hotel booking from Kallara, Kerala. Official Akbar Travels partner.',
++};
++
++export default function SegmentLayout({ children }: { children: React.ReactNode }) {
++  return <>{children}</>;
++}
+diff --git a/app/travel/page.tsx b/app/travel/page.tsx
+index 6ac5bee..8e8bf00 100644
+--- a/app/travel/page.tsx
++++ b/app/travel/page.tsx
+@@ -3,20 +3,25 @@
+ import { Suspense, useState, useRef } from 'react';
+ import { useSearchParams } from 'next/navigation';
+ import { Plane, Globe, Compass, HeartPulse, Hotel, BookOpen } from 'lucide-react';
++import FormConfirmation from '@/components/FormConfirmation';
++import { TRAVEL_SERVICES as TRAVEL_LIST, DATED_TRAVEL_KEYS } from '@/data/services';
+ import { generateReference } from '@/lib/referenceGenerator';
+ import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import { PHONE_LANDLINE } from '@/data/business';
+ import styles from './page.module.css';
+ 
+-const TRAVEL_SERVICES = [
+-  { key: 'air-ticketing', icon: Plane, heading: 'Air Ticketing', line: 'Domestic and international flights with competitive fares on all major airlines worldwide.' },
+-  { key: 'visa-gcc', icon: Globe, heading: 'Visa — GCC Countries', line: 'UAE, Saudi Arabia, Qatar, Oman, Bahrain, Kuwait employment, family, and visit visas.' },
+-  { key: 'visa-schengen', icon: Globe, heading: 'Visa — Schengen & EU', line: 'Complete documentation for Europe tourist, business, conference, and student visas.' },
+-  { key: 'visa-usa', icon: Globe, heading: 'Visa — USA & Australia', line: 'DS-160 application filling, interview scheduling, and document checklist verification.' },
+-  { key: 'tours', icon: Compass, heading: 'Custom Tour Packages', line: 'Curated itineraries for Dubai, Europe, Southeast Asia, Kashmir, and domestic escapes.' },
+-  { key: 'passport', icon: BookOpen, heading: 'Passport Services', line: 'Fresh passport applications, renewals, tatkal processing, and document verification.' },
+-  { key: 'medical', icon: HeartPulse, heading: 'Overseas Medical Travel', line: 'International hospital appointments and accompanying travel arrangements.' },
+-  { key: 'hotel', icon: Hotel, heading: 'Hotel Reservations', line: 'Worldwide confirmed hotel bookings and seamless airport transfer coordination.' },
+-];
++const ICONS: Record<string, typeof Plane> = {
++  'air-ticketing': Plane,
++  'visa-gcc': Globe,
++  'visa-schengen': Globe,
++  'visa-usa': Globe,
++  'tours': Compass,
++  'passport': BookOpen,
++  'medical': HeartPulse,
++  'hotel': Hotel,
++};
++
++const TRAVEL_SERVICES = TRAVEL_LIST;
+ 
+ function TravelContent() {
+   const searchParams = useSearchParams();
+@@ -31,6 +36,8 @@ function TravelContent() {
+   });
+   const [errors, setErrors] = useState<Record<string, string>>({});
+   const [reference, setReference] = useState('');
++  const [submitted, setSubmitted] = useState(false);
++  const [whatsappUrl, setWhatsappUrl] = useState('');
+ 
+   const updateField = (field: string, value: unknown) => {
+     setFormData(prev => ({ ...prev, [field]: value }));
+@@ -45,7 +52,10 @@ function TravelContent() {
+ 
+   const activeService = TRAVEL_SERVICES.find(s => s.key === selectedService);
+ 
+-  const isBookings = selectedService === 'bookings';
++  // Travel date and traveller count only apply to services involving a
++  // journey. Previously this tested for a key ('bookings') that does not
++  // exist in the list, so both fields were permanently hidden.
++  const isBookings = DATED_TRAVEL_KEYS.includes(selectedService);
+ 
+   const handleSubmit = () => {
+     const errs: Record<string, string> = {};
+@@ -57,7 +67,7 @@ function TravelContent() {
+     
+     const ref = generateReference('TR');
+     setReference(ref);
+-    const whatsappUrl = buildWhatsAppUrl({
++    const url = buildWhatsAppUrl({
+       reference: ref,
+       module: 'travel',
+       name: formData.name,
+@@ -68,9 +78,30 @@ function TravelContent() {
+       travellers: isBookings ? formData.travellers : undefined,
+       notes: formData.notes,
+     });
+-    window.open(whatsappUrl, '_blank');
++    setWhatsappUrl(url);
++    setSubmitted(true);
++    window.open(url, '_blank');
+   };
+ 
++  if (submitted) {
++    return (
++      <div className={styles.page}>
++        <section className={styles.splitSection}>
++          <div className={styles.splitContainer}>
++            <FormConfirmation
++              styles={styles}
++              reference={reference}
++              heading="Travel enquiry received."
++              mobile={formData.mobile}
++              whatsappUrl={whatsappUrl}
++              autoOpened
++            />
++          </div>
++        </section>
++      </div>
++    );
++  }
++
+   return (
+     <div className={styles.page}>
+       {/* Hero Banner */}
+@@ -98,7 +129,7 @@ function TravelContent() {
+               <p className={styles.sectionSubhead}>Select travel requirement</p>
+               <div className={styles.servicesGrid}>
+                 {TRAVEL_SERVICES.map(s => {
+-                  const Icon = s.icon;
++                  const Icon = ICONS[s.key] ?? Plane;
+                   const isSelected = selectedService === s.key;
+                   return (
+                     <button
+@@ -128,7 +159,7 @@ function TravelContent() {
+                 </div>
+                 <div className={styles.infoMetaItem}>
+                   <span className={styles.metaLabel}>Travel Desk</span>
+-                  <span className={styles.metaValue}>+91 472 296007</span>
++                  <span className={styles.metaValue}>{PHONE_LANDLINE.display}</span>
+                 </div>
+               </div>
+             </div>
+diff --git a/components/BrandIcons.tsx b/components/BrandIcons.tsx
+new file mode 100644
+index 0000000..f871028
+--- /dev/null
++++ b/components/BrandIcons.tsx
+@@ -0,0 +1,44 @@
++/**
++ * Icons that are not available in lucide-react.
++ * The WhatsApp glyph was previously pasted inline in four places.
++ */
++
++interface IconProps {
++  size?: number;
++  className?: string;
++}
++
++export function WhatsAppIcon({ size = 20, className }: IconProps) {
++  return (
++    <svg
++      width={size}
++      height={size}
++      viewBox="0 0 24 24"
++      fill="currentColor"
++      className={className}
++      aria-hidden="true"
++    >
++      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
++    </svg>
++  );
++}
++
++export function CheckCircleIcon({ size = 48, className }: IconProps) {
++  return (
++    <svg
++      width={size}
++      height={size}
++      viewBox="0 0 24 24"
++      fill="none"
++      stroke="currentColor"
++      strokeWidth="2"
++      strokeLinecap="round"
++      strokeLinejoin="round"
++      className={className}
++      aria-hidden="true"
++    >
++      <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
++      <polyline points="22 4 12 14.01 9 11.01" />
++    </svg>
++  );
++}
+diff --git a/components/Footer.tsx b/components/Footer.tsx
+index cb4737f..6871ecc 100644
+--- a/components/Footer.tsx
++++ b/components/Footer.tsx
+@@ -1,14 +1,10 @@
+ import Link from 'next/link';
+ import Image from 'next/image';
++import { Phone, Smartphone } from 'lucide-react';
++import { PARTNERS } from '@/data/partners';
++import { ADDRESS, PHONES, HOURS, BUSINESS } from '@/data/business';
+ import styles from './Footer.module.css';
+ 
+-const PARTNERS = [
+-  { name: 'Acer Authorised Partner', src: '/partners/acer-partner.png' },
+-  { name: 'Asus Business Partner Gold', src: '/partners/asus-partner.png' },
+-  { name: 'Canon Premium Partner', src: '/partners/canon-partner.png' },
+-  { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
+-];
+-
+ export default function Footer() {
+   const currentYear = new Date().getFullYear();
+ 
+@@ -32,20 +28,20 @@ export default function Footer() {
+                 Kallara since 2010.
+               </p>
+               <address className={styles.address}>
+-                KG Building, Main Road<br />
+-                Kallara P.O, Trivandrum<br />
+-                Kerala 695608
++                {ADDRESS.line1}<br />
++                {ADDRESS.line2}<br />
++                {ADDRESS.line3}
+               </address>
+               <div className={styles.phoneList}>
+-                <a href="tel:+914722960076" className={styles.footerPhone}>
+-                  <span>📞 +91 472 296007</span>
+-                </a>
+-                <a href="tel:+919496818237" className={styles.footerPhone}>
+-                  <span>📱 +91 9496 818237</span>
+-                </a>
+-                <a href="tel:+919447765757" className={styles.footerPhone}>
+-                  <span>📞 +91 9447 765757</span>
+-                </a>
++                {PHONES.map((phone) => {
++                  const Icon = phone.kind === 'landline' ? Phone : Smartphone;
++                  return (
++                    <a key={phone.tel} href={`tel:${phone.tel}`} className={styles.footerPhone}>
++                      <Icon size={15} strokeWidth={2} aria-hidden="true" />
++                      <span>{phone.display}</span>
++                    </a>
++                  );
++                })}
+               </div>
+             </div>
+           </div>
+@@ -79,9 +75,6 @@ export default function Footer() {
+               <Link href="/history" className={styles.footerLink}>
+                 History
+               </Link>
+-              <Link href="/about" className={styles.footerLink}>
+-                About Us
+-              </Link>
+               <Link href="/institutions" className={styles.footerLink}>
+                 For Institutions
+               </Link>
+@@ -95,13 +88,8 @@ export default function Footer() {
+           <div className={styles.footerSection}>
+             <h3>Hours</h3>
+             <div className={styles.footerLinks}>
+-              <span className={styles.footerLink}>
+-                {/* TO CONFIRM: Opening hours */}
+-                Monday – Saturday
+-              </span>
+-              <span className={styles.footerLink}>
+-                Hours to be confirmed
+-              </span>
++              <span className={styles.footerLink}>{HOURS.days}</span>
++              <span className={styles.footerLink}>{HOURS.time}</span>
+             </div>
+           </div>
+         </div>
+@@ -126,8 +114,10 @@ export default function Footer() {
+         {/* Bottom bar */}
+         <div className={styles.footerBottom}>
+           <p>
+-            © {currentYear} HITECH Systems, Kallara.{' '}
+-            <span className={styles.boardRepair}>Board-level repair since 2016.</span>
++            © {currentYear} {BUSINESS.name}, {BUSINESS.locality}.{' '}
++            <span className={styles.boardRepair}>
++              Board-level repair since {BUSINESS.boardRepairSince}.
++            </span>
+           </p>
+           <div className={styles.legalLinks}>
+             <Link href="/legal/privacy" className={styles.legalLink}>
+diff --git a/components/FormConfirmation.tsx b/components/FormConfirmation.tsx
+new file mode 100644
+index 0000000..ecc7e50
+--- /dev/null
++++ b/components/FormConfirmation.tsx
+@@ -0,0 +1,58 @@
++'use client';
++
++import { CheckCircleIcon, WhatsAppIcon } from './BrandIcons';
++
++/**
++ * Every enquiry form generated a reference number with generateReference()
++ * and then never rendered it, so the user was given nothing to quote back.
++ * This is the shared confirmation panel that fixes that.
++ *
++ * It also states the delivery channel honestly: the site has no backend, so
++ * WhatsApp is the only route a submission can actually reach Hitech by.
++ */
++
++interface Props {
++  /** The page's CSS module, which supplies the confirmation classes. */
++  styles: Record<string, string>;
++  reference: string;
++  heading: string;
++  mobile?: string;
++  whatsappUrl: string;
++  /** True when the WhatsApp window was opened automatically on submit. */
++  autoOpened?: boolean;
++}
++
++export default function FormConfirmation({
++  styles,
++  reference,
++  heading,
++  mobile,
++  whatsappUrl,
++  autoOpened = false,
++}: Props) {
++  return (
++    <div className={styles.confirmation}>
++      <CheckCircleIcon size={48} className={styles.confirmIcon} />
++      <h1 className={styles.confirmHeading}>{heading}</h1>
++      <p className={styles.referenceNumber}>{reference}</p>
++      <p className={styles.confirmText}>
++        Quote this reference when you contact us.
++        {mobile ? ` We will call you on ${mobile} within one working day.` : ''}
++      </p>
++      <p className={styles.confirmText}>
++        {autoOpened
++          ? 'If WhatsApp did not open, use the button below to send your details.'
++          : 'Send your details on WhatsApp so we have them on record.'}
++      </p>
++      <a
++        href={whatsappUrl}
++        target="_blank"
++        rel="noopener noreferrer"
++        className="btn btn-whatsapp"
++      >
++        <WhatsAppIcon size={20} />
++        Send details on WhatsApp
++      </a>
++    </div>
++  );
++}
+diff --git a/components/Header.tsx b/components/Header.tsx
+index f1aba75..7635f8e 100644
+--- a/components/Header.tsx
++++ b/components/Header.tsx
+@@ -4,124 +4,20 @@ import { useState, useRef, useEffect, useCallback } from 'react';
+ import Link from 'next/link';
+ import Image from 'next/image';
+ import { usePathname } from 'next/navigation';
++import { Phone, Menu, X } from 'lucide-react';
+ import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import { WhatsAppIcon } from './BrandIcons';
++import HeaderMobileNav from './HeaderMobileNav';
++import { NAV_ITEMS } from '@/data/navigation';
++import { PHONE_PRIMARY } from '@/data/business';
+ import styles from './Header.module.css';
+ 
+-/* ── Navigation Data ──────────────────────────────────────────────────── */
+-
+-interface NavChild {
+-  label: string;
+-  href: string;
+-  children?: NavChild[];
+-}
+-
+-interface NavItem {
+-  label: string;
+-  href: string;
+-  children?: NavChild[];
+-}
+-
+-const NAV_ITEMS: NavItem[] = [
+-  {
+-    label: 'Services',
+-    href: '/service',
+-    children: [
+-      { label: 'Annual Maintenance Contracts', href: '/service?service=amc' },
+-      { label: 'Operating System & Software', href: '/service?service=os-software' },
+-      { label: 'Laptop / Desktop Repair', href: '/service?service=laptop-desktop' },
+-      { label: 'Motherboard & Chip-Level Repair', href: '/service?service=motherboard' },
+-      { label: 'Printer Service', href: '/service?service=printer' },
+-      { label: 'Data Recovery', href: '/service?service=data-recovery' },
+-      { label: 'On-Site Service', href: '/service?service=on-site' },
+-      { label: 'Other Electronics', href: '/service?service=other' },
+-    ],
+-  },
+-  {
+-    label: 'Shop',
+-    href: '/technology',
+-    children: [
+-      { label: 'All Products', href: '/technology?category=all' },
+-      { label: 'Laptops', href: '/technology?category=laptops' },
+-      { label: 'Custom Desktops', href: '/technology?category=desktops' },
+-      { label: 'Printers & Scanners', href: '/technology?category=printers' },
+-      { label: 'Monitors', href: '/technology?category=monitors' },
+-      { label: 'Networking', href: '/technology?category=networking' },
+-      { label: 'Storage', href: '/technology?category=storage' },
+-      { label: 'Accessories', href: '/technology?category=accessories' },
+-      { label: 'Other', href: '/technology?category=other' },
+-    ],
+-  },
+-  {
+-    label: 'Security',
+-    href: '/security',
+-    children: [
+-      { label: 'CCTV Supply & Installation', href: '/security?service=cctv' },
+-      { label: 'Other Security Solutions', href: '/security?service=other' },
+-    ],
+-  },
+-  {
+-    label: 'Travel',
+-    href: '/travel',
+-    children: [
+-      { label: 'Air Ticketing', href: '/travel?service=air-ticketing' },
+-      {
+-        label: 'Visa Process',
+-        href: '/travel?service=visa',
+-        children: [
+-          { label: 'GCC Countries', href: '/travel?service=visa-gcc' },
+-          { label: 'Schengen (All EU Countries)', href: '/travel?service=visa-schengen' },
+-          { label: 'USA', href: '/travel?service=visa-usa' },
+-          { label: 'Australia', href: '/travel?service=visa-australia' },
+-          { label: 'Other', href: '/travel?service=visa-other' },
+-        ],
+-      },
+-      { label: 'Foreign Medical Appointments', href: '/travel?service=medical' },
+-      {
+-        label: 'Customized Tour Packages',
+-        href: '/travel?service=tours',
+-        children: [
+-          { label: 'Dubai & Abu Dhabi', href: '/travel?service=tour-dubai' },
+-          { label: 'Europe Packages', href: '/travel?service=tour-europe' },
+-        ],
+-      },
+-      { label: 'Hotel Booking', href: '/travel?service=hotel' },
+-      { label: 'Passport Application', href: '/travel?service=passport' },
+-    ],
+-  },
+-  {
+-    label: 'eGov',
+-    href: '/online-services',
+-    children: [
+-      { label: 'PSC Applications', href: '/online-services?service=psc' },
+-      { label: 'Aadhaar Support', href: '/online-services?service=aadhaar' },
+-      {
+-        label: 'Online Bill Payments',
+-        href: '/online-services?service=bills',
+-        children: [
+-          { label: 'KSEB', href: '/online-services?service=kseb' },
+-          { label: 'Government Fees', href: '/online-services?service=gov-fees' },
+-          { label: 'Tax Payments', href: '/online-services?service=tax' },
+-          { label: 'Other', href: '/online-services?service=bills-other' },
+-        ],
+-      },
+-    ],
+-  },
+-  {
+-    label: 'History',
+-    href: '/history',
+-  },
+-];
+-
+-const PHONE_PRIMARY = '+91 9496 818237';
+-const PHONE_PRIMARY_TEL = 'tel:+919496818237';
+-
+ /* ── Component ─────────────────────────────────────────────────────────── */
+ 
+ export default function Header() {
+   const [menuOpen, setMenuOpen] = useState(false);
+   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+-  const [mobileSubExpanded, setMobileSubExpanded] = useState<string | null>(null);
+   const pathname = usePathname();
+   const dropdownTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+   const headerRef = useRef<HTMLElement>(null);
+@@ -129,13 +25,17 @@ export default function Header() {
+   const closeMenu = () => {
+     setMenuOpen(false);
+     setMobileExpanded(null);
+-    setMobileSubExpanded(null);
+   };
+ 
+-  // Close dropdown on route change
++  // Close any open menu when the route changes. Guarded by a ref so the
++  // effect only fires on an actual navigation, not on the first render.
++  const lastPathname = useRef(pathname);
+   useEffect(() => {
++    if (lastPathname.current === pathname) return;
++    lastPathname.current = pathname;
+     setActiveDropdown(null);
+-    closeMenu();
++    setMenuOpen(false);
++    setMobileExpanded(null);
+   }, [pathname]);
+ 
+   // Close on ESC
+@@ -163,11 +63,6 @@ export default function Header() {
+ 
+   const toggleMobileExpand = (label: string) => {
+     setMobileExpanded(prev => prev === label ? null : label);
+-    setMobileSubExpanded(null);
+-  };
+-
+-  const toggleMobileSubExpand = (label: string) => {
+-    setMobileSubExpanded(prev => prev === label ? null : label);
+   };
+ 
+   return (
+@@ -220,31 +115,13 @@ export default function Header() {
+                     <div className={styles.dropdownInner}>
+                       {item.children.map((child) => (
+                         <div key={child.label} className={styles.dropdownGroup}>
+-                          {child.children ? (
+-                            <>
+-                              <span className={styles.dropdownGroupLabel}>{child.label}</span>
+-                              <div className={styles.dropdownSubItems}>
+-                                {child.children.map((sub) => (
+-                                  <Link
+-                                    key={sub.label}
+-                                    href={sub.href}
+-                                    className={styles.dropdownLink}
+-                                    onClick={() => setActiveDropdown(null)}
+-                                  >
+-                                    {sub.label}
+-                                  </Link>
+-                                ))}
+-                              </div>
+-                            </>
+-                          ) : (
+-                            <Link
+-                              href={child.href}
+-                              className={styles.dropdownLink}
+-                              onClick={() => setActiveDropdown(null)}
+-                            >
+-                              {child.label}
+-                            </Link>
+-                          )}
++                          <Link
++                            href={child.href}
++                            className={styles.dropdownLink}
++                            onClick={() => setActiveDropdown(null)}
++                          >
++                            {child.label}
++                          </Link>
+                         </div>
+                       ))}
+                     </div>
+@@ -256,11 +133,9 @@ export default function Header() {
+ 
+           {/* Actions */}
+           <div className={styles.headerActions}>
+-            <a href={PHONE_PRIMARY_TEL} className={styles.phoneLink}>
+-              <svg className={styles.phoneIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+-                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+-              </svg>
+-              {PHONE_PRIMARY}
++            <a href={`tel:${PHONE_PRIMARY.tel}`} className={styles.phoneLink}>
++              <Phone className={styles.phoneIcon} size={16} strokeWidth={2} aria-hidden="true" />
++              {PHONE_PRIMARY.display}
+             </a>
+ 
+             <a
+@@ -270,9 +145,7 @@ export default function Header() {
+               className={styles.whatsappBtn}
+               aria-label="Contact us on WhatsApp"
+             >
+-              <svg className={styles.whatsappIcon} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+-              </svg>
++              <WhatsAppIcon size={18} className={styles.whatsappIcon} />
+               <span className={styles.whatsappBtnText}>WhatsApp</span>
+             </a>
+ 
+@@ -284,118 +157,26 @@ export default function Header() {
+               aria-controls="mobile-menu"
+               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+             >
+-              {menuOpen ? (
+-                <svg className={styles.hamburgerIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+-                  <line x1="18" y1="6" x2="6" y2="18" />
+-                  <line x1="6" y1="6" x2="18" y2="18" />
+-                </svg>
+-              ) : (
+-                <svg className={styles.hamburgerIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+-                  <line x1="3" y1="6" x2="21" y2="6" />
+-                  <line x1="3" y1="12" x2="21" y2="12" />
+-                  <line x1="3" y1="18" x2="21" y2="18" />
+-                </svg>
+-              )}
++              {menuOpen
++                ? <X className={styles.hamburgerIcon} size={24} strokeWidth={2} aria-hidden="true" />
++                : <Menu className={styles.hamburgerIcon} size={24} strokeWidth={2} aria-hidden="true" />}
+             </button>
+           </div>
+         </div>
+ 
+-        {/* Mobile menu */}
+-        <nav
+-          id="mobile-menu"
+-          className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}
+-          aria-label="Mobile navigation"
+-        >
+-          {NAV_ITEMS.map((item) => (
+-            <div key={item.label} className={styles.mobileNavGroup}>
+-              <div className={styles.mobileNavHeader}>
+-                <Link
+-                  href={item.href}
+-                  className={`${styles.mobileNavLink} ${pathname.startsWith(item.href) ? styles.active : ''}`}
+-                  onClick={closeMenu}
+-                >
+-                  {item.label}
+-                </Link>
+-                {item.children && (
+-                  <button
+-                    className={`${styles.mobileExpandBtn} ${mobileExpanded === item.label ? styles.expanded : ''}`}
+-                    onClick={() => toggleMobileExpand(item.label)}
+-                    aria-label={`Expand ${item.label}`}
+-                  >
+-                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+-                      <path d="M3 4.5L6 7.5L9 4.5" />
+-                    </svg>
+-                  </button>
+-                )}
+-              </div>
+-
+-              {/* Mobile sub-items */}
+-              {item.children && mobileExpanded === item.label && (
+-                <div className={styles.mobileSubMenu}>
+-                  {item.children.map((child) => (
+-                    <div key={child.label}>
+-                      {child.children ? (
+-                        <>
+-                          <button
+-                            className={styles.mobileSubHeader}
+-                            onClick={() => toggleMobileSubExpand(child.label)}
+-                          >
+-                            {child.label}
+-                            <svg className={`${styles.mobileSubChevron} ${mobileSubExpanded === child.label ? styles.expanded : ''}`} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+-                              <path d="M3 4.5L6 7.5L9 4.5" />
+-                            </svg>
+-                          </button>
+-                          {mobileSubExpanded === child.label && (
+-                            <div className={styles.mobileNestedMenu}>
+-                              {child.children.map((sub) => (
+-                                <Link
+-                                  key={sub.label}
+-                                  href={sub.href}
+-                                  className={styles.mobileNestedLink}
+-                                  onClick={closeMenu}
+-                                >
+-                                  {sub.label}
+-                                </Link>
+-                              ))}
+-                            </div>
+-                          )}
+-                        </>
+-                      ) : (
+-                        <Link
+-                          href={child.href}
+-                          className={styles.mobileSubLink}
+-                          onClick={closeMenu}
+-                        >
+-                          {child.label}
+-                        </Link>
+-                      )}
+-                    </div>
+-                  ))}
+-                </div>
+-              )}
+-            </div>
+-          ))}
+-
+-          <div className={styles.mobileActions}>
+-            <a href={PHONE_PRIMARY_TEL} className={styles.mobilePhoneLink}>
+-              📞 {PHONE_PRIMARY}
+-            </a>
+-            <a href="tel:+914722960076" className={styles.mobilePhoneLink}>
+-              📞 +91 472 296007
+-            </a>
+-            <a href="tel:+919447765757" className={styles.mobilePhoneLink}>
+-              📞 +91 9447 765757
+-            </a>
+-          </div>
+-        </nav>
++        <HeaderMobileNav
++          open={menuOpen}
++          pathname={pathname}
++          expanded={mobileExpanded}
++          onToggleExpand={toggleMobileExpand}
++          onClose={closeMenu}
++        />
+       </header>
+ 
+       {/* Mobile sticky bottom bar */}
+       <div className={styles.mobileSticky} role="complementary" aria-label="Quick contact">
+-        <a href={PHONE_PRIMARY_TEL} className={`${styles.stickyBtn} ${styles.stickyCall}`}>
+-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+-            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+-          </svg>
++        <a href={`tel:${PHONE_PRIMARY.tel}`} className={`${styles.stickyBtn} ${styles.stickyCall}`}>
++          <Phone size={18} strokeWidth={2} aria-hidden="true" />
+           Call
+         </a>
+         <a
+@@ -404,9 +185,7 @@ export default function Header() {
+           rel="noopener noreferrer"
+           className={`${styles.stickyBtn} ${styles.stickyWhatsapp}`}
+         >
+-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+-          </svg>
++          <WhatsAppIcon size={18} />
+           WhatsApp
+         </a>
+       </div>
+diff --git a/components/HeaderMobileNav.tsx b/components/HeaderMobileNav.tsx
+new file mode 100644
+index 0000000..cc410d6
+--- /dev/null
++++ b/components/HeaderMobileNav.tsx
+@@ -0,0 +1,84 @@
++'use client';
++
++import Link from 'next/link';
++import { Phone, Smartphone } from 'lucide-react';
++import { NAV_ITEMS } from '@/data/navigation';
++import { PHONES } from '@/data/business';
++import styles from './Header.module.css';
++
++interface Props {
++  open: boolean;
++  pathname: string;
++  expanded: string | null;
++  onToggleExpand: (label: string) => void;
++  onClose: () => void;
++}
++
++export default function HeaderMobileNav({
++  open,
++  pathname,
++  expanded,
++  onToggleExpand,
++  onClose,
++}: Props) {
++  return (
++    <nav
++      id="mobile-menu"
++      className={`${styles.mobileMenu} ${open ? styles.open : ''}`}
++      aria-label="Mobile navigation"
++    >
++      {NAV_ITEMS.map((item) => (
++        <div key={item.label} className={styles.mobileNavGroup}>
++          <div className={styles.mobileNavHeader}>
++            <Link
++              href={item.href}
++              className={`${styles.mobileNavLink} ${pathname.startsWith(item.href) ? styles.active : ''}`}
++              onClick={onClose}
++            >
++              {item.label}
++            </Link>
++            {item.children && (
++              <button
++                className={`${styles.mobileExpandBtn} ${expanded === item.label ? styles.expanded : ''}`}
++                onClick={() => onToggleExpand(item.label)}
++                aria-expanded={expanded === item.label}
++                aria-label={`Expand ${item.label}`}
++              >
++                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
++                  <path d="M3 4.5L6 7.5L9 4.5" />
++                </svg>
++              </button>
++            )}
++          </div>
++
++          {item.children && expanded === item.label && (
++            <div className={styles.mobileSubMenu}>
++              {item.children.map((child) => (
++                <Link
++                  key={child.label}
++                  href={child.href}
++                  className={styles.mobileSubLink}
++                  onClick={onClose}
++                >
++                  {child.label}
++                </Link>
++              ))}
++            </div>
++          )}
++        </div>
++      ))}
++
++      <div className={styles.mobileActions}>
++        {PHONES.map((phone) => {
++          const Icon = phone.kind === 'landline' ? Phone : Smartphone;
++          return (
++            <a key={phone.tel} href={`tel:${phone.tel}`} className={styles.mobilePhoneLink}>
++              <Icon size={16} strokeWidth={2} aria-hidden="true" />
++              <span>{phone.display}</span>
++            </a>
++          );
++        })}
++      </div>
++    </nav>
++  );
++}
+diff --git a/components/home/BgaSpotlight.tsx b/components/home/BgaSpotlight.tsx
+new file mode 100644
+index 0000000..ec7cfdb
+--- /dev/null
++++ b/components/home/BgaSpotlight.tsx
+@@ -0,0 +1,104 @@
++import Link from 'next/link';
++import Image from 'next/image';
++import { Cpu, ArrowRight, Sparkles } from 'lucide-react';
++import { buildWhatsAppUrl } from '@/lib/whatsapp';
++import { BUSINESS } from '@/data/business';
++import styles from '@/app/page.module.css';
++
++/**
++ * Capability claims here must stay verifiable.
++ * The previous copy said "One-of-a-Kind Facility in Kerala" and "one of a kind
++ * in Kerala", which is an unprovable superlative. Replaced with the dated fact
++ * the brand record actually supports.
++ */
++const BGA_FEATURES = [
++  {
++    title: 'Ball Grid Array (BGA) Rework Station',
++    desc: 'Precision infrared and hot-air rework station for safely desoldering, reballing and re-soldering micro-pitch ICs.',
++  },
++  {
++    title: 'Component-Level Motherboard Diagnostics',
++    desc: 'Schematic tracing, short-circuit thermal imaging and oscilloscopes to pinpoint failed capacitors, MOSFETs and power controllers.',
++  },
++  {
++    title: 'GPU, CPU & Chipset Micro-Soldering',
++    desc: 'Reviving graphics chips, processor rails, BIOS corruption and power management units instead of costly full board replacements.',
++  },
++  {
++    title: `Board-Level Repair Since ${BUSINESS.boardRepairSince}`,
++    desc: 'A dedicated micro-soldering and board repair bench in Kallara, serving customers and trade clients across the Trivandrum region.',
++  },
++];
++
++export default function BgaSpotlight() {
++  return (
++  <section className={styles.bgaSpotlight} aria-label="Chip-level motherboard repair">
++    <div className={styles.bgaPattern} aria-hidden="true" />
++    <div className={styles.bgaInner}>
++      <div className={styles.bgaGrid}>
++        <div className={styles.bgaContent}>
++          <div className={styles.bgaPill}>
++            <Cpu size={16} strokeWidth={2} />
++            <span>Specialized Motherboard Engineering</span>
++          </div>
++          <h2 className={styles.bgaHeading}>
++            Advanced Chip-Level &amp; BGA Rework Laboratory.
++          </h2>
++          <p className={styles.bgaLead}>
++            We work at Ball Grid Array (BGA) level: micro-soldering and board-level
++            component diagnosis. Why replace an expensive motherboard when the damaged
++            chip can be repaired?
++          </p>
++
++          <div className={styles.bgaFeatureList}>
++            {BGA_FEATURES.map((feat, idx) => (
++              <div key={idx} className={styles.bgaFeatureItem}>
++                <div className={styles.bgaFeatureDot} aria-hidden="true" />
++                <div>
++                  <h3 className={styles.bgaFeatureTitle}>{feat.title}</h3>
++                  <p className={styles.bgaFeatureDesc}>{feat.desc}</p>
++                </div>
++              </div>
++            ))}
++          </div>
++
++          <div className={styles.bgaActions}>
++            <Link href="/service" className="btn btn-primary">
++              <span>Explore Repair Services</span>
++              <ArrowRight size={18} />
++            </Link>
++            <a
++              href={buildWhatsAppUrl({ module: 'service' })}
++              target="_blank"
++              rel="noopener noreferrer"
++              className="btn btn-secondary"
++            >
++              Consult a Technician
++            </a>
++          </div>
++        </div>
++
++        <div className={styles.bgaVisualWrapper}>
++          <div className={styles.bgaImageCard}>
++            <Image
++              src="/images/bga-chip-repair.jpg"
++              alt="Specialized BGA Chip Level Repair Laboratory at Hitech Kallara"
++              width={640}
++              height={480}
++              className={styles.bgaImage}
++              priority
++            />
++            <div className={styles.bgaFloatingBadge}>
++              <Sparkles size={16} className={styles.badgeSparkle} />
++              <div>
++                <div className={styles.badgeTitle}>BGA Micro-Soldering</div>
++                <div className={styles.badgeSub}>Precision Motherboard Rework</div>
++              </div>
++            </div>
++          </div>
++        </div>
++      </div>
++    </div>
++  </section>
++  );
++}
+diff --git a/components/home/LocationContact.tsx b/components/home/LocationContact.tsx
+new file mode 100644
+index 0000000..f2a1da7
+--- /dev/null
++++ b/components/home/LocationContact.tsx
+@@ -0,0 +1,73 @@
++import { MapPin, Phone, Smartphone, Clock } from 'lucide-react';
++import { ADDRESS, PHONES, HOURS } from '@/data/business';
++import styles from '@/app/page.module.css';
++
++export default function LocationContact() {
++  return (
++    <section className={styles.location} aria-label="Location and contact">
++    <div className={styles.locationInner}>
++      <div className={styles.locationGrid}>
++        <div className={styles.locationInfo}>
++          <div className={styles.locationHeaderBlock}>
++            <p className={styles.sectionLabel}>Visit &amp; Contact</p>
++            <h2 className={styles.locationMainHeading}>Find us in Kallara</h2>
++            <p className={styles.locationSubText}>
++              Conveniently located at Main Road, Kallara with direct service counters and dedicated technical lab.
++            </p>
++          </div>
++
++          
++          <div className={styles.styledAddressCard}>
++            <div className={styles.cardIconBox}>
++              <MapPin size={22} strokeWidth={2} />
++            </div>
++            <div>
++              <h3 className={styles.cardHeading}>Office &amp; Service Centre</h3>
++              <address className={styles.addressText}>
++                {ADDRESS.line1}<br />
++                {ADDRESS.line2}<br />
++                {ADDRESS.line3}
++              </address>
++            </div>
++          </div>
++
++          
++          <div className={styles.phonesContainer}>
++            {PHONES.map((phone) => {
++              const Icon = phone.kind === 'landline' ? Phone : Smartphone;
++              return (
++                <a key={phone.tel} href={`tel:${phone.tel}`} className={styles.phoneCard}>
++                  <div className={styles.phoneIconBox}>
++                    <Icon size={20} strokeWidth={2} />
++                  </div>
++                  <div className={styles.phoneCardContent}>
++                    <span className={styles.phoneNumber}>{phone.display}</span>
++                    <span className={styles.phoneRole}>{phone.label}</span>
++                  </div>
++                </a>
++              );
++            })}
++          </div>
++
++          {/* Working Hours */}
++          <div className={styles.hoursBox}>
++            <Clock size={16} className={styles.hoursIcon} />
++            <span>{HOURS.full}</span>
++          </div>
++        </div>
++
++        {/* Interactive Map */}
++        <div className={styles.mapContainer}>
++          <iframe
++            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.5!2d77.023!3d8.654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMzknMTQuNCJOIDc3wrAwMScyMy41IkU!5e0!3m2!1sen!2sin!4v1"
++            allowFullScreen
++            loading="lazy"
++            referrerPolicy="no-referrer-when-downgrade"
++            title="HITECH Systems location on Google Maps"
++          />
++        </div>
++      </div>
++    </div>
++  </section>
++  );
++}
+diff --git a/components/home/TrustedBy.tsx b/components/home/TrustedBy.tsx
+new file mode 100644
+index 0000000..0f404bd
+--- /dev/null
++++ b/components/home/TrustedBy.tsx
+@@ -0,0 +1,73 @@
++import { Landmark, Building2 } from 'lucide-react';
++import { BUSINESS } from '@/data/business';
++import styles from '@/app/page.module.css';
++
++const GOV_CUSTOMERS = [
++  'Community Health Centres',
++  'Family Health Centres',
++  'Village Offices',
++  'Panchayat Offices',
++  'Government Schools',
++];
++
++const BIZ_CUSTOMERS = [
++  'Daily Foods',
++  'Vrindhavanam Group',
++  'Ponmudi Mills',
++  'AKR Industries',
++  'MURKO',
++];
++
++export default function TrustedBy() {
++  return (
++    <section className={styles.trust} aria-label="Trusted by">
++    <div className={styles.trustInner}>
++      <div className={styles.trustHeader}>
++        <p className={styles.sectionLabel}>Trusted by</p>
++        <h2 className={styles.trustHeading}>Serving institutions and local businesses since {BUSINESS.foundedYear}.</h2>
++      </div>
++      <div className={styles.trustColumns}>
++        {/* Government & Institutions */}
++        <div className={styles.trustCard}>
++          <div className={styles.trustCardHeader}>
++            <div className={styles.trustIconWrapper}>
++              <Landmark size={24} strokeWidth={1.75} />
++            </div>
++            <div>
++              <h3 className={styles.trustCardTitle}>Government &amp; Institutions</h3>
++              <p className={styles.trustCardSub}>Healthcare centres, offices and educational bodies</p>
++            </div>
++          </div>
++          <div className={styles.trustNames}>
++            {GOV_CUSTOMERS.map((name) => (
++              <div key={name} className={styles.trustBadge}>
++                <span>{name}</span>
++              </div>
++            ))}
++          </div>
++        </div>
++
++        {/* Businesses */}
++        <div className={styles.trustCard}>
++          <div className={styles.trustCardHeader}>
++            <div className={styles.trustIconWrapper}>
++              <Building2 size={24} strokeWidth={1.75} />
++            </div>
++            <div>
++              <h3 className={styles.trustCardTitle}>Commercial Enterprises</h3>
++              <p className={styles.trustCardSub}>Manufacturers, retail brands and corporate teams</p>
++            </div>
++          </div>
++          <div className={styles.trustNames}>
++            {BIZ_CUSTOMERS.map((name) => (
++              <div key={name} className={styles.trustBadge}>
++                <span>{name}</span>
++              </div>
++            ))}
++          </div>
++        </div>
++      </div>
++    </div>
++  </section>
++  );
++}
+diff --git a/data/business.ts b/data/business.ts
+new file mode 100644
+index 0000000..5422b7e
+--- /dev/null
++++ b/data/business.ts
+@@ -0,0 +1,95 @@
++/**
++ * Single source of truth for business identity and contact details.
++ *
++ * Everything on the site that shows an address, phone number, hours or the
++ * WhatsApp number must read from here. Do not re-type these values in pages.
++ */
++
++export const BUSINESS = {
++  name: 'Hitech Systems',
++  shortName: 'HITECH',
++  locality: 'Kallara',
++  foundedYear: 2010,
++  boardRepairSince: 2016,
++} as const;
++
++export const ADDRESS = {
++  line1: 'KG Building, Main Road',
++  line2: 'Kallara P.O, Trivandrum',
++  line3: 'Kerala 695608',
++  street: 'KG Building, Main Road',
++  locality: 'Kallara',
++  region: 'Kerala',
++  postalCode: '695608',
++  country: 'IN',
++  latitude: 8.6544,
++  longitude: 77.0232,
++} as const;
++
++/**
++ * Confirmed by the owner, 13 September 2026.
++ * The site previously displayed "+91 472 296007" (6 digits) in some places
++ * while linking to tel:+914722960076 (7 digits). The 7-digit number is the
++ * correct one and is now the only version anywhere on the site.
++ */
++export interface PhoneEntry {
++  label: string;
++  display: string;
++  tel: string;
++  kind: 'landline' | 'mobile';
++  isWhatsApp?: boolean;
++}
++
++export const PHONES: PhoneEntry[] = [
++  {
++    label: 'Office Landline',
++    display: '+91 472 2960076',
++    tel: '+914722960076',
++    kind: 'landline',
++  },
++  {
++    label: 'Primary & WhatsApp',
++    display: '+91 9496 818237',
++    tel: '+919496818237',
++    kind: 'mobile',
++    isWhatsApp: true,
++  },
++  {
++    label: 'Direct Helpline',
++    display: '+91 9447 765757',
++    tel: '+919447765757',
++    kind: 'mobile',
++  },
++];
++
++export const PHONE_PRIMARY = PHONES.find(p => p.isWhatsApp) ?? PHONES[0];
++export const PHONE_LANDLINE = PHONES.find(p => p.kind === 'landline') ?? PHONES[0];
++
++/** WhatsApp number in wa.me format (country code, no plus, no spaces). */
++export const WHATSAPP_NUMBER = '919496818237';
++
++/**
++ * Confirmed by the owner, 13 September 2026.
++ * The homepage published "9:00 AM – 7:30 PM" while the footer and contact page
++ * said "Hours to be confirmed". One value now, used everywhere.
++ */
++export const HOURS = {
++  days: 'Monday – Saturday',
++  time: '9:00 AM – 7:30 PM',
++  full: 'Monday – Saturday · 9:00 AM – 7:30 PM',
++  /** Schema.org openingHours format. */
++  schema: 'Mo-Sa 09:00-19:30',
++} as const;
++
++export const AREAS_SERVED = [
++  'Kerala',
++  'Kallara',
++  'Trivandrum',
++  'Nedumangad',
++  'Kilimanoor',
++  'Palode',
++  'Pangode',
++  'Attingal',
++];
++
++export const SITE_URL = 'https://hitechkallara.com';
+diff --git a/data/navigation.ts b/data/navigation.ts
+new file mode 100644
+index 0000000..a32480f
+--- /dev/null
++++ b/data/navigation.ts
+@@ -0,0 +1,81 @@
++/**
++ * Site navigation, built from the shared service lists in data/services.ts.
++ *
++ * Every dropdown link is generated from the same array the target page
++ * renders, so a dropdown entry can no longer point at a service key that does
++ * not exist on the page.
++ */
++
++import {
++  REPAIR_SERVICES,
++  SECURITY_SERVICES,
++  TRAVEL_SERVICES,
++  EGOV_SERVICES,
++  PRODUCT_CATEGORIES,
++  type ServiceItem,
++} from './services';
++
++export interface NavItem {
++  label: string;
++  href: string;
++  children?: { label: string; href: string }[];
++}
++
++/** Shorter dropdown labels where the card heading is too long for a menu. */
++const NAV_LABEL_OVERRIDES: Record<string, string> = {
++  'motherboard': 'Motherboard & Chip-Level Repair',
++  'os-software': 'Operating System & Software',
++  'on-site': 'On-Site Service',
++  'passport-police': 'Passport & Police Certificates',
++  'certificate-attestation': 'Certificate Attestation',
++  'university': 'University Admissions & Fees',
++  'visa-gcc': 'Visa — GCC Countries',
++  'visa-schengen': 'Visa — Schengen & EU',
++  'visa-usa': 'Visa — USA & Australia',
++};
++
++function toNavChildren(basePath: string, items: ServiceItem[]) {
++  return items.map(item => ({
++    label: NAV_LABEL_OVERRIDES[item.key] ?? item.heading,
++    href: `${basePath}?service=${item.key}`,
++  }));
++}
++
++export const NAV_ITEMS: NavItem[] = [
++  {
++    label: 'Services',
++    href: '/service',
++    children: toNavChildren('/service', REPAIR_SERVICES),
++  },
++  {
++    label: 'Shop',
++    href: '/technology',
++    children: PRODUCT_CATEGORIES.map(cat => ({
++      label: cat.label,
++      href: `/technology?category=${cat.key}`,
++    })),
++  },
++  {
++    label: 'Security',
++    href: '/security',
++    children: toNavChildren('/security', SECURITY_SERVICES),
++  },
++  {
++    label: 'Travel',
++    href: '/travel',
++    children: toNavChildren('/travel', TRAVEL_SERVICES),
++  },
++  {
++    label: 'eGov',
++    href: '/online-services',
++    children: toNavChildren('/online-services', EGOV_SERVICES),
++  },
++  {
++    label: 'Institutions',
++    href: '/institutions',
++  },
++  {
++    label: 'History',
++    href: '/history',
++  },
++];
+diff --git a/data/partners.ts b/data/partners.ts
+new file mode 100644
+index 0000000..152ec72
+--- /dev/null
++++ b/data/partners.ts
+@@ -0,0 +1,24 @@
++/**
++ * Authorised manufacturer partnerships.
++ * Was duplicated verbatim in app/page.tsx, components/Footer.tsx,
++ * app/technology/page.tsx and app/history/page.tsx.
++ */
++
++export interface Partner {
++  name: string;
++  src: string;
++}
++
++export const PARTNERS: Partner[] = [
++  { name: 'Acer Authorised Partner', src: '/partners/acer-partner.png' },
++  { name: 'Asus Business Partner Gold', src: '/partners/asus-partner.png' },
++  { name: 'Canon Premium Partner', src: '/partners/canon-partner.png' },
++  { name: 'Epson Authorised Partner', src: '/partners/epson-partner.png' },
++];
++
++/** Brands handled but not held as a formal partnership. */
++export const BRANDS_HANDLED = [
++  'HP', 'Dell', 'Apple', 'Lenovo', 'Samsung', 'LG', 'NETGEAR',
++  'D-Link', 'TP-Link', 'BenQ', 'GIGABYTE', 'WD', 'Seagate',
++  'ANT Esports', 'Fingers',
++];
+diff --git a/data/services.ts b/data/services.ts
+new file mode 100644
+index 0000000..90f9ab2
+--- /dev/null
++++ b/data/services.ts
+@@ -0,0 +1,88 @@
++/**
++ * Service catalogues, shared between the page that renders them and the
++ * header navigation that deep-links into them.
++ *
++ * Why this file exists: the header previously linked to keys such as
++ * ?service=psc, ?service=aadhaar, ?service=visa-australia and
++ * ?category=other. None of those keys existed on the target pages, so every
++ * one of those dropdown links landed on the page with nothing pre-selected.
++ * Both sides now read the same list, so the keys cannot drift again.
++ */
++
++export interface ServiceItem {
++  key: string;
++  heading: string;
++  line: string;
++}
++
++/* ── /service ──────────────────────────────────────────────────────────── */
++
++export const REPAIR_SERVICES: ServiceItem[] = [
++  { key: 'motherboard', heading: 'Motherboard & Chip-Level Repair', line: 'BGA rework and component diagnostics. Repairing logic boards directly instead of expensive replacements.' },
++  { key: 'laptop-desktop', heading: 'Laptop / Desktop Repair', line: 'Hardware and OS troubleshooting across Apple, HP, Dell, Asus, Acer and Lenovo.' },
++  { key: 'printer', heading: 'Printer Service', line: 'Laser, inkjet and ink tank printers. Canon, Epson and HP drum, head and feed repairs.' },
++  { key: 'data-recovery', heading: 'Data Recovery', line: 'Logical and hardware recovery from failed SSDs, mechanical hard drives and flash media.' },
++  { key: 'amc', heading: 'Annual Maintenance (AMC)', line: 'Scheduled preventive care, routine check-ups and priority response for institutions.' },
++  { key: 'os-software', heading: 'OS & Software Solutions', line: 'OS setup, data backup, licensing, malware disinfection and system optimisation.' },
++  { key: 'on-site', heading: 'On-Site Field Service', line: 'Direct technician visits for offices, clinics and educational campuses across the state.' },
++  { key: 'other', heading: 'Other Electronics', line: 'UPS, stabilisers, power supplies, network switches and peripheral repair.' },
++];
++
++/** Repair types that need equipment make and model on the intake form. */
++export const HARDWARE_REPAIR_KEYS = ['motherboard', 'laptop-desktop', 'printer', 'data-recovery'];
++
++/* ── /security ─────────────────────────────────────────────────────────── */
++
++export const SECURITY_SERVICES: ServiceItem[] = [
++  { key: 'cctv', heading: 'CCTV Supply & Installation', line: 'Dome, bullet, IP and PTZ cameras. DVR/NVR systems, remote viewing setup and retention planning for shops, offices, factories, schools and public buildings.' },
++  { key: 'other', heading: 'Other Security Solutions', line: 'Access control, biometric attendance, video door phones, intercom systems, networking, structured cabling and repairs to existing systems.' },
++];
++
++/* ── /travel ───────────────────────────────────────────────────────────── */
++
++export const TRAVEL_SERVICES: ServiceItem[] = [
++  { key: 'air-ticketing', heading: 'Air Ticketing', line: 'Domestic and international flights on all major airlines.' },
++  { key: 'visa-gcc', heading: 'Visa — GCC Countries', line: 'UAE, Saudi Arabia, Qatar, Oman, Bahrain and Kuwait employment, family and visit visas.' },
++  { key: 'visa-schengen', heading: 'Visa — Schengen & EU', line: 'Complete documentation for Europe tourist, business, conference and student visas.' },
++  { key: 'visa-usa', heading: 'Visa — USA & Australia', line: 'DS-160 application filling, interview scheduling and document checklist verification.' },
++  { key: 'tours', heading: 'Custom Tour Packages', line: 'Curated itineraries for Dubai, Europe, Southeast Asia, Kashmir and domestic trips.' },
++  { key: 'passport', heading: 'Passport Services', line: 'Fresh passport applications, renewals, tatkal processing and document verification.' },
++  { key: 'medical', heading: 'Overseas Medical Travel', line: 'International hospital appointments and accompanying travel arrangements.' },
++  { key: 'hotel', heading: 'Hotel Reservations', line: 'Worldwide confirmed hotel bookings and airport transfer coordination.' },
++];
++
++/**
++ * Travel services that involve an actual journey, so the enquiry form should
++ * ask for travel date and traveller count. Visa and passport work does not.
++ *
++ * Previously the page tested `selectedService === 'bookings'`, a key that does
++ * not exist in this list, so those two fields never rendered for any service.
++ */
++export const DATED_TRAVEL_KEYS = ['air-ticketing', 'tours', 'hotel', 'medical'];
++
++/* ── /online-services ──────────────────────────────────────────────────── */
++
++export const EGOV_SERVICES: ServiceItem[] = [
++  { key: 'psc-employment', heading: 'PSC & Employment', line: 'PSC profile registration, application submission, certificate upload and verification, and UPSC assistance.' },
++  { key: 'passport-police', heading: 'Passport & Police Certificates', line: 'Passport applications (new, renewal, reissue) and Police Clearance Certificates via domestic and international routes.' },
++  { key: 'certificate-attestation', heading: 'Certificate Attestation (NORKA)', line: 'Educational (HRD plus Embassy/MOFA) and non-educational (Home Dept plus Embassy/MOFA) certificate attestation.' },
++  { key: 'utility-bills', heading: 'Utility Bill Payments', line: 'KSEB electricity, KWA water, BSNL, mobile postpaid, and Asianet cable/DTH recharge payments.' },
++  { key: 'registration-dept', heading: 'Registration Department', line: 'Encumbrance Certificate applications and document registration fee and stamp duty e-payments.' },
++  { key: 'mining-geology', heading: 'Mining & Geology', line: 'Mineral movement permit fees and royalty e-payments via the KOMPAS portal.' },
++  { key: 'transport', heading: 'Transport', line: 'Vehicle registration (RC), driving licence, road tax, e-Challan and fitness certificates.' },
++  { key: 'kerala-police', heading: 'Kerala Police e-Services', line: 'FIR copy downloads, vehicle NOCs, and character and antecedent verification certificates.' },
++  { key: 'university', heading: 'University Admissions & Payments', line: 'Admission applications, entrance exams and university fee payments.' },
++];
++
++/* ── /technology ───────────────────────────────────────────────────────── */
++
++export const PRODUCT_CATEGORIES = [
++  { key: 'all', label: 'All Products' },
++  { key: 'laptops', label: 'Laptops' },
++  { key: 'desktops', label: 'Custom Desktops' },
++  { key: 'printers', label: 'Printers & Scanners' },
++  { key: 'monitors', label: 'Monitors' },
++  { key: 'networking', label: 'Networking' },
++  { key: 'storage', label: 'Storage & SSDs' },
++  { key: 'accessories', label: 'Accessories' },
++];
+diff --git a/lib/referenceGenerator.ts b/lib/referenceGenerator.ts
+index 72eb3fc..584f47c 100644
+--- a/lib/referenceGenerator.ts
++++ b/lib/referenceGenerator.ts
+@@ -3,16 +3,29 @@
+  * Format: HT-{MODULE}-YYMMDD-NNN
+  *
+  * Module codes:
+- *   SR = Service Request
+- *   SS = Security / Site Survey
+- *   IN = Institutions
+- *   TR = Travel
+- *   OS = Online Services
+- *   GE = General Enquiry
++ *   SR = Service Request     SS = Security / Site Survey
++ *   IN = Institutions        TR = Travel
++ *   OS = Online Services     GE = General Enquiry
+  *   OR = Order
++ *
++ * The previous implementation was `Math.floor(Math.random() * 900) + 100 + counter`
++ * followed by `.slice(-3).padStart(3, '0')`. Two problems:
++ *   1. Once the value crossed 1000 the slice dropped the leading digit, so
++ *      1004 became "004", colliding with a genuine 004.
++ *   2. Random and counter were added rather than combined, so two submissions
++ *      in one session could produce the same suffix.
++ *
++ * This version uses a per-session random block plus a strictly increasing
++ * counter, so no two references in one session can match. It is still
++ * client-side and therefore not globally unique: two different visitors can
++ * still collide. A server-issued sequence is the real fix once a backend
++ * exists.
+  */
+ 
+-type ModuleCode = 'SR' | 'SS' | 'IN' | 'TR' | 'OS' | 'GE' | 'OR';
++export type ModuleCode = 'SR' | 'SS' | 'IN' | 'TR' | 'OS' | 'GE' | 'OR';
++
++/** Random session block, fixed for the life of the page. */
++const sessionBlock = Math.floor(Math.random() * 90) + 10; // 10-99
+ 
+ let counter = 0;
+ 
+@@ -22,14 +35,8 @@ export function generateReference(module: ModuleCode): string {
+   const mm = String(now.getMonth() + 1).padStart(2, '0');
+   const dd = String(now.getDate()).padStart(2, '0');
+ 
+-  // In production, this counter would come from a backend.
+-  // For v1 client-side generation, we use a random suffix.
+-  counter++;
+-  const nnn = String(
+-    Math.floor(Math.random() * 900) + 100 + counter
+-  )
+-    .slice(-3)
+-    .padStart(3, '0');
++  counter = (counter + 1) % 10;
++  const nnn = `${sessionBlock}${counter}`;
+ 
+   return `HT-${module}-${yy}${mm}${dd}-${nnn}`;
+ }
+diff --git a/next.config.ts b/next.config.ts
+index e9ffa30..644de8d 100644
+--- a/next.config.ts
++++ b/next.config.ts
+@@ -1,7 +1,14 @@
+-import type { NextConfig } from "next";
++import type { NextConfig } from 'next';
+ 
+ const nextConfig: NextConfig = {
+-  /* config options here */
++  async redirects() {
++    return [
++      // /about used to render app/history/page.tsx verbatim: two URLs, one
++      // body of content. Redirected so the history page keeps all its SEO
++      // weight instead of competing with a duplicate.
++      { source: '/about', destination: '/history', permanent: true },
++    ];
++  },
+ };
+ 
+ export default nextConfig;
+-- 
+2.43.0
+
