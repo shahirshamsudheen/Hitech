@@ -182,7 +182,7 @@ export default function Header() {
             <Image
               src="/brand/HITECH-logo-colour.svg"
               alt="HITECH"
-              width={160}
+              width={139}
               height={44}
               priority
             />

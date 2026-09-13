@@ -23,7 +23,7 @@ export default function Footer() {
               <Image
                 src="/brand/HITECH-logo-white.svg"
                 alt="HITECH"
-                width={140}
+                width={120}
                 height={38}
                 className={styles.footerLogo}
               />
