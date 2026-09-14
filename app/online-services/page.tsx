@@ -40,7 +40,11 @@ function EGovServicesContent() {
   const handleSelectService = (key: string, title: string) => {
     setSelectedService(key);
     updateField('service', title);
-    nameInputRef.current?.focus();
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      nameInputRef.current?.focus();
+    } else {
+      document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const activeService = EGOV_SERVICES.find(s => s.key === selectedService);
@@ -111,6 +115,9 @@ function EGovServicesContent() {
                   );
                 })}
               </div>
+              {activeService && (
+                <p className={styles.mobileSelectedLine}>{activeService.line}</p>
+              )}
 
               <div className={styles.infoMetaRow}>
                 <div className={styles.infoMetaItem}>
@@ -130,7 +137,7 @@ function EGovServicesContent() {
 
             {/* Right Column: Form Starting at the Top */}
             <div className={styles.rightColumn}>
-              <div className={styles.formCard}>
+              <div className={styles.formCard} id="enquiry-form">
                 <h2 className={styles.formHeading}>eGov enquiry</h2>
                 <p className={styles.formSubheading}>Tell us what you need and our desk will prepare instructions.</p>
 

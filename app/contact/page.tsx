@@ -143,7 +143,7 @@ export default function ContactPage() {
 
             {/* Right Column: Form */}
             <div className={styles.rightColumn}>
-              <div className={styles.formCard}>
+              <div className={styles.formCard} id="enquiry-form">
                 <h2 className={styles.formHeading}>Send us a message</h2>
                 <p className={styles.formSubheading}>We typically reply within one working day.</p>
 

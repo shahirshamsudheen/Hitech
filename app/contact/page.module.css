@@ -348,3 +348,37 @@
   margin-bottom: var(--space-xl);
   line-height: 1.6;
 }
+
+/* ── Phones & tablets (below the 1024px split layout) ────────────────────── */
+
+@media (max-width: 1023px) {
+  /* Single column: sticky has no purpose and can pin the form while the
+     rows after it scroll. */
+  .rightColumn {
+    position: static;
+  }
+
+  .splitSection {
+    padding: var(--space-xl) 0 var(--space-2xl);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    padding: 2.75rem 0 2.5rem;
+  }
+
+  .heading {
+    font-size: clamp(2rem, 9vw, 2.5rem);
+  }
+
+  .intro {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .formCard {
+    padding: 1.5rem 1.25rem;
+    border-radius: 20px;
+  }
+}

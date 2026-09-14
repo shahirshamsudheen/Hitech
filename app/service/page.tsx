@@ -46,7 +46,11 @@ function ServiceContent() {
 
   const handleSelectService = (key: string) => {
     setSelectedService(key);
-    nameInputRef.current?.focus();
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      nameInputRef.current?.focus();
+    } else {
+      document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const activeService = SERVICES.find(s => s.key === selectedService);
@@ -126,6 +130,9 @@ function ServiceContent() {
                   );
                 })}
               </div>
+              {activeService && (
+                <p className={styles.mobileSelectedLine}>{activeService.line}</p>
+              )}
 
               <div className={styles.infoMetaRow}>
                 <div className={styles.infoMetaItem}>
@@ -145,7 +152,7 @@ function ServiceContent() {
 
             {/* Right Column: Form Starting at the Top */}
             <div className={styles.rightColumn}>
-              <div className={styles.formCard}>
+              <div className={styles.formCard} id="enquiry-form">
                 <h2 className={styles.formHeading}>Book a repair</h2>
                 <p className={styles.formSubheading}>
                   Fill in details and our technical desk will get back to you promptly.
@@ -218,7 +225,7 @@ function ServiceContent() {
                 </div>
 
                 {isHardwareRepair && (
-                  <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div className="form-row">
                     <div className="form-group">
                       <label htmlFor="sr-equipment" className="form-label">Equipment</label>
                       <select

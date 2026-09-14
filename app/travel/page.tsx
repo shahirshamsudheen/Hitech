@@ -40,7 +40,11 @@ function TravelContent() {
   const handleSelectService = (key: string, title: string) => {
     setSelectedService(key);
     updateField('service', title);
-    nameInputRef.current?.focus();
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      nameInputRef.current?.focus();
+    } else {
+      document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const activeService = TRAVEL_SERVICES.find(s => s.key === selectedService);
@@ -116,6 +120,9 @@ function TravelContent() {
                   );
                 })}
               </div>
+              {activeService && (
+                <p className={styles.mobileSelectedLine}>{activeService.line}</p>
+              )}
 
               <div className={styles.infoMetaRow}>
                 <div className={styles.infoMetaItem}>
@@ -135,7 +142,7 @@ function TravelContent() {
 
             {/* Right Column: Form Starting at the Top */}
             <div className={styles.rightColumn}>
-              <div className={styles.formCard}>
+              <div className={styles.formCard} id="enquiry-form">
                 <h2 className={styles.formHeading}>Travel enquiry</h2>
                 <p className={styles.formSubheading}>Tell us your travel plans and our desk will prepare the best options.</p>
 
@@ -188,7 +195,7 @@ function TravelContent() {
                   {errors.service && <p className="form-error" role="alert">{errors.service}</p>}
                 </div>
 
-                <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div className="form-row">
                   {isBookings && (
                     <div className="form-group">
                       <label htmlFor="tr-from" className="form-label">Travel date (from)</label>
@@ -201,7 +208,7 @@ function TravelContent() {
                       />
                     </div>
                   )}
-                  <div className="form-group" style={{ gridColumn: isBookings ? 'auto' : '1 / -1' }}>
+                  <div className="form-group">
                     <label htmlFor="tr-dest" className="form-label">Destination</label>
                     <input
                       id="tr-dest"

@@ -17,12 +17,17 @@
   max-width: var(--container-max);
   margin: 0 auto;
   padding: var(--space-sm) var(--space-md);
-  min-height: 68px;
+  /* Notch / Dynamic Island in landscape on iPhone */
+  padding-left: max(var(--space-md), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--space-md), env(safe-area-inset-right, 0px));
+  min-height: var(--header-h);
 }
 
 @media (min-width: 768px) {
   .headerInner {
     padding: var(--space-sm) var(--space-xl);
+    padding-left: max(var(--space-xl), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--space-xl), env(safe-area-inset-right, 0px));
   }
 }
 
@@ -303,14 +308,21 @@
 .mobileMenu {
   display: none;
   position: fixed;
-  top: 68px;
+  top: var(--header-h);
   left: 0;
   right: 0;
   bottom: 0;
   background-color: var(--surface);
-  z-index: 99;
+  /* Above the sticky bar (98), the chat launcher (120) and the header (100) */
+  z-index: 130;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: var(--space-md);
+  padding-left: max(var(--space-md), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--space-md), env(safe-area-inset-right, 0px));
+  /* Keep the last rows clear of the iPhone home indicator */
+  padding-bottom: calc(var(--space-xl) + env(safe-area-inset-bottom, 0px));
   animation: mobileSlideIn 0.25s ease forwards;
 }
 
@@ -500,6 +512,10 @@
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border-top: 1px solid rgba(222, 221, 213, 0.5);
   padding: var(--space-sm) var(--space-md);
+  padding-left: max(var(--space-md), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--space-md), env(safe-area-inset-right, 0px));
+  /* Sit above the iPhone home indicator (needs viewport-fit=cover) */
+  padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom, 0px));
   gap: var(--space-sm);
   justify-content: center;
 }
@@ -511,22 +527,29 @@
 }
 
 .stickyBtn {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
-  padding: 0.625rem;
+  padding: 0.625rem 0.5rem;
   border-radius: var(--radius-pill);
   font-size: 0.8125rem;
   font-weight: 600;
-  min-height: 44px;
+  min-height: 48px;
   border: none;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
   max-width: 200px;
   transition: all var(--transition-fast);
   box-shadow: var(--shadow-sm);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stickyBtn svg {
+  flex-shrink: 0;
 }
 
 .stickyCall {
@@ -545,4 +568,14 @@
 
 .stickyWhatsapp:hover {
   background-color: #1EBE59;
+}
+
+/* Jump to the page's enquiry form */
+.stickyForm {
+  background-color: var(--grape);
+  color: var(--surface);
+}
+
+.stickyForm:hover {
+  background-color: #6A243A;
 }

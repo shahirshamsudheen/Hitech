@@ -141,7 +141,7 @@ export default function InstitutionsPage() {
 
             {/* Right Column: Form */}
             <div className={styles.rightColumn}>
-              <div className={styles.formCard}>
+              <div className={styles.formCard} id="enquiry-form">
                 <h2 className={styles.formHeading}>Request a quotation or AMC proposal</h2>
                 <p className={styles.formSubheading}>We will prepare a proposal and call you.</p>
 

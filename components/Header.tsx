@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { ClipboardList } from 'lucide-react';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import styles from './Header.module.css';
 
@@ -115,6 +116,24 @@ const NAV_ITEMS: NavItem[] = [
 const PHONE_PRIMARY = '+91 9496 818237';
 const PHONE_PRIMARY_TEL = 'tel:+919496818237';
 
+/* Extra links shown only in the mobile menu (desktop has them in the footer). */
+const MOBILE_EXTRA_LINKS = [
+  { label: 'For Institutions', href: '/institutions' },
+  { label: 'Contact', href: '/contact' },
+];
+
+/* Pages that render an enquiry form with id="enquiry-form".
+   The mobile sticky bar shows a jump button on these so the form is one tap away. */
+const FORM_JUMP_LABELS: Record<string, string> = {
+  '/service': 'Book',
+  '/technology': 'Quote',
+  '/security': 'Enquire',
+  '/travel': 'Enquire',
+  '/online-services': 'Enquire',
+  '/institutions': 'Quote',
+  '/contact': 'Message',
+};
+
 /* ── Component ─────────────────────────────────────────────────────────── */
 
 export default function Header() {
@@ -125,6 +144,7 @@ export default function Header() {
   const pathname = usePathname();
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const headerRef = useRef<HTMLElement>(null);
+  const lastPathname = useRef(pathname);
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -132,11 +152,39 @@ export default function Header() {
     setMobileSubExpanded(null);
   };
 
-  // Close dropdown on route change
+  // Close menus only when the route actually changes (not on first render)
   useEffect(() => {
-    setActiveDropdown(null);
-    closeMenu();
+    if (lastPathname.current === pathname) return;
+    lastPathname.current = pathname;
+    const id = window.setTimeout(() => {
+      setActiveDropdown(null);
+      closeMenu();
+    }, 0);
+    return () => window.clearTimeout(id);
   }, [pathname]);
+
+  // Lock page scroll behind the open mobile menu (iOS + Android)
+  useEffect(() => {
+    if (!menuOpen) return;
+    const html = document.documentElement;
+    const prevHtml = html.style.overflow;
+    const prevBody = document.body.style.overflow;
+    html.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    return () => {
+      html.style.overflow = prevHtml;
+      document.body.style.overflow = prevBody;
+    };
+  }, [menuOpen]);
+
+  const formJumpLabel = FORM_JUMP_LABELS[pathname];
+
+  const jumpToForm = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const el = document.getElementById('enquiry-form');
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   // Close on ESC
   useEffect(() => {
@@ -300,95 +348,112 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile menu */}
-        <nav
-          id="mobile-menu"
-          className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}
-          aria-label="Mobile navigation"
-        >
-          {NAV_ITEMS.map((item) => (
-            <div key={item.label} className={styles.mobileNavGroup}>
-              <div className={styles.mobileNavHeader}>
-                <Link
-                  href={item.href}
-                  className={`${styles.mobileNavLink} ${pathname.startsWith(item.href) ? styles.active : ''}`}
-                  onClick={closeMenu}
-                >
-                  {item.label}
-                </Link>
-                {item.children && (
-                  <button
-                    className={`${styles.mobileExpandBtn} ${mobileExpanded === item.label ? styles.expanded : ''}`}
-                    onClick={() => toggleMobileExpand(item.label)}
-                    aria-label={`Expand ${item.label}`}
-                  >
-                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                      <path d="M3 4.5L6 7.5L9 4.5" />
-                    </svg>
-                  </button>
-                )}
-              </div>
+      </header>
 
-              {/* Mobile sub-items */}
-              {item.children && mobileExpanded === item.label && (
-                <div className={styles.mobileSubMenu}>
-                  {item.children.map((child) => (
-                    <div key={child.label}>
-                      {child.children ? (
-                        <>
-                          <button
-                            className={styles.mobileSubHeader}
-                            onClick={() => toggleMobileSubExpand(child.label)}
-                          >
-                            {child.label}
-                            <svg className={`${styles.mobileSubChevron} ${mobileSubExpanded === child.label ? styles.expanded : ''}`} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                              <path d="M3 4.5L6 7.5L9 4.5" />
-                            </svg>
-                          </button>
-                          {mobileSubExpanded === child.label && (
-                            <div className={styles.mobileNestedMenu}>
-                              {child.children.map((sub) => (
-                                <Link
-                                  key={sub.label}
-                                  href={sub.href}
-                                  className={styles.mobileNestedLink}
-                                  onClick={closeMenu}
-                                >
-                                  {sub.label}
-                                </Link>
-                              ))}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <Link
-                          href={child.href}
-                          className={styles.mobileSubLink}
-                          onClick={closeMenu}
-                        >
-                          {child.label}
-                        </Link>
-                      )}
-                    </div>
-                  ))}
-                </div>
+      {/* Mobile menu (sibling of the header: a backdrop-filter ancestor would
+          otherwise become the containing block for this fixed panel on iOS Safari) */}
+      <nav
+        id="mobile-menu"
+        className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}
+        aria-label="Mobile navigation"
+        hidden={!menuOpen}
+      >
+        {NAV_ITEMS.map((item) => (
+          <div key={item.label} className={styles.mobileNavGroup}>
+            <div className={styles.mobileNavHeader}>
+              <Link
+                href={item.href}
+                className={`${styles.mobileNavLink} ${pathname.startsWith(item.href) ? styles.active : ''}`}
+                onClick={closeMenu}
+              >
+                {item.label}
+              </Link>
+              {item.children && (
+                <button
+                  className={`${styles.mobileExpandBtn} ${mobileExpanded === item.label ? styles.expanded : ''}`}
+                  onClick={() => toggleMobileExpand(item.label)}
+                  aria-label={`Expand ${item.label}`}
+                >
+                  <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                    <path d="M3 4.5L6 7.5L9 4.5" />
+                  </svg>
+                </button>
               )}
             </div>
-          ))}
 
-          <div className={styles.mobileActions}>
-            <a href={PHONE_PRIMARY_TEL} className={styles.mobilePhoneLink}>
-              📞 {PHONE_PRIMARY}
-            </a>
-            <a href="tel:+914722960076" className={styles.mobilePhoneLink}>
-              📞 +91 472 296007
-            </a>
-            <a href="tel:+919447765757" className={styles.mobilePhoneLink}>
-              📞 +91 9447 765757
-            </a>
+            {/* Mobile sub-items */}
+            {item.children && mobileExpanded === item.label && (
+              <div className={styles.mobileSubMenu}>
+                {item.children.map((child) => (
+                  <div key={child.label}>
+                    {child.children ? (
+                      <>
+                        <button
+                          className={styles.mobileSubHeader}
+                          onClick={() => toggleMobileSubExpand(child.label)}
+                        >
+                          {child.label}
+                          <svg className={`${styles.mobileSubChevron} ${mobileSubExpanded === child.label ? styles.expanded : ''}`} viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                            <path d="M3 4.5L6 7.5L9 4.5" />
+                          </svg>
+                        </button>
+                        {mobileSubExpanded === child.label && (
+                          <div className={styles.mobileNestedMenu}>
+                            {child.children.map((sub) => (
+                              <Link
+                                key={sub.label}
+                                href={sub.href}
+                                className={styles.mobileNestedLink}
+                                onClick={closeMenu}
+                              >
+                                {sub.label}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <Link
+                        href={child.href}
+                        className={styles.mobileSubLink}
+                        onClick={closeMenu}
+                      >
+                        {child.label}
+                      </Link>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </nav>
-      </header>
+        ))}
+
+        {MOBILE_EXTRA_LINKS.map((link) => (
+          <div key={link.href} className={styles.mobileNavGroup}>
+            <div className={styles.mobileNavHeader}>
+              <Link
+                href={link.href}
+                className={`${styles.mobileNavLink} ${pathname.startsWith(link.href) ? styles.active : ''}`}
+                onClick={closeMenu}
+              >
+                {link.label}
+              </Link>
+            </div>
+          </div>
+        ))}
+
+        <div className={styles.mobileActions}>
+          <a href={PHONE_PRIMARY_TEL} className={styles.mobilePhoneLink}>
+            📞 {PHONE_PRIMARY}
+          </a>
+          <a href="tel:+914722960076" className={styles.mobilePhoneLink}>
+            📞 +91 472 296007
+          </a>
+          <a href="tel:+919447765757" className={styles.mobilePhoneLink}>
+            📞 +91 9447 765757
+          </a>
+        </div>
+      </nav>
 
       {/* Mobile sticky bottom bar */}
       <div className={styles.mobileSticky} role="complementary" aria-label="Quick contact">
@@ -409,6 +474,16 @@ export default function Header() {
           </svg>
           WhatsApp
         </a>
+        {formJumpLabel && (
+          <a
+            href="#enquiry-form"
+            onClick={jumpToForm}
+            className={`${styles.stickyBtn} ${styles.stickyForm}`}
+          >
+            <ClipboardList size={18} strokeWidth={2} aria-hidden="true" />
+            {formJumpLabel}
+          </a>
+        )}
       </div>
     </>
   );

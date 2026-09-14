@@ -319,3 +319,171 @@
   margin-bottom: var(--space-xl);
   line-height: 1.6;
 }
+
+/* Shown only below 1024px (see the compact selector block) */
+.mobileSelectedLine {
+  display: none;
+}
+
+/* ── Phones & tablets (below the 1024px split layout) ────────────────────── */
+
+@media (max-width: 1023px) {
+  /* Single column: sticky has no purpose and can pin the form while the
+     rows after it scroll. */
+  .rightColumn {
+    position: static;
+  }
+
+  .splitSection {
+    padding: var(--space-xl) 0 var(--space-2xl);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    padding: 2.75rem 0 2.5rem;
+  }
+
+  .heading {
+    font-size: clamp(2rem, 9vw, 2.5rem);
+  }
+
+  .intro {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .formCard {
+    padding: 1.5rem 1.25rem;
+    border-radius: 20px;
+  }
+}
+
+/* ── Compact service selector on phones & tablets ─────────────────────────
+   Below 1024px the cards column stacks above the form, which pushed the
+   form ~2,400px down on a phone. The same buttons now render as wrapping
+   choice chips (icon + name); the selected service's description shows
+   in one line under the chips, and the details row moves below the form. */
+
+@media (max-width: 1023px) {
+  /* Let the subhead, chips, selected line and meta row become direct grid
+     items so the meta row can be ordered after the form. */
+  .leftColumn {
+    display: contents;
+  }
+
+  .sectionSubhead {
+    margin-bottom: var(--space-sm);
+  }
+
+  .servicesGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .serviceCard {
+    flex: 0 1 auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0.375rem 0.875rem 0.375rem 0.375rem;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid transparent;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .serviceCard:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .serviceCard:active {
+    transform: scale(0.97);
+  }
+
+  .serviceCardActive,
+  .serviceCardActive:hover {
+    background: var(--olive);
+    border-color: var(--olive);
+    box-shadow: 0 4px 14px rgba(58, 74, 44, 0.28);
+  }
+
+  .serviceIconWrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-pill);
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .serviceCardActive .serviceIconWrapper {
+    background: rgba(255, 255, 255, 0.18);
+    color: #FFFFFF;
+  }
+
+  .serviceCardHeading {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .serviceCardActive .serviceCardHeading {
+    color: #FFFFFF;
+  }
+
+  .serviceCardLine {
+    display: none;
+  }
+
+  .mobileSelectedLine {
+    display: block;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border-left: 3px solid var(--olive);
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-sm);
+  }
+
+  .infoMetaRow {
+    order: 10;
+  }
+
+  .splitGrid {
+    gap: var(--space-md);
+  }
+
+  .rightColumn {
+    margin-top: var(--space-sm);
+  }
+}
+
+@media (max-width: 639px) {
+  .infoMetaRow {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    padding: 1rem 1.25rem;
+  }
+
+  .infoMetaItem {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-md);
+  }
+
+  .metaLabel {
+    margin-bottom: 0;
+  }
+
+  .metaValue {
+    text-align: right;
+  }
+}

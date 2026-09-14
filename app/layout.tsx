@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatWidget from '@/components/ChatWidget';
@@ -28,6 +28,15 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     siteName: 'HITECH Systems',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  // Lets the sticky bar, menu and chat launcher extend under the iPhone
+  // home indicator / notch and use env(safe-area-inset-*) to stay clear of it.
+  viewportFit: 'cover',
+  themeColor: '#3A4A2C',
 };
 
 export default function RootLayout({

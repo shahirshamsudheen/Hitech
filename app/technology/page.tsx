@@ -107,12 +107,20 @@ function ShopContent() {
 
   const handleSelectSolution = (title: string) => {
     updateField('productInterest', title);
-    nameInputRef.current?.focus();
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      nameInputRef.current?.focus();
+    } else {
+      document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const handleProductEnquire = (productName: string) => {
     updateField('productInterest', productName);
-    nameInputRef.current?.focus();
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      nameInputRef.current?.focus();
+    } else {
+      document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const filtered = useMemo(() => {
@@ -310,7 +318,7 @@ function ShopContent() {
 
             {/* Right Column: Hardware Enquiry Form */}
             <div className={styles.rightColumn}>
-              <div className={styles.formCard}>
+              <div className={styles.formCard} id="enquiry-form">
                 <h2 className={styles.formHeading}>Hardware &amp; device enquiry</h2>
                 <p className={styles.formSubheading}>Request a quote, custom build configuration, or store availability.</p>
 

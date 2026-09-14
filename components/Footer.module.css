@@ -5,8 +5,8 @@
   padding-top: var(--space-3xl);
   padding-bottom: var(--space-xl);
   overflow: hidden;
-  /* Extra bottom padding on mobile for sticky bar */
-  margin-bottom: 72px;
+  /* Keep the footer clear of the sticky Call / WhatsApp bar + home indicator */
+  margin-bottom: calc(var(--mobile-bar-h) + env(safe-area-inset-bottom, 0px));
 }
 
 @media (min-width: 1024px) {

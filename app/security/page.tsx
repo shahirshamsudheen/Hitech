@@ -34,7 +34,11 @@ function SecurityContent() {
 
   const handleSelectService = (key: string) => {
     setSelectedService(key);
-    nameInputRef.current?.focus();
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      nameInputRef.current?.focus();
+    } else {
+      document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const activeService = SERVICES.find(s => s.key === selectedService);
@@ -111,6 +115,9 @@ function SecurityContent() {
                   );
                 })}
               </div>
+              {activeService && (
+                <p className={styles.mobileSelectedLine}>{activeService.line}</p>
+              )}
 
               <div className={styles.infoMetaRow}>
                 <div className={styles.infoMetaItem}>
@@ -130,7 +137,7 @@ function SecurityContent() {
 
             {/* Right Column: Form Starting at the Top */}
             <div className={styles.rightColumn}>
-              <div className={styles.formCard}>
+              <div className={styles.formCard} id="enquiry-form">
                 <h2 className={styles.formHeading}>Request a site survey</h2>
                 <p className={styles.formSubheading}>Tell us what you need and our technical team will inspect.</p>
 
